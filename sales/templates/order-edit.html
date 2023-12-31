@@ -1,0 +1,688 @@
+
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}<title>GlasstechSales | Sifariş Düzəliş</title>{% endblock %}
+
+{% block content %}
+    
+      <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+          <div class="container-fluid">
+            <div class="row mb-2">
+              <div class="col-sm-6">
+                <h1>Sifariş NO: {{order.number}}</h1>
+              </div>
+              <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                  <li class="breadcrumb-item"><a href="{% url 'core:dashboard' %}">Dashboard</a></li>
+                  <li class="breadcrumb-item active">Satış</li>
+                  <li class="breadcrumb-item active">Sifariş</li>
+                  <li class="breadcrumb-item active">Sifariş Düzəliş</li>
+                </ol>
+              </div>
+            </div>
+          </div><!-- /.container-fluid -->
+        </section>
+    
+        <!-- Main content -->
+        <section class="content">
+            <form id="ordeEditForm" action="" enctype="multipart/form-data">
+                <hr>
+                <p class="MsoNormal" style="margin: 0cm 0cm 10pt; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0);">
+                    <span style="font-size: 18pt; font-family: Arial, sans-serif;">&nbsp;<span lang="EN-US">Sifariş Blankı<o:p></o:p>
+                </p>
+                <!-- detail -->
+                <table class="MsoTableGrid" style="width: 100%;" border="1" cellspacing="0" cellpadding="0" width="709"
+                    style="width: 531.6pt; margin-left: -14.45pt; border: none;">
+                    <tbody>
+                        <tr style="height: 15.25pt;">
+                            <td width="177" valign="top"
+                                style="width: 133.05pt; border: 1pt solid windowtext; padding: 0cm 5.4pt; height: 15.25pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">Sifariş No: <o:p></o:p>
+                                        </span></p>
+                            </td>
+                            <td width="531" valign="top"
+                                style="width: 398.55pt; border-top: 1pt solid windowtext; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-image: initial; border-left: none; padding: 0cm 5.4pt; height: 15.25pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US"
+                                        style="font-size: 10pt; font-family: Arial, sans-serif;">&nbsp;{{number}}
+                                        <o:p></o:p></span></p>
+                            </td>
+                        </tr>
+                        <tr style="height: 15.25pt;">
+                            <td width="177" valign="top"
+                                style="width: 133.05pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; padding: 0cm 5.4pt; height: 15.25pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">Sifarişci:<o:p></o:p>
+                                        </span></p>
+                            </td>
+                            <td width="531" valign="top"
+                                style="width: 398.55pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; padding: 0cm 5.4pt; height: 15.25pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">&nbsp;{{offer.customer.get_full_name}}</span></p>
+                            </td>
+                        </tr>
+                        <tr style="height: 15.75pt;">
+                            <td width="177" valign="top"
+                                style="width: 133.05pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; padding: 0cm 5.4pt; height:10.25pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">Kontakt Adı<o:p></o:p>
+                                        </span>
+                                </p>
+                            </td>
+                            <td width="531" valign="top"
+                                style="width: 398.55pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; padding: 0cm 5.4pt; height: 10.25pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm 0cm 0cm 1.7pt; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;">
+                                    <span lang="AZ-LATIN" style="font-size: 10pt; font-family: Arial, sans-serif;">{{offer.customer.get_full_name}}<o:p></o:p>
+                                        </span></p>
+                            
+                            </td>
+                        </tr>
+                        <tr style="height: 15.25pt;">
+                            <td width="177" valign="top"
+                                style="width: 133.05pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; padding: 0cm 5.4pt; height: 15.25pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">Telefon<o:p></o:p></span>
+                                </p>
+                            </td>
+                            <td width="531" valign="top"
+                                style="width: 398.55pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; padding: 0cm 5.4pt; height: 15.25pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="AZ-LATIN" style="font-size: 10pt; font-family: Arial, sans-serif;">{{offer.customer.mobile}}<o:p>
+                                        </o:p></span></p>
+                            </td>
+                        </tr>
+                        <tr style="height: 18.05pt;">
+                            <td width="177" valign="top"
+                                style="width: 133.05pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; padding: 0cm 5.4pt; height: 18.05pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">Email<o:p></o:p></span>
+                                </p>
+                            </td>
+                            <td width="531" valign="top"
+                                style="width: 398.55pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; padding: 0cm 5.4pt; height: 18.05pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">&nbsp;{{offer.customer.email}}</span></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="177" valign="top"
+                                style="width: 133.05pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; padding: 0cm 5.4pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">&nbsp;</span></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">Layihe adi<o:p></o:p>
+                                        </span></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">&nbsp;</span></p>
+                            </td>
+                            <td width="531" valign="top"
+                                style="width: 398.55pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; padding: 0cm 5.4pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="AZ-LATIN" style="font-size: 10pt; font-family: Arial, sans-serif;"><input value="{{order.project_name}}" placeholder="...." style="background: rgb(245, 245, 245); border: 0; font-size: 10pt; padding: 0%;" required id="project_name" class="form-control" type="text"><o:p></o:p></span></p>
+                            </td>
+                        </tr>
+                        <tr style="height: 14.5pt;">
+                            <td width="177" valign="top"
+                                style="width: 133.05pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; padding: 0cm 5.4pt; height: 14.5pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">Satışı edən<o:p></o:p>
+                                        </span></p>
+                            </td>
+                            <td width="531" valign="top"
+                                style="width: 398.55pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; padding: 0cm 5.4pt; height: 14.5pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="AZ-LATIN" style="font-size: 10pt; font-family: Arial, sans-serif;">
+                                        <select required style="border: 0; background: rgb(245, 245, 245);" name="" id="saller">
+                                            {% for user in users %}
+                                            {% if user.id == order.saller.id %}
+                                            <option selected value="{{user.id}}">{{user.get_full_name}}</option>
+                                            {% else %}
+                                            <option value="{{user.id}}">{{user.get_full_name}}</option>
+                                            {% endif %}
+                                            {% endfor %}
+
+                                        </select>
+                                        <o:p>
+                                        </o:p></span></p>
+                            </td>
+                        </tr>
+                        <tr style="height: 19.2pt;">
+                            <td width="177" valign="top"
+                                style="width: 133.05pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; padding: 0cm 5.4pt; height: 19.2pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">Sifariş tarixi<o:p>
+                                        </o:p></span></p>
+                            </td>
+                            <td width="531" valign="top"
+                                style="width: 398.55pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; padding: 0cm 5.4pt; height: 19.2pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">{{order.date}}<o:p></o:p>
+                                        </span></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="177" valign="top"
+                                style="width: 133.05pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; padding: 0cm 5.4pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US"
+                                        style="font-size: 10pt; font-family: Arial, sans-serif;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <o:p></o:p></span></p>
+                            </td>
+                            <td width="531" valign="top"
+                                style="width: 398.55pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; padding: 0cm 5.4pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">&nbsp;</span></p>
+                            </td>
+                        </tr>
+                        <tr style="height: 15.2pt;">
+                            <td width="709" colspan="2" valign="top"
+                                style="width: 531.6pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; background: rgb(242, 242, 242); padding: 0cm 5.4pt; height: 15.2pt;">
+                                <p class="MsoNormal" align="center"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif; text-align: center;">
+                                    <b><span lang="EN-US"
+                                            style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">Proseslər üçün əlavə
+                                            qeydlər</span></b><b><span lang="EN-US"
+                                            style="font-size: 10pt; font-family: Arial, sans-serif;">
+                                            <o:p></o:p>
+                                        </span></b></p>
+                            </td>
+                        </tr>
+                        <tr style="height: 14.5pt;">
+                            <td width="177" valign="top"
+                                style="width: 133.05pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; padding: 0cm 5.4pt; height: 14.5pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">Planlama<o:p></o:p></span>
+                                </p>
+                            </td>
+                            <td width="531" valign="top"
+                                style="width: 398.55pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; padding: 0cm 5.4pt; height: 14.5pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;"><input value="{{order.plan_note}}"  placeholder="...." style="height: 10pt; background: rgb(245, 245, 245); border: 0; font-size: 10pt; padding: 0%;" required id="plan_note" class="form-control" type="text" name=""></span><span
+                                        lang="AZ-LATIN" style="font-size: 10pt; font-family: Arial, sans-serif;">
+                                        <o:p></o:p>
+                                    </span></p>
+                            </td>
+                        </tr>
+                        <tr style="height: 15.9pt;">
+                            <td width="177" valign="top"
+                                style="width: 133.05pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; padding: 0cm 5.4pt; height: 15.9pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">Təchizat<o:p></o:p></span>
+                                </p>
+                            </td>
+                            <td width="531" valign="top"
+                                style="width: 398.55pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; padding: 0cm 5.4pt; height: 15.9pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;"><input value="{{order.equipment_note}}" type="text" name=""  placeholder="...." style="height: 10pt; background: rgb(245, 245, 245); border: 0; font-size: 10pt; padding: 0%;" required id="equipment_note" class="form-control"></span></p>
+                            </td>
+                        </tr>
+                        <tr style="height: 16.55pt;">
+                            <td width="177" valign="top"
+                                style="width: 133.05pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; padding: 0cm 5.4pt; height: 16.55pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">İstehsalat<o:p></o:p>
+                                        </span></p>
+                            </td>
+                            <td width="531" valign="top"
+                                style="width: 398.55pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; padding: 0cm 5.4pt; height: 16.55pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;"><input value="{{order.production_note}}" type="text" name=""  placeholder="...." style="height: 10pt; background: rgb(245, 245, 245); border: 0; font-size: 10pt; padding: 0%;" required id="production_note" class="form-control"><o:p></o:p></span></p>
+                            </td>
+                        </tr>
+                        <tr style="height: 15.9pt;">
+                            <td width="177" valign="top"
+                                style="width: 133.05pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; padding: 0cm 5.4pt; height: 15.9pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">Qablaşdırma<o:p></o:p>
+                                        </span></p>
+                            </td>
+                            <td width="531" valign="top"
+                                style="width: 398.55pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; padding: 0cm 5.4pt; height: 15.9pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;"><input value="{{order.packaging_note}}" type="text" name=""  placeholder="...." style="height: 10pt; background: rgb(245, 245, 245); border: 0; font-size: 10pt; padding: 0%;" required id="packaging_note" class="form-control"><o:p></o:p></span></p>
+                            </td>
+                        </tr>
+                        <tr style="height: 15.9pt;">
+                            <td width="177" valign="top"
+                                style="width: 133.05pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; padding: 0cm 5.4pt; height: 15.9pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">Nəqliyat<o:p></o:p></span>
+                                </p>
+                            </td>
+                            <td width="531" valign="top"
+                                style="width: 398.55pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; padding: 0cm 5.4pt; height: 15.9pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;"><input value="{{order.transportation_note}}" type="text" name=""  placeholder="...." style="height: 10pt; background: rgb(245, 245, 245); border: 0; font-size: 10pt; padding: 0%;" required id="transport_note" class="form-control">
+                                        <o:p></o:p></span></p>
+                            </td>
+                        </tr>
+                        <tr style="height: 18.05pt;">
+                            <td width="177" valign="top"
+                                style="width: 133.05pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; padding: 0cm 5.4pt; height: 18.05pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">Quraşdırma<o:p></o:p>
+                                        </span></p>
+                            </td>
+                            <td width="531" valign="top"
+                                style="width: 398.55pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; padding: 0cm 5.4pt; height: 18.05pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;"><input value="{{order.installation_note}}" type="text" name=""  placeholder="...." style="height: 10pt; background: rgb(245, 245, 245); border: 0; font-size: 10pt; padding: 0%;" required id="installation_note" class="form-control"><o:p></o:p>
+                                        </span></p>
+                            </td>
+                        </tr>
+                        <tr style="height: 18.05pt;">
+                            <td width="177" valign="top"
+                                style="width: 133.05pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; padding: 0cm 5.4pt; height: 18.05pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">NOT<o:p></o:p></span></p>
+                            </td>
+                            <td width="531" valign="top"
+                                style="width: 398.55pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; padding: 0cm 5.4pt; height: 18.05pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;"><input value="{{order.note}}" type="text" name=""  placeholder="...." style="height: 10pt; background: rgb(245, 245, 245); border: 0; font-size: 10pt; padding: 0%;" required id="note" class="form-control"><o:p></o:p></span></p>
+                            </td>
+                        </tr>
+                        <tr style="height: 18.05pt;">
+                            <td width="177" valign="top"
+                                style="width: 133.05pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; padding: 0cm 5.4pt; height: 18.05pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">&nbsp;</span></p>
+                            </td>
+                            <td width="531" valign="top"
+                                style="width: 398.55pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; padding: 0cm 5.4pt; height: 18.05pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">&nbsp;</span></p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="MsoNormal"
+                    style="margin: 0cm 0cm 10pt; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0);">
+                    <span lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">&nbsp;</span></p>
+                <p class="MsoListParagraph"
+                    style="margin: 0cm 0cm 10pt 36pt; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0);">
+                    <span lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">&nbsp;</span></p>
+                <!-- package -->
+                <table class="MsoTableGrid" style="width: 100%;" border="1" cellspacing="0" cellpadding="0" width="709"
+                    style="width: 531.55pt; margin-left: -14.45pt; border: none;">
+                    <tbody>
+                        <!-- header -->
+                        <tr style="height: 13.15pt;">
+                            <td width="709" colspan="6" valign="top"
+                                style="width: 531.55pt; border: 1pt solid windowtext; background: rgb(242, 242, 242); padding: 0cm 5.4pt; height: 13.15pt;">
+                                <p class="MsoNormal" align="center"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif; text-align: center;">
+                                    <b><span lang="EN-US"
+                                            style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">Muhasibat<o:p></o:p>
+                                            </span></b></p>
+                            </td>
+                        </tr>
+                        <tr style="height: 13.15pt;">
+                            <td width="64"
+                                style="width: 48.1pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; background: rgb(242, 242, 242); padding: 0cm 5.4pt; height: 13.15pt;">
+                                <p class="MsoNormal" align="center"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif; text-align: center;">
+                                    <span lang="EN-US"
+                                        style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">ID</span><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">
+                                        <o:p></o:p>
+                                    </span></p>
+                            </td>
+                            <td width="377"
+                                style="width: 283.1pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; background: rgb(242, 242, 242); padding: 0cm 5.4pt; height: 13.15pt;">
+                                <p class="MsoNormal" align="center"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif; text-align: center;">
+                                    <span lang="EN-US"
+                                        style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">Açıqlama</span><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif; color: red;">
+                                        <o:p></o:p>
+                                    </span></p>
+                            </td>
+                            <td width="70"
+                                style="width: 52.5pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; background: rgb(242, 242, 242); padding: 0cm 5.4pt; height: 13.15pt;">
+                                <p class="MsoNormal" align="center"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif; text-align: center;">
+                                    <span lang="EN-US"
+                                        style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">Vahid</span><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif; color: red;">
+                                        <o:p></o:p>
+                                    </span></p>
+                            </td>
+                            <td width="65"
+                                style="width: 48.85pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; background: rgb(242, 242, 242); padding: 0cm 5.4pt; height: 13.15pt;">
+                                <p class="MsoNormal" align="center"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif; text-align: center;">
+                                    <span lang="EN-US"
+                                        style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">Miqdar</span><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif; color: red;">
+                                        <o:p></o:p>
+                                    </span></p>
+                            </td>
+                            <td width="57" valign="top"
+                                style="width: 42.5pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; background: rgb(242, 242, 242); padding: 0cm 5.4pt; height: 13.15pt;">
+                                <p class="MsoListParagraph"
+                                    style="margin: 0cm 0cm 0cm 36pt; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif; text-indent: -36pt;">
+                                    <span lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">&nbsp;</span></p>
+                                <p class="MsoNormal" align="center"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif; text-align: center;">
+                                    <span lang="EN-US"
+                                        style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">Qiym</span><span
+                                        lang="AZ-LATIN"
+                                        style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">ət</span><span
+                                        lang="AZ-LATIN" style="font-size: 10pt; font-family: Arial, sans-serif;">
+                                        <o:p></o:p>
+                                    </span></p>
+                                <p class="MsoNormal" align="center"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif; text-align: center;">
+                                    <span lang="EN-US"
+                                        style="font-size: 10pt; font-family: Arial, sans-serif; color: red;">&nbsp;</span></p>
+                            </td>
+                            <td width="75"
+                                style="width: 56.5pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; background: rgb(242, 242, 242); padding: 0cm 5.4pt; height: 13.15pt;">
+                                <p class="MsoListParagraph" align="center"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif; text-align: center;">
+                                    <span lang="EN-US"
+                                        style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">Toplam</span><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">
+                                        <o:p></o:p>
+                                    </span></p>
+                                <p class="MsoNormal" align="center"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif; text-align: center;">
+                                    <span lang="EN-US"
+                                        style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">Azn</span><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif; color: red;">
+                                        <o:p></o:p>
+                                    </span></p>
+                            </td>
+                        </tr>
+                        <tr id="serviceStartLine" ></tr>
+
+        
+                    
+
+                        <!-- totalprice -->
+                        <tr id="orderTotalPriceBody" style="height: 13.15pt;">
+                            <td width="633" colspan="5" valign="top"
+                                style="width: 475.05pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; background: rgb(242, 242, 242); padding: 0cm 5.4pt; height: 13.15pt;">
+                                <p class="MsoNormal" align="right"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif; text-align: right;">
+                                    <span lang="AZ-LATIN"
+                                        style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        Ümumi(ƏDV Xaric)<o:p></o:p></span></p>
+                            </td>
+                            <td width="75" valign="top"
+                                style="width: 56.5pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; background: rgb(242, 242, 242); padding: 0cm 5.4pt; height: 13.15pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="AZ-LATIN"
+                                        style="display: flex; justify-content: center; font-size: 10pt; font-family: Arial, sans-serif; color: black;"><span id="orderTotalPrice">0</span>AZN</span></p>
+                            </td>
+                        </tr>
+
+
+
+
+                    
+                    
+                        
+                    
+                    </tbody>
+                </table>
+                <p class="MsoNormal"
+                    style="margin: 0cm 0cm 10pt; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0);">
+                    <span lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">&nbsp;</span></p>
+                <table class="MsoTableGrid"  style="width: 100%;" border="1" cellspacing="0" cellpadding="0" width="709"
+                    style="width: 531.55pt; margin-left: -14.45pt; border: none;">
+                    <tbody>
+                        <tr style="height: 33.75pt;">
+                            <td width="633" colspan="2" valign="top"
+                                style="width: 475.1pt; border: 1pt solid windowtext; background: rgb(242, 242, 242); padding: 0cm 5.4pt; height: 33.75pt;">
+                                <p class="MsoNormal" align="right"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif; text-align: right;">
+                                    <span lang="AZ-LATIN"
+                                        style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">&nbsp;</span></p>
+                            </td>
+                            <td width="75" valign="top"
+                                style="width: 56.5pt; border-top: 1pt solid windowtext; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-image: initial; border-left: none; background: rgb(242, 242, 242); padding: 0cm 5.4pt; height: 33.75pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="AZ-LATIN"
+                                        style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">&nbsp;</span></p>
+                            </td>
+                        </tr>
+                        <tr style="height: 13.15pt;">
+                            <td width="633" colspan="2" valign="top"
+                                style="width: 475.1pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; background: rgb(242, 242, 242); padding: 0cm 5.4pt; height: 13.15pt;">
+                                <p class="MsoNormal" align="right"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif; text-align: right;">
+                                    <span lang="AZ-LATIN"
+                                        style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">&nbsp;</span></p>
+                            </td>
+                            <td width="75" valign="top"
+                                style="width: 56.5pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; background: rgb(242, 242, 242); padding: 0cm 5.4pt; height: 13.15pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="AZ-LATIN"
+                                        style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">&nbsp;</span></p>
+                            </td>
+                        </tr>
+                        <tr style="height: 15.95pt;">
+                            <td width="183" valign="top"
+                                style="width: 137.45pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; padding: 0cm 5.4pt; height: 15.95pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="AZ-LATIN" style="font-size: 10pt; font-family: Arial, sans-serif;">Alınan avans<o:p></o:p>
+                                        </span></p>
+                            </td>
+                            <td width="526" colspan="2" valign="top"
+                                style="width: 394.15pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; padding: 0cm 5.4pt; height: 15.95pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="AZ-LATIN" style="font-size: 10pt; font-family: Arial, sans-serif;"><input value="{{order.prepayment}}"  placeholder="...." style="height: 10pt; background: rgb(245, 245, 245); border: 0; font-size: 10pt; padding: 0%;" required id="pre_pay" class="form-control" type="text" name=""><o:p></o:p>
+                                        </span></p>
+                            </td>
+                        </tr>
+                        <tr style="height: 13.15pt;">
+                            <td width="183" valign="top"
+                                style="width: 137.45pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; padding: 0cm 5.4pt; height: 13.15pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">Növbəti ödəniş qrafiki
+                                        <o:p></o:p></span></p>
+                            </td>
+                            <td width="526" colspan="2" valign="top"
+                                style="width: 394.15pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; padding: 0cm 5.4pt; height: 13.15pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;"><input  value="{{order.nps}}"  placeholder="...." style="height: 10pt; background: rgb(245, 245, 245); border: 0; font-size: 10pt; padding: 0%;" id="nps"  class="form-control" type="text" name=""></span></p>
+                            </td>
+                        </tr>
+                        <tr height="0">
+                            <td width="183" style="border: none;"></td>
+                            <td width="450" style="border: none;"></td>
+                            <td width="75" style="border: none;"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="MsoNormal"
+                    style="margin: 0cm 0cm 10pt; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0);">
+                    <span lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">&nbsp;</span>
+                </p>
+                <table class="MsoTableGrid" style="width: 100%;" border="1" cellspacing="0" cellpadding="0" width="709"
+                    style="width: 531.55pt; margin-left: -14.45pt; border: none;">
+                    <tbody>
+                        <tr style="height: 13.15pt;">
+                            <td width="187" valign="top"
+                                style="width: 140.35pt; border: 1pt solid windowtext; padding: 0cm 5.4pt; height: 13.15pt;">
+                                <p class="MsoNormal" align="center"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif; text-align: center;">
+                                    <span lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">Sifarişi Alan<o:p></o:p>
+                                        </span></p>
+                            </td>
+                            <td width="189" valign="top"
+                                style="width: 5cm; border-top: 1pt solid windowtext; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-image: initial; border-left: none; padding: 0cm 5.4pt; height: 13.15pt;">
+                                <p class="MsoNormal" align="center"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif; text-align: center;">
+                                    <span lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">Muhasibat<o:p></o:p>
+                                        </span></p>
+                            </td>
+                            <td width="180" valign="top"
+                                style="width: 134.65pt; border-top: 1pt solid windowtext; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-image: initial; border-left: none; padding: 0cm 5.4pt; height: 13.15pt;">
+                                <p class="MsoNormal" align="center"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif; text-align: center;">
+                                    <span lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">İstehsalat<o:p></o:p>
+                                        </span></p>
+                            </td>
+                            <td width="153" valign="top"
+                                style="width: 114.85pt; border-top: 1pt solid windowtext; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-image: initial; border-left: none; padding: 0cm 5.4pt; height: 13.15pt;">
+                                <p class="MsoNormal" align="center"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif; text-align: center;">
+                                    <span lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">Quraşdırma<o:p></o:p>
+                                        </span></p>
+                            </td>
+                        </tr>
+                        <tr style="height: 13.15pt;">
+                            <td width="187"
+                                style="width: 140.35pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; padding: 0cm 5.4pt; height: 13.15pt;">
+                                
+                                <p class="MsoNormal" align="center"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif; text-align: center;">
+                                    <span lang="EN-US" style="font-size: 20pt; font-family: Arial, sans-serif;">
+                                        <select class="form-control" required style="height: 20pt; font-size: 10pt; border: 0; background: rgb(245, 245, 245);" name="" id="order_recipient">
+                                            <option value="" selected disabled >-------</option>
+                                            {% for user in users %}
+                                            {% if user.id == order.order_recipient.id %}
+                                            <option selected value="{{user.id}}">{{user.get_full_name}}</option>
+                                            {% else %}
+                                            <option value="{{user.id}}">{{user.get_full_name}}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </select> 
+                                        <o:p>
+                                        </o:p>
+                                    </span>
+                                </p>
+                                
+                            </td>
+                            <td width="189" valign="top"
+                                style="width: 5cm; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; padding: 0cm 5.4pt; height: 13.15pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US" style="font-size: 20pt; font-family: Arial, sans-serif;">
+                                        <select class="form-control" style="height: 20pt; font-size: 10pt; border: 0; background: rgb(245, 245, 245);" name="" id="order_accountant">
+                                            {% for user in users %}
+                                            {% if user.id == order.order_accountant.id %}
+                                            <option selected value="{{user.id}}">{{user.get_full_name}}</option>
+                                            {% else %}
+                                            <option value="{{user.id}}">{{user.get_full_name}}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </select> 
+                                    </span>
+                                </p>
+                            </td>
+                            <td width="180" valign="top"
+                                style="width: 134.65pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; padding: 0cm 5.4pt; height: 13.15pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US" style="height: 20pt; font-size: 10pt; font-family: Arial, sans-serif;">
+                                        <select class="form-control" style="height: 20pt; font-size: 10pt; border: 0; background: rgb(245, 245, 245);" name="" id="order_production">
+                                            {% for user in users %}
+                                            {% if user.id == order.order_production.id %}
+                                            <option selected value="{{user.id}}">{{user.get_full_name}}</option>
+                                            {% else %}
+                                            <option value="{{user.id}}">{{user.get_full_name}}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </select> 
+                                    </span>
+                                </p>
+                            </td>
+                            <td width="153" valign="top"
+                                style="width: 114.85pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; padding: 0cm 5.4pt; height: 13.15pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                        lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">
+                                        <select class="form-control" style="height: 20pt; font-size: 10pt;border: 0; background: rgb(245, 245, 245);" name="" id="order_install">
+                                            <option value="" selected disabled >-------</option>
+                                            {% for user in users %}
+                                            {% if user.id == order.order_installer.id %}
+                                            <option selected value="{{user.id}}">{{user.get_full_name}}</option>
+                                            {% else %}
+                                            <option value="{{user.id}}">{{user.get_full_name}}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </select> 
+                                    </span>
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="MsoNormal"
+                    style="margin: 0cm 0cm 10pt; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0);">
+                    <span lang="EN-US" style="font-size: 10pt; font-family: Arial, sans-serif;">&nbsp;</span>
+                </p>
+                <button class="btn btn-primary mb-2" type="submit">Yadda saxla</button>
+                <a href="{% url 'sales:order-review' number=order.number %}" class="mb-2 btn btn-secondary" >Ləğv et</a>
+
+            </form>
+        </section>
+        <!-- /.content -->
+      </div>
+    
+    {% endblock content %}
+    
+    {% block scripts %}
+      <script>
+        var getOfferApiURL = '{% url "salesApi:offerapi" number=offer.number %}'
+        var redirect_url = '{% url "sales:order-review" number=order.number %}'
+        var orderID = '{{order.id}}'
+        var orderUpdateURL = '{% url "salesApi:order-updateapi" pk=order.id %}'
+        
+      </script>
+      <script  type="text/javascript" src="{% static 'js/orderedit.js' %}"></script>
+    {% endblock scripts %}

@@ -1,0 +1,1521 @@
+{% load static %}
+<!doctype html>
+<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40' >
+    <div id="exportContent">
+        <head>
+            <!-- jQuery -->
+            <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+            <script src="{% static 'js/html-docx.js' %}"></script>
+            <script src="{% static 'js/loader.js' %}"></script>
+
+
+            <title>Export Html to Word Document</title>
+            <style>
+                /* Style Definitions */
+                p.MsoHeader, li.MsoHeader, div.MsoHeader{
+                    margin:0in;
+                    margin-top:.0001pt;
+                    mso-pagination:widow-orphan;
+                    tab-stops:center 3.0in right 6.0in;
+                }
+                
+                @page Section1{
+                
+                    mso-header-margin:0.5in;
+                    mso-header:h1;
+                
+                    mso-paper-source:0;
+                }
+                div.Section1{
+                    page:Section1;
+                }
+                table#hrdftrtbl{
+                    margin:0in 0in 0in 9in;
+                } 
+                
+            </style>
+            <script>
+                loader.show()
+                function convertHtmlToDocx() {
+                    var htmlContent = document.getElementById('exportContent').innerHTML;
+                    var converted = htmlDocx.asBlob(htmlContent);
+        
+                    // Create a download link
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(converted);
+                    link.download = '{{offer.customer.get_full_name}}-QiymetTeklifi-{{offer.number}}-REV{{revision.number}}.docx';
+                    link.click();
+                }
+            </script>
+        </head>
+        <body>
+            <div class="Section1">
+                <table id='hrdftrtbl' border='0' cellspacing='0' cellpadding='0'>
+                    <tr>
+                        <td>
+                            <div style='mso-element:header' id="h1" >
+                                <p class="MsoHeader">
+                                    <table border="0" width="100%">
+                                        <tr>
+                                            <td>
+                                                <img src="data:image/png;base64,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"  alt="Glasstech" data-filename="glasstechheaderpng.png" style="width: 176px; height: 53.589px;">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </p>
+                        </div>
+                    </td>
+                    </tr>
+                </table>
+                <table class="MsoNormalTable" border="1" cellspacing="0" cellpadding="0" align="left" width="671" style="width: 503.2pt; border: none; margin-left: 6.75pt; margin-right: 6.75pt;">
+                    
+                    <tbody>
+                        <tr>
+                            <td width="371" valign="top"
+                                style="width: 278.1pt; border-top: 2.25pt solid windowtext; border-left: none; border-bottom: 2.25pt solid windowtext; border-right: none; padding: 0cm 5.4pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;">
+                                    <b><span lang="EN-US" style="font-family: Arial, sans-serif;">&nbsp;</span></b></p>
+                            </td>
+                            <td width="300" valign="top"
+                                style="width: 225.1pt; border-top: 2.25pt solid windowtext; border-left: none; border-bottom: 2.25pt solid windowtext; border-right: none; padding: 0cm 5.4pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm -12.55pt 0cm 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;">
+                                    <span lang="EN-US" style="font-family: Arial, sans-serif;">&nbsp;</span></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm -12.55pt 0.0001pt 56.95pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-indent: -56.95pt;">
+                                    <span lang="EN-US" style="font-family: Arial, sans-serif;">Ünvan&nbsp;&nbsp;&nbsp; :&nbsp;
+                                        Bakı,
+                                        Səməd Vurğun küç.100, Vurgun Residence<o:p></o:p></span></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;"><span
+                                        lang="EN-US"
+                                        style="font-family: Arial, sans-serif;">Tel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;:&nbsp; +994 50 228 40 34<o:p></o:p></span></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;"><span
+                                        lang="EN-US" style="font-family: Arial, sans-serif;">E-mail&nbsp;&nbsp;&nbsp; :
+                                        &nbsp;&nbsp;</span><span lang="EN-US"><a href="mailto:info@glasstech.az"
+                                            style="color: blue; text-decoration-line: underline;"><span
+                                                style="font-family: Arial, sans-serif;">info@glasstech.az</span></a></span><span
+                                        lang="EN-US" style="font-family: Arial, sans-serif;">
+                                        <o:p></o:p>
+                                    </span></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm -28.75pt 0cm 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;">
+                                    <span lang="EN-US" style="font-family: Arial, sans-serif;">Web
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :
+                                        &nbsp;&nbsp;</span><span lang="EN-US"><a href="http://www.glasstech.az/"
+                                            style="color: blue; text-decoration-line: underline;"><span
+                                                style="font-family: Arial, sans-serif;">www.glasstech.az</span></a></span><u><span
+                                            lang="EN-US" style="font-family: Arial, sans-serif; color: blue;">
+                                            <o:p></o:p>
+                                        </span></u></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm -28.75pt 0cm 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;">
+                                    <span lang="EN-US" style="font-family: Arial, sans-serif;">&nbsp;</span></p>
+                            </td>
+                        </tr>
+                        <tr style="height: 133.1pt;">
+                            <td width="371" valign="top"
+                                style="width: 278.1pt; border-top: none; border-right: none; border-left: none; border-image: initial; border-bottom: 2.25pt solid windowtext; padding: 0cm 5.4pt; height: 133.1pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;">
+                                    <b><span lang="AZ-LATIN"
+                                            style="font-family: Arial, sans-serif; color: rgb(79, 98, 40);">&nbsp;</span></b>
+                                </p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;">
+                                    <b><span lang="AZ-LATIN"
+                                            style="font-size: 24pt; font-family: Arial, sans-serif; color: rgb(50, 98, 96);">Qiymət
+                                            Təklifi<o:p></o:p></span></b></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;">
+                                    <b><span lang="AZ-LATIN"
+                                            style="font-size: 10pt; font-family: Arial, sans-serif; color: rgb(51, 98, 96);">No&nbsp;&nbsp;&nbsp;&nbsp;
+                                            : {{offer.number}}&nbsp;&nbsp; REV{{revision.number}}<o:p></o:p></span></b></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;">
+                                    <b><span lang="AZ-LATIN"
+                                            style="font-size: 10pt; font-family: Arial, sans-serif; color: rgb(51, 98, 96);">Tarix</span></b><b><span
+                                            lang="EN-US"
+                                            style="font-size: 10pt; font-family: Arial, sans-serif; color: rgb(51, 98, 96);">:&nbsp;
+                                            {{revision.date}}</span></b><b><span lang="EN-US"
+                                            style="font-size: 10pt; font-family: Arial, sans-serif; color: rgb(51, 98, 96);">
+                                            <o:p></o:p>
+                                        </span></b></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;">
+                                    <b><span lang="EN-US"
+                                            style="font-size: 10pt; font-family: Arial, sans-serif; color: rgb(79, 98, 40);">&nbsp;</span></b>
+                                </p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;">
+                                    <b><span lang="AZ-LATIN"
+                                            style="font-size: 24pt; font-family: Arial, sans-serif; color: rgb(79, 98, 40);">&nbsp;</span></b>
+                                </p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;">
+                                    <b><span lang="AZ-LATIN"
+                                            style="font-family: Arial, sans-serif; color: rgb(79, 98, 40);">&nbsp;</span></b>
+                                </p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;">
+                                    <b><span lang="AZ-LATIN" style="font-family: Arial, sans-serif;">&nbsp;</span></b></p>
+                            </td>
+                            <td width="300" valign="top"
+                                style="width: 225.1pt; border-top: none; border-right: none; border-left: none; border-image: initial; border-bottom: 2.25pt solid windowtext; padding: 0cm 5.4pt; height: 133.1pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm 0cm 0cm 1.7pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;">
+                                    <span lang="AZ-LATIN" style="font-family: Arial, sans-serif;">&nbsp;</span></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm 0cm 0cm 1.7pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;">
+                                    <span lang="AZ-LATIN" style="font-family: Arial, sans-serif;">&nbsp;</span></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm 0cm 0cm 1.7pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;">
+                                    <span lang="AZ-LATIN" style="font-family: Arial, sans-serif;">&nbsp;</span></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm 0cm 0cm 1.7pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;">
+                                    <span lang="AZ-LATIN" style="font-size: 10pt; font-family: Arial, sans-serif;">Firma Adı&nbsp;&nbsp;&nbsp;:&nbsp;{{offer.customer.company_name}}<o:p></o:p></span></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm 0cm 0cm 1.7pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;">
+                                    <span lang="AZ-LATIN" style="font-size: 10pt; font-family: Arial, sans-serif;">Adı Soyadı :&nbsp;{{offer.customer.get_full_name}}<o:p></o:p></span></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm 0cm 0cm 1.7pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;">
+                                    <span lang="AZ-LATIN"
+                                        style="font-size: 10pt; font-family: Arial, sans-serif;">Tel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;{{offer.customer.phone}}<o:p></o:p></span></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;"><span
+                                        lang="AZ-LATIN"
+                                        style="font-size: 10pt; font-family: Arial, sans-serif;">&nbsp;Mob&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;{{offer.customer.mobile}}<o:p></o:p></span></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;"><span
+                                        lang="AZ-LATIN"
+                                        style="font-size: 10pt; font-family: Arial, sans-serif;">&nbsp;Email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;{{offer.customer.email}}</span><span lang="EN-US" style="font-family: Arial, sans-serif;">
+                                        <o:p></o:p>
+                                    </span></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="671" colspan="2" valign="top"
+                                style="width: 503.2pt; border-top: none; border-right: none; border-left: none; border-image: initial; border-bottom: 2.25pt solid windowtext; padding: 0cm 5.4pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify;">
+                                    <span lang="AZ-LATIN" style="font-family: Arial, sans-serif;">&nbsp;</span></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify;">
+                                    <span lang="AZ-LATIN" style="font-family: Arial, sans-serif;">&nbsp;</span></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify;">
+                                    <span lang="AZ-LATIN" style="font-family: Arial, sans-serif;">&nbsp;</span></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify;">
+                                    <span lang="AZ-LATIN" style="font-family: Arial, sans-serif;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        Hörmətli &nbsp;{{offer.customer.get_full_name}},&nbsp;<o:p></o:p></span></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm 0cm 0cm -5.4pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify;">
+                                    <span lang="AZ-LATIN" style="font-family: Arial, sans-serif;">&nbsp;</span></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify;">
+                                    <span lang="AZ-LATIN" style="font-family: Arial, sans-serif;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        Bizdən
+                                        tələb etdiyiniz işlərlə bağlı qiymət təklifimizi əlavədə sizə təqdim edirik. Xahiş
+                                        edirik tanış
+                                        olasınız və öz fikirlərinizi bizə bildirəsiniz.<o:p></o:p></span></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify;">
+                                    <span lang="AZ-LATIN" style="font-family: Arial, sans-serif;">&nbsp;</span></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;"><span
+                                        lang="AZ-LATIN" style="font-family: Arial, sans-serif;">&nbsp;</span></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;"><span
+                                        lang="AZ-LATIN" style="font-family: Arial, sans-serif;">Hörmətlə<o:p></o:p></span></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;"><span
+                                        lang="AZ-LATIN" style="font-family: Arial, sans-serif;">&nbsp;</span></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;"><span
+                                        lang="AZ-LATIN" style="font-family: Arial, sans-serif;">Təklifi Hazırlayan
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        Təklifi Təsdiqləyən<o:p></o:p></span></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;"><span
+                                        lang="AZ-LATIN" style="font-family: Arial, sans-serif;">{{revision.offer_creator.get_full_name}}
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        {{revision.offer_approver.get_full_name}}&nbsp;&nbsp;&nbsp;<o:p></o:p></span></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm 0cm 0cm 1.7pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;">
+                                    <b><span lang="AZ-LATIN" style="font-family: Arial, sans-serif;">&nbsp;</span></b></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm 0cm 0cm 1.7pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;">
+                                    <b><span lang="AZ-LATIN" style="font-family: Arial, sans-serif;">&nbsp;</span></b></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;">
+                                    <b><span lang="AZ-LATIN" style="font-family: Arial, sans-serif;">&nbsp;</span></b></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm 0cm 0cm 1.7pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;">
+                                    <b><span lang="AZ-LATIN" style="font-family: Arial, sans-serif;">&nbsp;</span></b></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;">
+                                    <b><span lang="AZ-LATIN" style="font-family: Arial, sans-serif;">&nbsp;</span></b></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm 0cm 0cm 1.7pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;">
+                                    <b><span lang="AZ-LATIN" style="font-family: Arial, sans-serif;">&nbsp;</span></b></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;">
+                                    <b><span lang="AZ-LATIN" style="font-family: Arial, sans-serif;">&nbsp;</span></b></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="671" colspan="2" valign="top"
+                                style="width: 503.2pt; border-top: none; border-right: none; border-left: none; border-image: initial; border-bottom: 2.25pt solid windowtext; padding: 0cm 5.4pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify;">
+                                    <span lang="AZ-LATIN" style="font-family: Arial, sans-serif;">&nbsp;</span></p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="MsoNormal" align="center"
+                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; color: rgb(0, 0, 0); text-align: center;">
+                    <b><span lang="AZ-LATIN"
+                            style="font-size: 24pt; font-family: Arial, sans-serif; color: rgb(79, 98, 40);">&nbsp;</span></b>
+                </p>
+                <p class="MsoNormal" align="center"
+                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; color: rgb(0, 0, 0); text-align: center;">
+                    <b><span lang="AZ-LATIN"
+                            style="font-size: 24pt; font-family: Arial, sans-serif; color: rgb(79, 98, 40);">&nbsp;</span></b>
+                </p>
+                <p class="MsoNormal" align="center"
+                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; color: rgb(0, 0, 0); text-align: center;">
+                    <b><span lang="AZ-LATIN"
+                            style="font-size: 24pt; font-family: Arial, sans-serif; color: rgb(79, 98, 40);"><br clear="all">
+                            <o:p></o:p>
+                        </span></b></p>
+            
+                <p class="MsoNormal" align="center"
+                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; color: rgb(0, 0, 0); text-align: center;">
+                    <b><span lang="AZ-LATIN"
+                            style="font-size: 18pt; font-family: Arial, sans-serif; color: rgb(50, 98, 96);">Qiymət
+                            cədvəli<o:p></o:p></span></b></p>
+                <p class="MsoNormal" align="center"
+                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; color: rgb(0, 0, 0); text-align: center;">
+                    <b><span lang="AZ-LATIN"
+                            style="font-size: 18pt; font-family: Arial, sans-serif; color: rgb(50, 98, 96);">&nbsp;</span></b>
+                </p>
+
+            
+
+
+
+                <p id="offer_packages_start_line" class="MsoNormal" style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; color: rgb(0, 0, 0);">
+                    <b><span lang="AZ-LATIN" style="font-size: 18pt; font-family: Arial, sans-serif; color: rgb(51, 98, 96);">Qeyd!<o:p> </o:p></span></b>
+                </p>
+                {{revision.note|safe}}
+
+                <p class="MsoNormal"
+                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; color: rgb(0, 0, 0);">
+                    <b><span lang="AZ-LATIN"
+                            style="font-size: 18pt; font-family: Arial, sans-serif; color: rgb(51, 98, 96);">&nbsp;</span></b>
+                </p>
+
+                <p class="MsoNormal"
+                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; color: rgb(0, 0, 0);">
+                    <b><span lang="AZ-LATIN"
+                            style="font-size: 18pt; font-family: Arial, sans-serif; color: rgb(51, 98, 96);">Satış
+                            şərtləri<o:p></o:p></span></b></p>
+                <p class="MsoNormal"
+                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; color: rgb(0, 0, 0);">
+                    <b><span lang="AZ-LATIN" style="font-size: 11pt; font-family: Arial, sans-serif;">&nbsp;</span></b></p>
+                <table class="MsoNormalTable" border="1" cellspacing="0" cellpadding="0" width="643"
+                    style="width: 481.9pt; margin-left: 5.4pt; border: none;">
+                    <tbody>
+                        <tr style="height: 14.35pt;">
+                            <td width="643" valign="top"
+                                style="width: 481.9pt; border-top: 1pt solid windowtext; border-left: none; border-bottom: 1pt solid windowtext; border-right: none; padding: 0cm 5.4pt; height: 14.35pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;">
+                                    <b><span lang="AZ-LATIN" style="font-size: 11pt; font-family: Arial, sans-serif;">Satıcının
+                                            hüquq və
+                                            öhdəlikləri<o:p></o:p></span></b></p>
+                            </td>
+                        </tr>
+                        <tr style="height: 26pt;">
+                            <td width="643" valign="top"
+                                style="width: 481.9pt; border-top: none; border-right: none; border-left: none; border-image: initial; border-bottom: 1pt solid windowtext; padding: 0cm 5.4pt; height: 26pt;">
+                                <p class="MsoListParagraphCxSpFirst"
+                                    style="margin: 0cm 0cm 0cm 36pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify; text-indent: -18pt;">
+                                    <span lang="AZ-LATIN" style="font-size: 11pt; font-family: Symbol;">·<span
+                                            style="font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-stretch: normal; font-size: 7pt; line-height: normal; font-family: &quot;Times New Roman&quot;;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </span></span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif;">Ödənişi tələb etmək<o:p></o:p>
+                                        </span>
+                                </p>
+                                <p class="MsoListParagraphCxSpMiddle"
+                                    style="margin: 0cm 0cm 0cm 36pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify; text-indent: -18pt;">
+                                    <span lang="AZ-LATIN" style="font-size: 11pt; font-family: Symbol;">·<span
+                                            style="font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-stretch: normal; font-size: 7pt; line-height: normal; font-family: &quot;Times New Roman&quot;;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </span></span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif;">Uyğun şəraiti tələb etmək<o:p>
+                                        </o:p>
+                                    </span></p>
+                                <p class="MsoListParagraphCxSpMiddle"
+                                    style="margin: 0cm 0cm 0cm 36pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify; text-indent: -18pt;">
+                                    <span lang="AZ-LATIN" style="font-size: 11pt; font-family: Symbol;">·<span
+                                            style="font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-stretch: normal; font-size: 7pt; line-height: normal; font-family: &quot;Times New Roman&quot;;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </span></span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif;">Malların dəyərini
+                                        müəyyənləşdirilmiş
+                                        şərtlər və qaydalara uyğun olaraq vaxtında və tam həcmdə ödəməyi Alıcıdan tələb etmək;
+                                        <o:p>
+                                        </o:p></span></p>
+                                <p class="MsoListParagraphCxSpMiddle"
+                                    style="margin: 0cm 0cm 0cm 36pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify; text-indent: -18pt;">
+                                    <span lang="AZ-LATIN" style="font-size: 11pt; font-family: Symbol;">·<span
+                                            style="font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-stretch: normal; font-size: 7pt; line-height: normal; font-family: &quot;Times New Roman&quot;;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </span></span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif;">Malı və xidməti müqavilə ilə
+                                        müəyyən
+                                        olunan şərtlərlə və qaydada Alıcıya təhvil vermək;<o:p></o:p></span></p>
+                                <p class="MsoListParagraphCxSpMiddle"
+                                    style="margin: 0cm 0cm 0cm 36pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify; text-indent: -18pt;">
+                                    <span lang="AZ-LATIN" style="font-size: 11pt; font-family: Symbol;">·<span
+                                            style="font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-stretch: normal; font-size: 7pt; line-height: normal; font-family: &quot;Times New Roman&quot;;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </span></span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif;">Malın keyfiyyət kriteriyalarına
+                                        uyğun
+                                        olmasını təmin etmək və Alıcıya zəmanət öhdəliyi vermək;<o:p></o:p></span></p>
+                                <p class="MsoListParagraphCxSpMiddle"
+                                    style="margin: 0cm 0cm 0cm 36pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify; text-indent: -18pt;">
+                                    <span lang="AZ-LATIN" style="font-size: 11pt; font-family: Symbol;">·<span
+                                            style="font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-stretch: normal; font-size: 7pt; line-height: normal; font-family: &quot;Times New Roman&quot;;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </span></span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif;">Malın Alıcıya təhvil verilən
+                                        anadək,
+                                        malda aşkar edilən qüsurları öz qüvvə və vəsaiti hesabına aradan qaldırmağı, eləcədə
+                                        malın
+                                        təsadüfən zay olması və ya zədələnməsi riskini daşımağı və zay olmuş məhsulu malı dərhal
+                                        yenisi
+                                        ilə əvəzləməyi öhdəsinə götürmək.<o:p></o:p></span></p>
+                                <p class="MsoListParagraphCxSpMiddle"
+                                    style="margin: 0cm 0cm 0cm 36pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify; text-indent: -18pt;">
+                                    <span lang="AZ-LATIN" style="font-size: 11pt; font-family: Symbol;">·<span
+                                            style="font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-stretch: normal; font-size: 7pt; line-height: normal; font-family: &quot;Times New Roman&quot;;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </span></span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif;">Texniki təhlükəsizlik
+                                        qaydalarına
+                                        riayyət etmək<o:p></o:p></span></p>
+                                <p class="MsoListParagraphCxSpLast"
+                                    style="margin: 0cm 0cm 0cm 36pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify;">
+                                    <span lang="AZ-LATIN" style="font-size: 11pt; font-family: Arial, sans-serif;">&nbsp;</span>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr style="height: 13.95pt;">
+                            <td width="643" valign="top"
+                                style="width: 481.9pt; border-top: none; border-right: none; border-left: none; border-image: initial; border-bottom: 1pt solid windowtext; padding: 0cm 5.4pt; height: 13.95pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify;">
+                                    <b><span lang="AZ-LATIN" style="font-size: 11pt; font-family: Arial, sans-serif;">Alıcının
+                                            hüquq və
+                                            öhdəlikləri</span></b><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif;">
+                                        <o:p></o:p>
+                                    </span></p>
+                            </td>
+                        </tr>
+                        <tr style="height: 26pt;">
+                            <td width="643" valign="top"
+                                style="width: 481.9pt; border-top: none; border-right: none; border-left: none; border-image: initial; border-bottom: 1pt solid windowtext; padding: 0cm 5.4pt; height: 26pt;">
+                                <p class="MsoListParagraphCxSpFirst"
+                                    style="margin: 0cm 0cm 0cm 36pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-indent: -18pt;">
+                                    <span lang="AZ-LATIN" style="font-size: 11pt; font-family: Symbol;">·<span
+                                            style="font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-stretch: normal; font-size: 7pt; line-height: normal; font-family: &quot;Times New Roman&quot;;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </span></span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif;">Malı müəyyənləşdirilmiş
+                                        keyfiyyət
+                                        kriteriayalarına görə tələb etmək<o:p></o:p></span></p>
+                                <p class="MsoListParagraphCxSpMiddle"
+                                    style="margin: 0cm 0cm 0cm 36pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-indent: -18pt;">
+                                    <span lang="AZ-LATIN" style="font-size: 11pt; font-family: Symbol;">·<span
+                                            style="font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-stretch: normal; font-size: 7pt; line-height: normal; font-family: &quot;Times New Roman&quot;;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </span></span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif;">Malı müəyyənləşdirilmiş təhvil
+                                        tarixinə
+                                        görə tələb etmək<o:p></o:p></span></p>
+                                <p class="MsoListParagraphCxSpMiddle"
+                                    style="margin: 0cm 0cm 0cm 36pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-indent: -18pt;">
+                                    <span lang="AZ-LATIN" style="font-size: 11pt; font-family: Symbol;">·<span
+                                            style="font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-stretch: normal; font-size: 7pt; line-height: normal; font-family: &quot;Times New Roman&quot;;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </span></span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif;">Ödənişi razılaşdırılmış
+                                        şərtlərə əsasən
+                                        vaxtında və qeyd olunmuş miqdarında ödəmək<o:p></o:p></span></p>
+                                <p class="MsoListParagraphCxSpMiddle"
+                                    style="margin: 0cm 0cm 0cm 36pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-indent: -18pt;">
+                                    <span lang="AZ-LATIN" style="font-size: 11pt; font-family: Symbol;">·<span
+                                            style="font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-stretch: normal; font-size: 7pt; line-height: normal; font-family: &quot;Times New Roman&quot;;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </span></span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif;">Quraşdırma işlərinin düzgün
+                                        aparılması
+                                        üçün müqavilədə qeyd olunan lazımı iş şəraitinin təmin etmək (yol, texniki
+                                        təhlükəsizlik,
+                                        elektrik, hava, su&nbsp; və s.)<o:p></o:p></span></p>
+                                <p class="MsoListParagraphCxSpMiddle"
+                                    style="margin: 0cm 0cm 0cm 36pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-indent: -18pt;">
+                                    <span lang="AZ-LATIN" style="font-size: 11pt; font-family: Symbol;">·<span
+                                            style="font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-stretch: normal; font-size: 7pt; line-height: normal; font-family: &quot;Times New Roman&quot;;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </span></span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif;">Malı təhvil aldıqdan sonra onu
+                                        qorumaq
+                                        və düzgün istifadə etmək<o:p></o:p></span></p>
+                                <p class="MsoListParagraphCxSpLast"
+                                    style="margin: 0cm 0cm 0cm 36pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;">
+                                    <span lang="AZ-LATIN" style="font-size: 11pt; font-family: Arial, sans-serif;">&nbsp;</span>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr style="height: 13.95pt;">
+                            <td width="643" valign="top"
+                                style="width: 481.9pt; border-top: none; border-right: none; border-left: none; border-image: initial; border-bottom: 1pt solid windowtext; padding: 0cm 5.4pt; height: 13.95pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify;">
+                                    <b><span lang="AZ-LATIN" style="font-size: 11pt; font-family: Arial, sans-serif;">Ödəniş və
+                                            çatdırılma şərtləri<o:p></o:p></span></b></p>
+                            </td>
+                        </tr>
+                        <tr style="height: 26pt;">
+                            <td width="643" valign="top"
+                                style="width: 481.9pt; border-top: none; border-right: none; border-left: none; border-image: initial; border-bottom: 1pt solid windowtext; padding: 0cm 5.4pt; height: 26pt;">
+                                {{revision.pay_delv_cond|safe}}
+                                <p class="MsoNormal"
+                                    style="margin: 0cm 0cm 0cm 31.65pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-indent: -31.65pt;">
+                                    <b><span lang="AZ-LATIN" style="font-size: 11pt; font-family: Arial, sans-serif;">Qeyd:
+                                            Qiymətlər
+                                            hal hazırda olan ABŞ Daolları məzənnəsinə uyğun olaraq çıxarılmışdır. Məzənnədəki
+                                            dəyişikliklər qiymətlərə uyğun şəkildə əks etdiriləcəkdir.<o:p></o:p></span></b></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;"><span
+                                        lang="AZ-LATIN" style="font-size: 11pt; font-family: Arial, sans-serif;">&nbsp;</span>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr style="height: 18.25pt;">
+                            <td width="643" valign="top"
+                                style="width: 481.9pt; border-top: none; border-right: none; border-left: none; border-image: initial; border-bottom: 1pt solid windowtext; padding: 0cm 5.4pt; height: 18.25pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;">
+                                    <b><span lang="AZ-LATIN" style="font-size: 11pt; font-family: Arial, sans-serif;">Təhvil və
+                                            təklif
+                                            müddəti və qaydaları<o:p></o:p></span></b></p>
+                            </td>
+                        </tr>
+                        <tr style="height: 26pt;">
+                            <td width="643" valign="top"
+                                style="width: 481.9pt; border-top: none; border-right: none; border-left: none; border-image: initial; border-bottom: 1pt solid windowtext; padding: 0cm 5.4pt; height: 26pt;">
+                                <p class="MsoListParagraphCxSpFirst"
+                                    style="margin: 0cm 0cm 0cm 36pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-indent: -18pt;">
+                                    <span lang="AZ-LATIN" style="font-size: 11pt; font-family: Symbol;">·<span
+                                            style="font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-stretch: normal; font-size: 7pt; line-height: normal; font-family: &quot;Times New Roman&quot;;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </span></span><b><span lang="AZ-LATIN"
+                                            style="font-size: 11pt; font-family: Arial, sans-serif;">Təhvil müddəti: avans
+                                            ödənişi, ölçü
+                                            və texniki detallar təsdiqləndikdən sonra – <b style="color: red;">{{revision.delv_time}}</b>&nbsp;iş g&uuml;n&uuml; ərzində yerinə yetiriləcəkdir </span></b>
+                                <p class="MsoListParagraphCxSpLast"
+                                    style="margin: 0cm 0cm 0cm 36pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-indent: -18pt;">
+                                    <span lang="AZ-LATIN" style="font-size: 11pt; font-family: Symbol;">·<span
+                                            style="font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-stretch: normal; font-size: 7pt; line-height: normal; font-family: &quot;Times New Roman&quot;;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </span></span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif;">Malın təhvili tərəflər arasında imzalanmış təhvil-təslim aktı ilə təsdiqlənməlidir.<o:p></o:p></span></p>
+                                <p class="MsoListParagraphCxSpLast"
+                                    style="margin: 0cm 0cm 0cm 36pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-indent: -18pt;">
+                                    <span lang="AZ-LATIN" style="font-size: 11pt; font-family: Symbol;">·<span
+                                            style="font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-stretch: normal; font-size: 7pt; line-height: normal; font-family: &quot;Times New Roman&quot;;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </span></span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif;">Təklifin qüvvədə qalma müddəti:
+                                        <b>15</b> iş gün<o:p></o:p></span></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;"><span
+                                        lang="AZ-LATIN" style="font-size: 11pt; font-family: Arial, sans-serif;">&nbsp;</span>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr style="height: 26pt;">
+                            <td width="643" valign="top"
+                                style="width: 481.9pt; border-top: none; border-right: none; border-left: none; border-image: initial; border-bottom: 1pt solid windowtext; padding: 0cm 5.4pt; height: 26pt;">
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;">
+                                    <b><span lang="AZ-LATIN" style="font-size: 11pt; font-family: Arial, sans-serif;">Zəmanət və
+                                            istismar
+                                            qaydaları</span></b><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif;">
+                                        <o:p></o:p>
+                                    </span></p>
+                            </td>
+                        </tr>
+                        <tr style="height: 26pt;">
+                            <td width="643" valign="top"
+                                style="width: 481.9pt; border-top: none; border-right: none; border-left: none; border-image: initial; border-bottom: 1pt solid windowtext; padding: 0cm 5.4pt; height: 26pt;">
+                                <p class="MsoListParagraphCxSpFirst"
+                                    style="margin: 0cm 0cm 0cm 36pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify; text-indent: -18pt;">
+                                    <span lang="TR" style="font-size: 11pt; font-family: Symbol; color: black;">·<span
+                                            style="font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-stretch: normal; font-size: 7pt; line-height: normal; font-family: &quot;Times New Roman&quot;;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </span></span><span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">Lamine şüşələrə
+                                        yalnız
+                                    </span><b><span lang="TR"
+                                            style="font-size: 11pt; font-family: Arial, sans-serif; color: red;">NEUTRAL</span></b><span
+                                        lang="TR" style="font-size: 11pt; font-family: Arial, sans-serif; color: red;">
+                                    </span><span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">(turşu və
+                                        qələvi </span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">tərkibli
+                                    </span><span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">olmayan
+                                        silikonlar – </span><b><span lang="TR"
+                                            style="font-size: 11pt; font-family: Arial, sans-serif; color: red; text-transform: uppercase;">GÜZGÜ</span></b><b><span
+                                            lang="AZ-LATIN"
+                                            style="font-size: 11pt; font-family: Arial, sans-serif; color: red; text-transform: uppercase;">,
+                                            AYNA, MIRROR, </span></b><b><span lang="TR"
+                                            style="font-size: 11pt; font-family: Arial, sans-serif; color: red; text-transform: uppercase;">ЗЕРКАЛО</span></b><span
+                                        lang="TR" style="font-size: 11pt; font-family: Arial, sans-serif; color: red;">
+                                    </span><b><span lang="TR"
+                                            style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">silikonu</span></b><span
+                                        lang="TR" style="font-size: 11pt; font-family: Arial, sans-serif; color: black;"> kimi
+                                        və s.)
+                                        istifadə olunmalıdır! Yanlış silikonun istifadəsi nəticəsində </span><span
+                                        lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">iki şüşə
+                                    </span><span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">arasındaki
+                                        plyonka kimyəvi reaksiya</span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">ya
+                                        girmə</span><span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;"> səbəbilə
+                                    </span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">istənməyən
+                                        ləkələrin
+                                        yaranmasına səbəb olur!</span><span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">
+                                        <o:p></o:p>
+                                    </span></p>
+                                <p class="MsoListParagraphCxSpMiddle"
+                                    style="margin: 0cm 0cm 0cm 14.2pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify; text-indent: -14.2pt;">
+                                    <span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">&nbsp;</span>
+                                </p>
+                                <p class="MsoListParagraphCxSpLast"
+                                    style="margin: 0cm 0cm 0cm 36pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify; text-indent: -18pt;">
+                                    <span lang="TR" style="font-size: 11pt; font-family: Symbol; color: black;">·<span
+                                            style="font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-stretch: normal; font-size: 7pt; line-height: normal; font-family: &quot;Times New Roman&quot;;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </span></span><span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">Lamine
+                                    </span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">şüşələr</span><span
+                                        lang="TR" style="font-size: 11pt; font-family: Arial, sans-serif; color: black;"> sadə
+                                    </span><b><span lang="TR"
+                                            style="font-size: 11pt; font-family: Arial, sans-serif; color: red; text-transform: uppercase;">SU</span></b><b><span
+                                            lang="AZ-LATIN"
+                                            style="font-size: 11pt; font-family: Arial, sans-serif; color: red; text-transform: uppercase;">YLA
+                                        </span></b><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">təmizlənməlidir</span><span
+                                        lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">.</span><span
+                                        lang="TR" style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">
+                                    </span><b><span lang="AZ-LATIN"
+                                            style="font-size: 11pt; font-family: Arial, sans-serif; color: red; text-transform: uppercase;">TURŞU</span></b><span
+                                        lang="AZ-LATIN" style="font-size: 11pt; font-family: Arial, sans-serif; color: red;">
+                                    </span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">və
+                                    </span><b><span lang="AZ-LATIN"
+                                            style="font-size: 11pt; font-family: Arial, sans-serif; color: red; text-transform: uppercase;">QƏLƏVİ</span></b><span
+                                        lang="AZ-LATIN" style="font-size: 11pt; font-family: Arial, sans-serif; color: red;">
+                                    </span><span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">tərkibli agresiv
+                                        kimyəvi
+                                        maddələr istifadə olunmamalıdır və bu maddələrin iki şüşənin arasında yerləşən plyonkaya
+                                    </span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">təmasının</span><span
+                                        lang="TR" style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">
+                                        qarşısı
+                                        alınmalıdır!<o:p></o:p></span></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm 0cm 0cm 14.2pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify; text-indent: -14.2pt;">
+                                    <span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">&nbsp;</span></p>
+                                <p class="MsoListParagraph"
+                                    style="margin: 0cm 0cm 0cm 36pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify; text-indent: -18pt;">
+                                    <span lang="TR" style="font-size: 11pt; font-family: Symbol; color: black;">·<span
+                                            style="font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-stretch: normal; font-size: 7pt; line-height: normal; font-family: &quot;Times New Roman&quot;;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </span></span><span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">Şüşələr</span><span
+                                        lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">,</span><span
+                                        lang="AZ-LATIN" style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">
+                                    </span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">temperli</span><span
+                                        lang="TR" style="font-size: 11pt; font-family: Arial, sans-serif; color: black;"> olduğu
+                                        üçün</span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">, </span><b><span
+                                            lang="AZ-LATIN"
+                                            style="font-size: 11pt; font-family: Arial, sans-serif; color: red; text-transform: uppercase;">YAN
+                                            HİSSƏSİNƏ</span></b><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: red; text-transform: uppercase;">
+                                    </span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">toxuna
+                                    </span><span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">biləcək
+                                        zərbələrdən qorunmalıdır!<o:p></o:p></span></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm 0cm 0cm 14.2pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify; text-indent: -14.2pt;">
+                                    <span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">&nbsp;</span></p>
+                                <p class="MsoListParagraph"
+                                    style="margin: 0cm 0cm 0cm 36pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify; text-indent: -18pt;">
+                                    <span lang="TR" style="font-size: 11pt; font-family: Symbol; color: black;">·<span
+                                            style="font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-stretch: normal; font-size: 7pt; line-height: normal; font-family: &quot;Times New Roman&quot;;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </span></span><span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">Şüşələr
+                                        (qırılmağın
+                                        qarşısını almaq üçün) </span><b><span lang="TR"
+                                            style="font-size: 11pt; font-family: Arial, sans-serif; color: red; text-transform: uppercase;">DİK
+                                            HALDA</span></b><span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: red; text-transform: uppercase;">
+                                    </span><span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">daşınmalıdır</span><span
+                                        lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">!</span><span
+                                        lang="TR" style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">
+                                        <o:p></o:p>
+                                    </span></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm 0cm 0cm 14.2pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify; text-indent: -14.2pt;">
+                                    <span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">&nbsp;</span></p>
+                                <p class="MsoListParagraph"
+                                    style="margin: 0cm 0cm 0cm 36pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify; text-indent: -18pt;">
+                                    <span lang="TR" style="font-size: 11pt; font-family: Symbol; color: black;">·<span
+                                            style="font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-stretch: normal; font-size: 7pt; line-height: normal; font-family: &quot;Times New Roman&quot;;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </span></span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">Bina
+                                        nərdivanları,
+                                        l</span><span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">ift və dar
+                                        keçidlərdə
+                                        şüşələr maksimum dərəcədə </span><b><span lang="TR"
+                                            style="font-size: 11pt; font-family: Arial, sans-serif; color: red; text-transform: uppercase;">ZƏRBƏLƏRƏ</span></b><span
+                                        lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: red; text-transform: uppercase;">
+                                    </span><span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">v</span><span
+                                        lang="AZ-LATIN" style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">ə
+                                        kənar
+                                        əşyalara toxunmağa </span><span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">qarşı
+                                        qorunmalıdır</span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">!</span><span
+                                        lang="TR" style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">
+                                        <o:p></o:p>
+                                    </span></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm 0cm 0cm 14.2pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify; text-indent: -14.2pt;">
+                                    <span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">&nbsp;</span></p>
+                                <p class="MsoListParagraph"
+                                    style="margin: 0cm 0cm 0cm 36pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify; text-indent: -18pt;">
+                                    <span lang="TR" style="font-size: 11pt; font-family: Symbol; color: black;">·<span
+                                            style="font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-stretch: normal; font-size: 7pt; line-height: normal; font-family: &quot;Times New Roman&quot;;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </span></span><span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">Şüşələr
+                                    </span><b><span lang="TR"
+                                            style="font-size: 11pt; font-family: Arial, sans-serif; color: red; text-transform: uppercase;">YERƏ</span></b><span
+                                        lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: red; text-transform: uppercase;">
+                                    </span><span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">qoyulduqda</span><span
+                                        lang="AZ-LATIN" style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">,
+                                    </span><b><span lang="AZ-LATIN"
+                                            style="font-size: 11pt; font-family: Arial, sans-serif; color: red; text-transform: uppercase;">BİR
+                                            BİRİNƏ</span></b><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: red; text-transform: uppercase;">
+                                    </span><span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">və</span><span
+                                        lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">ya</span><span
+                                        lang="AZ-LATIN" style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">
+                                    </span><b><span lang="TR"
+                                            style="font-size: 11pt; font-family: Arial, sans-serif; color: red; text-transform: uppercase;">DİVARA</span></b><span
+                                        lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: red; text-transform: uppercase;">
+                                    </span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">söykəndikdə</span><span
+                                        lang="TR" style="font-size: 11pt; font-family: Arial, sans-serif; color: black;"> altına
+                                        və
+                                        arxasına </span><b><span lang="TR"
+                                            style="font-size: 11pt; font-family: Arial, sans-serif; color: red; text-transform: uppercase;">YUMUŞAQ
+                                            MATERİAL</span></b><span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: red; text-transform: uppercase;">
+                                    </span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">(karton, mantar,
+                                        rezin,
+                                        plyonka və s.) </span><span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">qoyulmalıdır</span><span
+                                        lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">!</span><span
+                                        lang="TR" style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">
+                                        <o:p></o:p>
+                                    </span></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify;">
+                                    <span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">&nbsp;</span></p>
+                                <p class="MsoListParagraph"
+                                    style="margin: 0cm 0cm 0cm 36pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify; text-indent: -18pt;">
+                                    <span lang="TR" style="font-size: 11pt; font-family: Symbol; color: black;">·<span
+                                            style="font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-stretch: normal; font-size: 7pt; line-height: normal; font-family: &quot;Times New Roman&quot;;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </span></span><span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">Şüşələr
+                                    </span><b><span lang="TR"
+                                            style="font-size: 11pt; font-family: Arial, sans-serif; color: red; text-transform: uppercase;">KÜLƏYİN</span></b><span
+                                        lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: red; text-transform: uppercase;">
+                                    </span><span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">cərəyan etdiyi
+                                        yerdə
+                                        saxlanılmamaldır</span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">!</span><span
+                                        lang="TR" style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">
+                                        <o:p></o:p>
+                                    </span></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm 0cm 0cm 14.2pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify; text-indent: -14.2pt;">
+                                    <span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">&nbsp;</span></p>
+                                <p class="MsoListParagraph"
+                                    style="margin: 0cm 0cm 0cm 36pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify; text-indent: -18pt;">
+                                    <span lang="TR" style="font-size: 11pt; font-family: Symbol; color: black;">·<span
+                                            style="font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-stretch: normal; font-size: 7pt; line-height: normal; font-family: &quot;Times New Roman&quot;;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </span></span><span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">Şüşələrin
+                                    </span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">oldugu
+                                        yerdə</span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;"> </span><b><span
+                                            lang="TR"
+                                            style="font-size: 11pt; font-family: Arial, sans-serif; color: red; text-transform: uppercase;">METAL</span></b><b><span
+                                            lang="AZ-LATIN"
+                                            style="font-size: 11pt; font-family: Arial, sans-serif; color: red; text-transform: uppercase;">
+                                            KƏSMƏ</span></b><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">,</span><span
+                                        lang="AZ-LATIN" style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">
+                                    </span><b><span lang="TR"
+                                            style="font-size: 11pt; font-family: Arial, sans-serif; color: red; text-transform: uppercase;">YONM</span></b><span
+                                        lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: red; text-transform: uppercase;">A</span><span
+                                        lang="TR" style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">,
+                                    </span><b><span lang="TR"
+                                            style="font-size: 11pt; font-family: Arial, sans-serif; color: red; text-transform: uppercase;">QAYNAQ</span></b><span
+                                        lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: red; text-transform: uppercase;">
+                                    </span><span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">işləri
+                                        apar</span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">il</span><span
+                                        lang="TR" style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">an
+                                        zaman şüşələrin səthi
+                                        qorunmalıdır. Əks halda metal parçacıqları şüşə üzərinə </span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">toxunaraq</span><span
+                                        lang="TR" style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">
+                                        ləkələrə səbəb
+                                        olur</span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">!</span><span
+                                        lang="TR" style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">
+                                        <o:p></o:p>
+                                    </span></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm 0cm 0cm 14.2pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify; text-indent: -14.2pt;">
+                                    <span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">&nbsp;</span>
+                                </p>
+                                <p class="MsoListParagraph"
+                                    style="margin: 0cm 0cm 0cm 36pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify; text-indent: -18pt;">
+                                    <span lang="TR" style="font-size: 11pt; font-family: Symbol; color: black;">·<span
+                                            style="font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-stretch: normal; font-size: 7pt; line-height: normal; font-family: &quot;Times New Roman&quot;;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </span></span><span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">Lamine şüşəyə
+                                    </span><b><span lang="TR"
+                                            style="font-size: 11pt; font-family: Arial, sans-serif; color: red; text-transform: uppercase;">ŞURUP
+                                            BAĞLAYAN ZAMAN</span></b><span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: red; text-transform: uppercase;">
+                                    </span><span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">dəlik
+                                        açan əl aparatının ucluğuna </span><b><span lang="TR"
+                                            style="font-size: 11pt; font-family: Arial, sans-serif; color: red; text-transform: uppercase;">YUMUŞAQ</span></b><span
+                                        lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: red; text-transform: uppercase;">
+                                    </span><span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">qoruyucu qapaq
+                                        taxılmalıdır, əks halda </span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">&nbsp;gözlənilməz
+                                        zərbə
+                                        ilə</span><span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;"> şüşəni qıra
+                                        bilər</span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">!</span><span
+                                        lang="TR" style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">
+                                        <o:p></o:p>
+                                    </span></p>
+                                <p class="MsoNormal"
+                                    style="margin: 0cm 0cm 0cm 14.2pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify; text-indent: -14.2pt;">
+                                    <span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">&nbsp;</span>
+                                </p>
+                                <p class="MsoListParagraphCxSpFirst"
+                                    style="margin: 0cm 0cm 0cm 36pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify; text-indent: -18pt;">
+                                    <span lang="TR" style="font-size: 11pt; font-family: Symbol; color: black;">·<span
+                                            style="font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-stretch: normal; font-size: 7pt; line-height: normal; font-family: &quot;Times New Roman&quot;;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </span></span><span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">Lamine şüşənin
+                                        plyonka
+                                        olduğu araya </span><b><span lang="TR"
+                                            style="font-size: 11pt; font-family: Arial, sans-serif; color: red; text-transform: uppercase;">KƏSİCİ
+                                            ALƏTLƏR</span></b><span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: red; text-transform: uppercase;">
+                                    </span><span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">salınmamalıdır.
+                                        Bu
+                                        içindəki dekorda zədələnməyə səbəb ola bilər</span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">!</span><span
+                                        lang="TR" style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">
+                                        <o:p></o:p>
+                                    </span></p>
+                                <p class="MsoListParagraphCxSpMiddle"
+                                    style="margin: 0cm 0cm 0cm 36pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify; text-indent: -14.2pt;">
+                                    <span lang="TR"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif; color: black;">&nbsp;</span>
+                                </p>
+                                <p class="MsoListParagraphCxSpMiddle"
+                                    style="margin: 0cm 0cm 0cm 36pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify; text-indent: -18pt;">
+                                    <span lang="AZ-LATIN" style="font-size: 11pt; font-family: Symbol;">·<span
+                                            style="font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-stretch: normal; font-size: 7pt; line-height: normal; font-family: &quot;Times New Roman&quot;;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </span></span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif;">Şüşələrdə istifadə olunan
+                                        <b><span style="color: red; text-transform: uppercase;">XROM</span></b>, <b><span
+                                                style="color: red; text-transform: uppercase;">PASLANMAYAN</span></b><span
+                                            style="color: red;"> </span>və <b><span
+                                                style="color: red; text-transform: uppercase;">ƏLVAN</span></b><span
+                                            style="color: red;"> </span>metal aksesuarların təmizlənməsi kimyəvi təmizləmə
+                                        maddələr ilə
+                                        olunmamalıdır (adi su ilə təmizlənməyi tövsüyə olunur). Əks halda bu aksesuarlar
+                                        üzərində
+                                        yaranan <b><span
+                                                style="color: red; text-transform: uppercase;">LƏKƏLƏRDƏN</span></b><span
+                                            style="color: red; text-transform: uppercase;"> </span>Glasstech şirkəti <b><span
+                                                style="color: red; text-transform: uppercase;">MƏSULİYYƏT</span></b><span
+                                            style="color: red; text-transform: uppercase;"> <b>DAŞIMIR</b></span>!<o:p></o:p>
+                                        </span></p>
+                                <p class="MsoListParagraphCxSpMiddle"
+                                    style="margin: 0cm 0cm 0cm 36pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify; text-indent: -14.2pt;">
+                                    <span lang="AZ-LATIN" style="font-size: 11pt; font-family: Arial, sans-serif;">&nbsp;</span>
+                                </p>
+                                <p class="MsoListParagraphCxSpMiddle"
+                                    style="margin: 0cm 0cm 0cm 36pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: justify; text-indent: -18pt;">
+                                    <span lang="AZ-LATIN" style="font-size: 11pt; font-family: Symbol;">·<span
+                                            style="font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-stretch: normal; font-size: 7pt; line-height: normal; font-family: &quot;Times New Roman&quot;;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </span></span><span lang="AZ-LATIN"
+                                        style="font-size: 11pt; font-family: Arial, sans-serif;">Şüşələr təhvil verildikdən
+                                        sonra
+                                        üzərində yaranmış defektlər, cızıqlar, qaynaq izləri və s kimi xüsuslardan Glasstech
+                                        şirkəti
+                                        <b><span style="color: red; text-transform: uppercase;">MƏSULİYYƏT DAŞIMIR</span></b>!
+                                        <o:p>
+                                        </o:p></span></p>
+                                <p class="MsoListParagraphCxSpMiddle"
+                                    style="margin: 0cm 0cm 0cm 36pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;">
+                                    <span lang="AZ-LATIN" style="font-size: 11pt; font-family: Arial, sans-serif;">&nbsp;</span>
+                                </p>
+                                <p class="MsoListParagraphCxSpLast"
+                                    style="margin: 0cm 0cm 0cm 36pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;">
+                                    <span lang="AZ-LATIN" style="font-size: 11pt; font-family: Arial, sans-serif;">&nbsp;</span>
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="MsoNormal"
+                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; color: rgb(0, 0, 0);">
+                    <span lang="AZ-LATIN" style="font-family: Arial, sans-serif;">&nbsp;</span></p>
+                <p class="MsoNormal"
+                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; color: rgb(0, 0, 0);">
+                    <b><span lang="AZ-LATIN" style="font-size: 11pt; font-family: Arial, sans-serif;">&nbsp;</span></b></p>
+                <p class="MsoNormal"
+                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; color: rgb(0, 0, 0);">
+                    <span lang="AZ-LATIN" style="font-family: Arial, sans-serif;">&nbsp;</span></p>
+
+
+
+            </div>
+        </body>
+    </div>
+    <script>
+        function Export2Doc(element, filename = '') {
+            var preHtml =
+                "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML To Doc</title></head><body>";
+            var postHtml = "</body></html>";
+            var html = preHtml + document.getElementById(element).innerHTML + postHtml;
+
+            var blob = new Blob(['\ufeff', html], {
+                type: 'application/msword'
+            });
+
+            var url = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(html)
+
+            filename = filename ? filename + '.doc' : 'document.doc';
+
+            var downloadLink = document.createElement("a");
+
+            document.body.appendChild(downloadLink);
+
+            if (navigator.msSaveOrOpenBlob) {
+                navigator.msSaveOrOpenBlob(blob, filename);
+            } else {
+                downloadLink.href = url;
+
+                downloadLink.download = filename;
+
+                downloadLink.click();
+            }
+
+            document.body.removeChild(downloadLink);
+
+
+        }
+    </script>
+    <script>
+
+        function getOfferFetch(){
+            var api_url = '{% url "salesApi:offerapi" number=offer.number %}'
+
+            async function Products(api_url=api_url) {
+                const response = await fetch(api_url, {
+                    method: 'GET', // *GET, POST, PUT, DELETE, etc.
+                });
+                
+                return response.json(); // parses JSON response into native JavaScript objects
+            }
+            
+            Products(api_url)
+            .then((data) => {
+                if (data){
+                    for (let revision of data['revisions']){
+                        if(revision['is_active'] === true){
+                            let offerPackagesStartLine = document.getElementById('offer_packages_start_line')
+                            let newerPackageID = 1
+                            for(let package of revision['packages']){
+            
+                                let newerPackage =
+                                `
+                                <!-- offer package -->
+                                <table class="packages" data-id = ${package.id} data-package_id="${newerPackageID}" id="package-${newerPackageID}" class="MsoNormalTable" border="0" cellspacing="0" cellpadding="0" width="671" style="margin-left: -7.6pt;">
+                                    <tbody>
+                                        <!-- header -->
+                                        <tr style="height: 39.6pt;">
+                                            <!-- version -->
+                                            <td width="36"
+                                                style="width: 27.3pt; border: 1pt solid windowtext; background: rgb(231, 230, 230); padding: 0cm 5.4pt; height: 39.6pt;">
+                                                
+                                                        ${
+                                                            (function versioncheck() {
+                                                                if (revision['packages'].length>1){
+
+                                                                    
+                                                                    return `
+                                                                    <p class="MsoNormal" align="center"
+                                                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: center;">
+                                                                    <b id="package-${newerPackageID}-version" ><span lang="AZ-LATIN"
+                                                                            style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">&nbsp;</span></b><b><span
+                                                                            lang="AZ-LATIN"
+                                                                            style="font-size: 11pt; font-family: Arial, sans-serif; color: red;">VER${newerPackageID}</span></b><b><span
+                                                                            lang="AZ-LATIN" style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">
+                                                                            <o:p></o:p>
+                                                                        </span></b></p>
+                                                                    
+                                                                    `
+                                                                }
+                                                                return `<b id="package-${newerPackageID}-version" style="color: red;"></b>`
+                                                            })()
+                                                        }              
+                                            </td>
+                                            <!-- header titles -->
+                                            <td width="332"
+                                                style="width: 249.15pt; border-top: 1pt solid windowtext; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-image: initial; border-left: none; background: rgb(231, 230, 230); padding: 0cm 5.4pt; height: 39.6pt;">
+                                                <p class="MsoNormal" align="center"
+                                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: center;">
+                                                    <b><span lang="AZ-LATIN" style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">İşin
+                                                            Adı</span></b><b><span lang="AZ-LATIN"
+                                                            style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">
+                                                            <o:p></o:p>
+                                                        </span></b></p>
+                                            </td>
+                                            <td width="76"
+                                                style="width: 2cm; border-top: 1pt solid windowtext; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-image: initial; border-left: none; background: rgb(231, 230, 230); padding: 0cm 5.4pt; height: 39.6pt;">
+                                                <p class="MsoNormal" align="center"
+                                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: center;">
+                                                    <b><span lang="AZ-LATIN"
+                                                            style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">Vahid<o:p></o:p>
+                                                            </span></b></p>
+                                            </td>
+                                            <td width="66"
+                                                style="width: 49.6pt; border-top: 1pt solid windowtext; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-image: initial; border-left: none; background: rgb(231, 230, 230); padding: 0cm 5.4pt; height: 39.6pt;">
+                                                <p class="MsoNormal" align="center"
+                                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: center;">
+                                                    <b><span lang="AZ-LATIN"
+                                                            style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">Miqdarı<o:p></o:p>
+                                                            </span></b></p>
+                                            </td>
+                                            <td width="76" colspan="2"
+                                                style="width: 2cm; border-top: 1pt solid windowtext; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-image: initial; border-left: none; background: rgb(231, 230, 230); padding: 0cm 5.4pt; height: 39.6pt;">
+                                                <p class="MsoNormal" align="center"
+                                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: center;">
+                                                    <b><span lang="AZ-LATIN"
+                                                            style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">Vahidin qiyməti
+                                                            Azn</span></b><b><span lang="AZ-LATIN"
+                                                            style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">
+                                                            <o:p></o:p>
+                                                        </span></b></p>
+                                            </td>
+                                            <td width="85"
+                                                style="width: 63.8pt; border-top: 1pt solid windowtext; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-image: initial; border-left: none; background: rgb(231, 230, 230); padding: 0cm 5.4pt; height: 39.6pt;">
+                                                <p class="MsoNormal" align="center"
+                                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: center;">
+                                                    <b><span lang="AZ-LATIN"
+                                                            style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">Məbləğ<o:p></o:p>
+                                                            </span></b></p>
+                                                <p class="MsoNormal" align="center"
+                                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: center;">
+                                                    <b><span lang="AZ-LATIN"
+                                                            style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">Azn</span></b><b><span
+                                                            lang="AZ-LATIN" style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">
+                                                            <o:p></o:p>
+                                                        </span></b></p>
+                                            </td>
+                                        </tr>
+
+                                    
+                
+
+                                        <!-- summa -->
+                                        <tr id='package-${newerPackageID}-services_start_line' style="height: 26.05pt;">
+                                            <td width="585" colspan="5"
+                                                style="width: 439.1pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; background: rgb(229, 229, 229); padding: 0cm 5.4pt; height: 26.05pt;">
+                                                <p class="MsoNormal" align="right"
+                                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: right;">
+                                                    <b><span lang="AZ-LATIN"
+                                                            style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">Ümumi
+                                                            Məbləğ</span></b><b><span lang="AZ-LATIN"
+                                                            style="font-size: 10pt; font-family: Arial, sans-serif;">
+                                                            <o:p></o:p>
+                                                        </span></b></p>
+                                            </td>
+                                            <td width="86" colspan="2"
+                                                style="width: 64.15pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; background: rgb(229, 229, 229); padding: 0cm 5.4pt; height: 26.05pt;">
+                                                <p class="MsoNormal" align="center"
+                                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: center;">
+                                                    <b lang="AZ-LATIN"
+                                                            style="font-size: 10pt; font-family: Arial, sans-serif; color: black;"><span lang="AZ-LATIN"
+                                                            style="font-size: 10pt; font-family: Arial, sans-serif; color: black;" id="package-${newerPackageID}-totalprice">0</span> AZN</b><b><span
+                                                            lang="AZ-LATIN" style="font-size: 10pt; font-family: Arial, sans-serif;">
+                                                            <o:p></o:p>
+                                                        </span></b></p>
+                                            </td>
+                                        </tr>
+                                        ${
+                                (function discountcheck() {
+                                    if(package.discount > 0){
+                                        return `
+                                        <!-- endirim -->
+
+                                        <tr id="package-${newerPackageID}-discount" style="height: 26.05pt;">
+                                            <td width="585" colspan="5"
+                                                style="width: 439.1pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; background: rgb(229, 229, 229); padding: 0cm 5.4pt; height: 26.05pt;">
+                                                <p class="MsoNormal" align="right"
+                                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: right;">
+                                                    <b><span lang="AZ-LATIN"
+                                                            style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">Endirim</span></b><b><span lang="AZ-LATIN"
+                                                            style="font-size: 10pt; font-family: Arial, sans-serif;">
+                                                            <o:p></o:p>
+                                                        </span></b></p>
+                                            </td>
+                                            <td width="86" colspan="2"
+                                                style="width: 64.15pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; background: rgb(229, 229, 229); padding: 0cm 5.4pt; height: 26.05pt;">
+                                                <p class="MsoNormal" align="center"
+                                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: center;">
+                                                    <b><span lang="AZ-LATIN"
+                                                            style="font-size: 10pt; font-family: Arial, sans-serif; color: black;" id="package-${newerPackageID}-discountfield">${package.discount} <b>AZN</b></span></b><b><span
+                                                            lang="AZ-LATIN" style="font-size: 10pt; font-family: Arial, sans-serif;">
+                                                            <o:p></o:p>
+                                                        </span></b></p>
+                                            </td>
+                                        </tr>
+                                        <tr style="height: 26.05pt;">
+                                            <td width="585" colspan="5"
+                                                style="width: 439.1pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; background: rgb(229, 229, 229); padding: 0cm 5.4pt; height: 26.05pt;">
+                                                <p class="MsoNormal" align="right"
+                                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: right;">
+                                                    <b><span lang="AZ-LATIN"
+                                                            style="font-size: 10pt; font-family: Arial, sans-serif; color: black;"><b>Endirimli qiymət (ƏDV Xaric)</b></span></b><b><span lang="AZ-LATIN"
+                                                            style="font-size: 10pt; font-family: Arial, sans-serif;">
+                                                            <o:p></o:p>
+                                                        </span></b></p>
+                                            </td>
+                                            <td width="86" colspan="2"
+                                                style="width: 64.15pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; background: rgb(229, 229, 229); padding: 0cm 5.4pt; height: 26.05pt;">
+                                                <p class="MsoNormal" align="center"
+                                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: center;">
+                                                    <b><span lang="AZ-LATIN"
+                                                            style="font-size: 10pt; font-family: Arial, sans-serif; color: black;"><span id="package-${newerPackageID}-totalpricewdiscount"></span> AZN</span></b><b><span
+                                                            lang="AZ-LATIN" style="font-size: 10pt; font-family: Arial, sans-serif;">
+                                                            <o:p></o:p>
+                                                        </span></b></p>
+                                            </td>
+                                        </tr>
+                                            
+                                        `
+                                    }else{
+
+                                        return ''
+                                    }
+                                })()
+                                }
+                                ${
+                                    (function taxcheck() {
+                                        if(package.tax > 0){
+                                            return `
+                                            <!-- edv -->
+
+                                            <tr id="package-${newerPackageID}-tax" style="height: 26.05pt;">
+                                                <td width="585" colspan="5"
+                                                    style="width: 439.1pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; background: rgb(229, 229, 229); padding: 0cm 5.4pt; height: 26.05pt;">
+                                                    <p class="MsoNormal" align="right"
+                                                        style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: right;">
+                                                        <b><span lang="AZ-LATIN"
+                                                                style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">ƏDV 18%</span></b><b><span lang="AZ-LATIN"
+                                                                style="font-size: 10pt; font-family: Arial, sans-serif;">
+                                                                <o:p></o:p>
+                                                            </span></b></p>
+                                                </td>
+                                                <td width="86" colspan="2"
+                                                    style="width: 64.15pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; background: rgb(229, 229, 229); padding: 0cm 5.4pt; height: 26.05pt;">
+                                                    <p class="MsoNormal" align="center"
+                                                        style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: center;">
+                                                        <b lang="AZ-LATIN"
+                                                                style="font-size: 10pt; font-family: Arial, sans-serif; color: black;"><span lang="AZ-LATIN"
+                                                                style="font-size: 10pt; font-family: Arial, sans-serif; color: black;" id="package-${newerPackageID}-taxprice">0</span> AZN</b><b><span
+                                                                lang="AZ-LATIN" style="font-size: 10pt; font-family: Arial, sans-serif;">
+                                                                <o:p></o:p>
+                                                            </span></b></p>
+                                                </td>
+                                            </tr>
+                                            <tr style="height: 26.05pt;">
+                                                <td width="585" colspan="5"
+                                                    style="width: 439.1pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; background: rgb(229, 229, 229); padding: 0cm 5.4pt; height: 26.05pt;">
+                                                    <p class="MsoNormal" align="right"
+                                                        style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: right;">
+                                                        <b lang="AZ-LATIN"
+                                                                style="font-size: 10pt; font-family: Arial, sans-serif; color: black;"><span lang="AZ-LATIN"
+                                                                style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">Yekun (ƏDV Daxil Qiymət)</span></b><b><span lang="AZ-LATIN"
+                                                                style="font-size: 10pt; font-family: Arial, sans-serif;">
+                                                                <o:p></o:p>
+                                                            </span></b></p>
+                                                </td>
+                                                <td width="86" colspan="2"
+                                                    style="width: 64.15pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; background: rgb(229, 229, 229); padding: 0cm 5.4pt; height: 26.05pt;">
+                                                    <p class="MsoNormal" align="center"
+                                                        style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: center;">
+                                                        <b lang="AZ-LATIN"
+                                                                style="font-size: 10pt; font-family: Arial, sans-serif; color: black;"><span lang="AZ-LATIN"
+                                                                style="font-size: 10pt; font-family: Arial, sans-serif; color: black;" id="package-${newerPackageID}-totalpricewtax">0</span> AZN</b><b><span
+                                                                lang="AZ-LATIN" style="font-size: 10pt; font-family: Arial, sans-serif;">
+                                                                <o:p></o:p>
+                                                            </span></b></p>
+                                                </td>
+                                            </tr>
+
+                                        
+                                            </tr>
+                                            `
+                                        }else{
+        
+                                            return ''
+                                        }
+                                    })()
+                                }
+                            
+
+                                        <tr height="0">
+                                            <td width="36" style="border: none;"></td>
+                                            <td width="332" style="border: none;"></td>
+                                            <td width="76" style="border: none;"></td>
+                                            <td width="66" style="border: none;"></td>
+                                            <td width="75" style="border: none;"></td>
+                                            <td width="0" style="border: none;"></td>
+                                            <td width="85" style="border: none;"></td>
+                                        </tr>
+                                        
+                                    </tbody>
+                                </table>
+
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; color: rgb(0, 0, 0);"><b><span
+                                            lang="AZ-LATIN"
+                                            style="font-size: 18pt; font-family: Arial, sans-serif; color: rgb(51, 98, 96);">&nbsp;</span></b></p>
+
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; color: rgb(0, 0, 0);">
+                                    <b><span lang="AZ-LATIN"
+                                            style="font-size: 18pt; font-family: Arial, sans-serif; color: rgb(51, 98, 96);">&nbsp;</span></b>
+                                </p>
+
+                                <p class="MsoNormal"
+                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; color: rgb(0, 0, 0);">
+                                    <b><span lang="AZ-LATIN"
+                                            style="font-size: 18pt; font-family: Arial, sans-serif; color: rgb(51, 98, 96);">&nbsp;</span></b>
+                                </p>
+                                `
+                                offerPackagesStartLine.insertAdjacentHTML('beforeBegin', newerPackage)
+                                loadServices(package['services'], newerPackageID)
+                                calcPackageTotalPrice(newerPackageID)
+                                newerPackageID++;
+                            
+                            }
+                            function loadServices(services,packageID){
+                                let newerServiceStartLine = document.getElementById(`package-${packageID}-services_start_line`)
+                                let newerServiceID = 1
+                                for(let service of services){
+                                let newerService =
+                                `
+                                <!-- services -->
+                                        <tr data-id=${service.id} data-package_id="${packageID}" data-service_id="${newerServiceID}" class="services" id="package-${packageID}-service-${newerServiceID}" style="height: 138.95pt;">
+                                            
+                                            <!-- service num -->
+                                            <td width="36"
+                                                style="width: 27.3pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; padding: 0cm 5.4pt; height: 138.95pt;">
+                                                <p class="MsoNormal" align="center"
+                                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: center;">
+                                                    <span lang="AZ-LATIN"
+                                                        style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">${newerServiceID}</span><span
+                                                        lang="AZ-LATIN" style="font-size: 10pt; font-family: Arial, sans-serif;">
+                                                        <o:p></o:p>
+                                                    </span></p>
+                                            </td>
+
+                                            <!-- service -->
+                                            <td width="332" style="width: 249.15pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; padding: 0cm 5.4pt; height: 138.95pt;">
+                                                <p class="MsoNormal" style="margin: 0cm 0cm 0cm 2.1pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;">
+                                                    <b><span lang="AZ-LATIN" style="font-family: Arial, sans-serif; color: black;">${service.product.name}</span></b>
+                                                    <b><span lang="AZ-LATIN" style="font-family: Arial, sans-serif;"><o:p></o:p></span></b>
+                                                </p>
+
+                                                <p class="MsoNormal"
+                                                    style="margin: 0cm 0cm 0cm 2.1pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif;">
+                                                    <b><span lang="AZ-LATIN" style="font-family: Arial, sans-serif;">&nbsp;</span></b>
+                                                </p>
+
+                                                <!-- serivce detail -->
+                                                ${service.detail}
+
+                                            </td>
+                                            
+                                            <!-- service unit -->
+                                            <td width="76"
+                                                style="width: 2cm; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; padding: 0cm 5.4pt; height: 138.95pt;">
+                                                <p class="MsoNormal" align="center"
+                                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: center;">
+                                                    <span lang="AZ-LATIN"
+                                                        style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">${service.product.unit}</span><span
+                                                        lang="AZ-LATIN" style="font-size: 10pt; font-family: Arial, sans-serif;">
+                                                        <o:p></o:p>
+                                                    </span></p>
+                                            </td>
+
+                                            <!-- service quantity -->
+                                            <td width="66"
+                                                style="width: 49.6pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; padding: 0cm 5.4pt; height: 138.95pt;">
+                                                <p class="MsoNormal" align="center"
+                                                    style="margin: 0cm 0cm 0cm -2.15pt; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: center;">
+                                                    <span id="package-${newerPackageID}-service-${newerServiceID}-quantity" lang="AZ-LATIN"
+                                                        style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">${service.quantity}</span><span
+                                                        lang="AZ-LATIN" style="font-size: 10pt; font-family: Arial, sans-serif;">
+                                                        <o:p></o:p>
+                                                    </span></p>
+                                            </td>
+
+                                            <!-- service price -->
+                                            <td width="76" colspan="2"
+                                                style="width: 2cm; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; padding: 0cm 5.4pt; height: 138.95pt;">
+                                                <p class="MsoNormal" align="center"
+                                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: center;">
+                                                    <span id="package-${newerPackageID}-service-${newerServiceID}-price" lang="AZ-LATIN"
+                                                        style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">${service.price}</span><span
+                                                        lang="AZ-LATIN" style="font-size: 10pt; font-family: Arial, sans-serif;">
+                                                        <o:p></o:p>
+                                                    </span></p>
+                                            </td>
+
+                                            <!-- service  total price -->
+                                            <td width="85"
+                                                style="width: 63.8pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; padding: 0cm 5.4pt; height: 138.95pt;">
+                                                <p class="MsoNormal" align="center"
+                                                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: center;">
+                                                    <span class="servicetotalprice" id="package-${packageID}-service-${newerServiceID}-totalprice" lang="AZ-LATIN"
+                                                        style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">0</span><span
+                                                        lang="AZ-LATIN" style="font-size: 10pt; font-family: Arial, sans-serif;">
+                                                        <o:p></o:p>
+                                                    </span></p>
+                                            </td>
+                                        </tr>
+                                `
+                                    newerServiceStartLine.insertAdjacentHTML('beforebegin', newerService)
+                                    
+                                    let calcPackageID = packageID
+                                    let calcServiceID = newerServiceID
+                                
+                                    
+                                    let servicePrice = parseFloat(document.getElementById(`package-${calcPackageID}-service-${calcServiceID}-price`).innerText)
+                                    let serviceQuantity = parseFloat(document.getElementById(`package-${calcPackageID}-service-${calcServiceID}-quantity`).innerText)
+                                    
+                                    if((servicePrice*serviceQuantity)>=1){
+                                    document.getElementById(`package-${calcPackageID}-service-${calcServiceID}-totalprice`).innerText = parseInt(servicePrice*serviceQuantity)
+                                    }
+                                
+                                    newerServiceID++;
+                                    
+                                }       
+                            }
+
+                        
+
+                            break;
+                        }
+                    }
+                
+
+                    var imgs = document.getElementsByTagName('img');
+                    var totalImages = imgs.length;
+                    var loadedImages = 0;
+
+                    function handleImageLoad() {
+                        loadedImages++;
+                        if (loadedImages === totalImages) {
+                            convertHtmlToDocx();
+                            window.location.href = '{% url "sales:offer-review" number=offer.number %}' 
+
+                        }
+                    }
+
+                    // shekiller src base64  ceviri bahsqa vvariant sekilin full pathni yeni  domain/photo_path
+                    for(let img of imgs){
+                        img.onload = function() {
+                            if(!img.src.startsWith('data:')){
+                                var extension = img.src.split('.').pop().toLowerCase();
+                                var canvas = document.createElement('canvas');
+                                var ctx = canvas.getContext('2d');
+    
+                                canvas.width = img.width;
+                                canvas.height = img.height;
+    
+                                try {
+                                    // Ensure that the image is an instance of HTMLImageElement
+                                    if (img instanceof HTMLImageElement) {
+                                    ctx.drawImage(img, 0, 0, img.width, img.height);
+    
+                                    // Use try-catch to handle potential security errors
+                                    var base64Data = canvas.toDataURL(`image/${extension}`);
+                                    img.src = base64Data
+                                    } else {
+                                    console.error('The provided value is not an HTMLImageElement.');
+                                    }
+                                } catch (error) {
+                                    console.error('Error converting image to base64:', error);
+                                }
+
+                            }
+                            handleImageLoad();
+                        }
+                    }
+                    if(imgs.length <= 1){
+                        convertHtmlToDocx();
+                        window.location.href = '{% url "sales:offer-review" number=offer.number %}' 
+                    }
+                    
+
+                }   
+            });
+
+        }
+        getOfferFetch()
+
+        function calcPackageTotalPrice(calcPackageID){
+            let packageServicesPrices = document.getElementById(`package-${calcPackageID}`).getElementsByClassName('servicetotalprice')
+            let packageTotalPrice = 0
+            for(let servicesTotalPrices of packageServicesPrices){
+                if(!isNaN(parseInt(servicesTotalPrices.innerText))){
+                packageTotalPrice += parseInt(servicesTotalPrices.innerText)
+                }
+            }
+            if(packageTotalPrice!=0){
+                document.getElementById(`package-${calcPackageID}-totalprice`).innerText = packageTotalPrice
+            }
+            if(document.getElementById(`package-${calcPackageID}-discount`) != null){
+                calcDiscountTotalPrice(null,calcPackageID)
+            }
+            if(document.getElementById(`package-${calcPackageID}-tax`) != null){
+                calcTaxTotalPrice(calcPackageID)
+            }
+        }
+
+        function calcDiscountTotalPrice(event,packageID){
+            if(event != null){
+                var calcPackageID =  event.target.dataset.package_id
+            }else{
+                var calcPackageID =  packageID
+            }
+            let discountPrice = parseInt(document.getElementById(`package-${calcPackageID}-discountfield`).value)
+            let packageTotalPrice = parseInt(document.getElementById(`package-${calcPackageID}-totalprice`).innerText)
+            if((packageTotalPrice-discountPrice) >= 1){
+                document.getElementById(`package-${calcPackageID}-totalpricewdiscount`).innerText = packageTotalPrice-discountPrice
+            }else{
+                document.getElementById(`package-${calcPackageID}-totalpricewdiscount`).innerText = packageTotalPrice
+            }
+            if(document.getElementById(`package-${calcPackageID}-tax`) != null){
+                calcTaxTotalPrice(calcPackageID)
+            }
+        }
+
+        function calcTaxTotalPrice(packageID){
+            let packageTotalPriceWDiscount = document.getElementById(`package-${packageID}-totalpricewdiscount`)
+            if(packageTotalPriceWDiscount != null){
+                if(parseInt(packageTotalPriceWDiscount.innerText) >= 1){
+                    let packageTaxPrice = document.getElementById(`package-${packageID}-taxprice`)
+                    let packageTotalPriceWTAX = document.getElementById(`package-${packageID}-totalpricewtax`)
+                    let taxPrice = parseInt(parseInt(packageTotalPriceWDiscount.innerText)*18/100)
+                    packageTaxPrice.innerText = taxPrice
+                    packageTotalPriceWTAX.innerText = parseInt(packageTotalPriceWDiscount.innerText)+taxPrice
+                }
+            }else{
+                let packageTotalPrice = document.getElementById(`package-${packageID}-totalprice`)
+                if(parseInt(packageTotalPrice.innerText) >= 1){
+                    let packageTaxPrice = document.getElementById(`package-${packageID}-taxprice`)
+                    let packageTotalPriceWTAX = document.getElementById(`package-${packageID}-totalpricewtax`)
+                    let taxPrice = parseInt(parseInt(packageTotalPrice.innerText)*18/100)
+                    packageTaxPrice.innerText = taxPrice
+                    packageTotalPriceWTAX.innerText = parseInt(packageTotalPrice.innerText)+taxPrice
+                }
+            }
+        }
+
+    </script>   
+</html>

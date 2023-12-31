@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}<title>GlasstechSales | Təklif Ön İzləmə</title>{% endblock %}
+
+{% block style %}
+
+{% endblock style %}
+
+{% block content %}
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Təklif NO:{{offer.number}}</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="{% url 'core:dashboard' %}">Dashboard</a></li>
+              <li class="breadcrumb-item active">Satış</li>
+              <li class="breadcrumb-item active">Təklif</li>
+              <li class="breadcrumb-item active">Təklif Önizləmə</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <hr>
+        <div style="display: flex; justify-content: end;">
+          <ul style="list-style: none; ">
+            <li>Ünvan:  Bakı, Səməd Vurğun küç.100,<br> Vurgun Residence</li>
+            <li>Tel:  +994 50 228 40 34</li>
+            <li>E-mail:   info@glasstech.az</li>
+            <li>Web:   www.glasstech.az</li>
+          </ul>
+        </div>
+        <hr>
+        <div style="display: flex; justify-content: space-between;">
+          <div  style="color: rgb(58, 106, 90);">
+            <h3 style="font-weight: bold; margin: 0%;">Qiymət Təklifi</h3>
+            <h6 style="margin: 0%;">No     : {{offer.number}}   REV<span id="rev_num"></span></h6>
+            <h6>Tarix:  <span id="rev_date"></span></h6>
+          </div>
+          <div>
+            <ul style="list-style: none; ">
+              <li>Firma Adı:  {{offer.customer.company_name}}</li>
+              <li>Adı Soyadı:  {{offer.customer.get_full_name}}</li>
+              <li>Tel:  {{offer.customer.phone}}</li>
+              <li> Mob: {{offer.customer.mobile}}</li>
+              <li> Email: {{offer.customer.email}}</li>
+            </ul>
+          </div>
+        </div>
+        <hr>
+        <p >Hörmətli {{offer.customer.get_full_name}},<br>  
+          Bizdən tələb etdiyiniz işlərlə bağlı qiymət təklifimizi əlavədə sizə təqdim edirik. Xahiş edirik <br>
+          tanış olasınız və öz fikirlərinizi bizə bildirəsiniz. <br>
+          Hörmətlə <br><br>
+          <span style="display: flex; justify-content: space-between;">
+            <span>Təklifi Hazırlayan <br> 
+             <b id="offer_creator"></b>
+            </span>			
+            <span>Təklifi Təsdiqləyən <br> 
+              <b id="offer_approver" ></b>
+            </span>					       
+          </span>
+        </p>
+        <hr><hr>
+        <h3 style="text-align: center; color: rgb(58, 106, 90); font-weight: bold;">Qiymət Cədvəli</h3>
+        
+ 
+      
+        <h3 id="offer_packages_start_line" style="color: rgb(58, 106, 90); font-weight: bold;">Qeyd!</h3>
+        <span id="offer_note">
+
+        </span>
+        <p><span style="font-size:12pt"><span ><strong><span dir="ltr" lang="AZ-LATIN" style="font-size:18.0pt"><span ><span style="color:#336260">Satış şərtləri</span></span></span></strong></span></span></p>
+
+
+        <table cellspacing="0" class="Table" style="border-collapse:collapse; border:none; margin-left:7px; ">
+          <tbody>
+            <tr>
+              <td style="border-bottom:1px solid black; border-left:none; border-right:none; border-top:1px solid black; height:19px; vertical-align:top; ">
+              <p><span style="font-size:12pt"><span ><strong><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Satıcının h&uuml;quq və &ouml;hdəlikləri</span></span></strong></span></span></p>
+              </td>
+            </tr>
+            <tr>
+              <td style="border-bottom:1px solid black; border-left:none; border-right:none; border-top:none; height:35px; vertical-align:top; ">
+              <ul>
+                <li style="text-align:justify"><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >&Ouml;dənişi tələb etmək </span></span></span></span></li>
+                <li style="text-align:justify"><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Uyğun şəraiti tələb etmək</span></span></span></span></li>
+                <li style="text-align:justify"><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Malların dəyərini m&uuml;əyyənləşdirilmiş şərtlər və qaydalara uyğun olaraq vaxtında və tam həcmdə &ouml;dəməyi Alıcıdan tələb etmək;</span></span></span></span></li>
+                <li style="text-align:justify"><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Malı və xidməti m&uuml;qavilə ilə m&uuml;əyyən olunan şərtlərlə və qaydada Alıcıya təhvil vermək;</span></span></span></span></li>
+                <li style="text-align:justify"><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Malın keyfiyyət kriteriyalarına uyğun olmasını təmin etmək və Alıcıya zəmanət &ouml;hdəliyi vermək;</span></span></span></span></li>
+                <li style="text-align:justify"><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Malın Alıcıya təhvil verilən anadək, malda aşkar edilən q&uuml;surları &ouml;z q&uuml;vvə və vəsaiti hesabına aradan qaldırmağı, eləcədə malın təsad&uuml;fən zay olması və ya zədələnməsi riskini daşımağı və zay olmuş məhsulu malı dərhal yenisi ilə əvəzləməyi &ouml;hdəsinə g&ouml;t&uuml;rmək.</span></span></span></span></li>
+                <li style="text-align:justify"><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Texniki təhl&uuml;kəsizlik qaydalarına riayyət etmək</span></span></span></span></li>
+              </ul>
+
+              <p style="margin-left:48px; text-align:justify">&nbsp;</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="border-bottom:1px solid black; border-left:none; border-right:none; border-top:none; height:19px; vertical-align:top; ">
+              <p style="text-align:justify"><span style="font-size:12pt"><span ><strong><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Alıcının h&uuml;quq və &ouml;hdəlikləri </span></span></strong></span></span></p>
+              </td>
+            </tr>
+            <tr>
+              <td style="border-bottom:1px solid black; border-left:none; border-right:none; border-top:none; height:35px; vertical-align:top; ">
+              <ul>
+                <li><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Malı m&uuml;əyyənləşdirilmiş keyfiyyət kriteriayalarına g&ouml;rə tələb etmək </span></span></span></span></li>
+                <li><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Malı m&uuml;əyyənləşdirilmiş təhvil tarixinə g&ouml;rə tələb etmək </span></span></span></span></li>
+                <li><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >&Ouml;dənişi razılaşdırılmış şərtlərə əsasən vaxtında və qeyd olunmuş miqdarında &ouml;dəmək </span></span></span></span></li>
+                <li><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Quraşdırma işlərinin d&uuml;zg&uuml;n aparılması &uuml;&ccedil;&uuml;n m&uuml;qavilədə qeyd olunan lazımı iş şəraitinin təmin etmək (yol, texniki təhl&uuml;kəsizlik, elektrik, hava, su&nbsp; və s.) </span></span></span></span></li>
+                <li><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Malı təhvil aldıqdan sonra onu qorumaq və d&uuml;zg&uuml;n istifadə etmək</span></span></span></span></li>
+              </ul>
+
+              <p style="margin-left:48px">&nbsp;</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="border-bottom:1px solid black; border-left:none; border-right:none; border-top:none; height:19px; vertical-align:top; ">
+              <p style="text-align:justify"><span style="font-size:12pt"><span ><strong><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >&Ouml;dəniş və &ccedil;atdırılma şərtləri </span></span></strong></span></span></p>
+              </td>
+            </tr>
+            <tr>
+              <td style="border-bottom:1px solid black; border-left:none; border-right:none; border-top:none; height:35px; vertical-align:top; ">
+                <span  id="offer_pay_delv_cond">
+
+                </span>
+
+                <p style="margin-left:48px">&nbsp;</p>
+
+                <p style="margin-left:42px"><span style="font-size:12pt"><span ><strong><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Qeyd: Qiymətlər hal hazırda olan ABŞ Daolları məzənnəsinə uyğun olaraq &ccedil;ıxarılmışdır. Məzənnədəki dəyişikliklər qiymətlərə uyğun şəkildə əks etdiriləcəkdir.</span></span></strong></span></span></p>
+
+                <p>&nbsp;</p>
+              </td>
+            </tr>
+          </tbody>
+          <tbody>
+            <tr>
+              <td style="border-bottom:1px solid black; border-left:none; border-right:none; border-top:1px solid black; height:24px; vertical-align:top;">
+              <p><strong><span dir="ltr" lang="AZ-LATIN" style="font-size:11pt"><span style="font-family:Arial,sans-serif">Təhvil və təklif m&uuml;ddəti və qaydaları&nbsp;</span></span></strong></p>
+              </td>
+            </tr>
+            <tr>
+              <td style="border-bottom:1px solid black; border-left:none; border-right:none; border-top:none; height:35px; vertical-align:top;"> 
+              <p><strong><span dir="ltr" lang="AZ-LATIN" style="font-size:11pt"><span style="display: flex; align-items: center;  font-family:Arial,sans-serif">&middot;Təhvil m&uuml;ddəti: avans &ouml;dənişi, &ouml;l&ccedil;&uuml; və texniki detallar təsdiqləndikdən sonra &ndash;&nbsp;<b style="color: red;" id="offer_delv_time"></b>&nbsp;iş g&uuml;n&uuml; ərzində yerinə yetiriləcəkdir</span></span></strong></p>
+        
+              <p><span dir="ltr" lang="AZ-LATIN" style="font-size:11pt"><span style="font-family:Symbol">&middot;</span></span><span dir="ltr" lang="AZ-LATIN" style="font-size:11pt"><span style="font-family:Arial,sans-serif">Malın təhvili tərəflər arasında imzalanmış təhvil-təslim aktı ilə təsdiqlənməlidir.</span></span></p>
+        
+              <p><span dir="ltr" lang="AZ-LATIN" style="font-size:11pt"><span style="font-family:Symbol">&middot;</span></span><span dir="ltr" lang="AZ-LATIN" style="font-size:11pt"><span style="font-family:Arial,sans-serif">Təklifin q&uuml;vvədə qalma m&uuml;ddəti:&nbsp;<strong>15</strong>&nbsp;iş g&uuml;n&nbsp;</span></span></p>
+        
+              <p>&nbsp;</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div id="editanddetailbtn" style="margin: 10px 0px 0px 0px; padding: 0;" class="mb-2 btn btn-primary">
+          <a href='{% url "sales:offer-detail" number=offer.number %}' style="margin: 0;  border: 0; border-radius: 0;" class="btn btn-primary">Təklif Detalları</a>
+          {% if offer.status == 'Aktiv' %}
+            <a href='{% url "sales:offer-edit" number=offer.number %}' style="margin: 0;  border: 0; border-radius: 0;" class="btn btn-primary">Düzəliş et</a>
+          {% endif %}
+        </div>
+        <a id="docxBtn" href='{% url "sales:export-docx-offer" number=offer.number %}' style="margin-top: 10px;" class="mb-2 btn btn-secondary">DOCX Çıxart</a>
+      
+    </section>
+    <!-- /.content -->
+  </div>
+{% endblock content %}
+
+{% block scripts %}
+
+<script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+<script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+<script>
+
+  var offerDetailURL = '{% url "sales:offer-detail" number=offer.number %}'
+  var offerNumber = '{{offer.number}}'
+  var getOfferApiURL = '{% url "salesApi:offerapi" number=offer.number %}'
+  var exportURL = '{% url "sales:export-docx-offer" number=offer.number %}'
+  
+</script>
+
+<script type="text/javascript" src="{% static 'js/offerreview.js' %}"></script>
+
+
+
+
+{% endblock scripts %}

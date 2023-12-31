@@ -1,0 +1,244 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}<title>GlasstechSales | Müştərilər</title>{% endblock %}
+{% block style %}
+<!-- DataTables -->
+<link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+{% endblock %}
+{% block content %}
+
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Müştəri Siyahısı</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="{% url 'core:dashboard' %}">Dashboard</a></li>
+              <li class="breadcrumb-item active">Müştəri</li>
+              <li class="breadcrumb-item active">Müştəri Siyahısı</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="col-5">
+                <!-- PIE CHART -->
+                <div class="card card-danger">
+                    <div class="card-header">
+                    <h3 class="card-title">Ümumi müştərilərin referansları({{customers.count}})</h3>
+
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                    </div>
+                    <div class="card-body">
+                    <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <div class="col-7">
+                <!-- BAR CHART -->
+                <div class="card card-success">
+                    <div class="card-header">
+                    <h3 class="card-title">İllik müştəri sayı({{customer_year}})</h3>
+    
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                    </div>
+                    <div class="card-body">
+                    <div class="chart">
+                        <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                    </div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            
+        </div>
+        <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Müştərilər</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                  <th>Tam adı</th>
+                  <th>Tipi</th>
+                  <th>Kategoriyası</th>
+                  <th>Referansı</th>
+                  <th>Təklif sayı</th>
+                  <th>Potensiyallığı</th>
+                  <th>Qeydiyyat tarixi</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for customer in customers %}
+                <tr>
+                  <td><a href="{% url 'customers:customer-profile' pk=customer.id %}">{{customer.get_full_name}}</a></td>
+                  <td>{{customer.c_type}}</td>
+                  <td>{{customer.c_category}}</td>
+                  <td>{{customer.reference}}</td>
+                  <td>{{customer.customer_offers.all.count}}</td>
+                  <td>{% if customer.potency == "YAXŞI" %}<span style="color: green;">YAXŞI</span>{% elif customer.potency == "ORTA" %}<span style="color: rgb(255, 157, 0);">ORTA</span>{% elif customer.potency == "PİS" %}<span style="color: rgb(189, 0, 0);">PİS</span>{% else %}<span style="color: black;" > <span style="display: none;" >z</span> Təyin Edilməyib</span>{% endif %}</td>
+                  <td>{{customer.date}}</td>
+                </tr>
+                {% endfor %}
+               
+                
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th>Tam adı</th>
+                    <th>Tipi</th>
+                    <th>Kategoriyası</th>
+                    <th>Referansı</th>
+                    <th>Təklif sayı</th>
+                    <th>Potensiyallığı</th>
+                    <th>Qeydiyyat tarixi</th>
+                    </tr>
+                </tfoot>
+              </table>
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+
+    </section>
+    <!-- /.content -->
+  </div>
+
+{% endblock content %}
+
+{% block scripts %}
+<!-- ChartJS -->
+<script src="{%  static 'plugins/chart.js/Chart.min.js' %}"></script>
+<script>
+// Get context with jQuery - using jQuery's .get() method.
+var totalCustomerReferancedData = {
+      labels: [
+          'Instagram',
+          'Biz tapmışıq',
+          'Eşitmə',
+          'Linkedin',
+          'Facebook',
+          'WEB',
+      ],
+      datasets: [
+        {
+          data: [
+            '{{ref_igcustomer}}',
+            '{{ref_selfcustomer}}',
+            '{{ref_calledcustomer}}',
+            '{{ref_licustomer}}',
+            '{{ref_fbcustomer}}',
+            '{{ref_webcustomer}}'],
+          backgroundColor : ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
+        }
+      ]
+    }
+
+var yearlyCustomerData = {
+  labels  : ['Yanvar', 'Fevral', 'Mart', 'Aprel', 'May', 'Iyun', 'Iyul', 'Avqust', 'Sentyabr', 'Oktyabr', 'Noyabr', 'Dekabr'],
+  datasets: [
+    {
+      label               : 'Müştəri',
+      backgroundColor     : 'rgba(60,141,188,0.9)',
+      borderColor         : 'rgba(60,141,188,0.8)',
+      pointRadius          : false,
+      pointColor          : '#3b8bba',
+      pointStrokeColor    : 'rgba(60,141,188,1)',
+      pointHighlightFill  : '#fff',
+      pointHighlightStroke: 'rgba(60,141,188,1)',
+      data                : [
+        '{{customer_jan}}',
+        '{{customer_feb}}',
+        '{{customer_mar}}',
+        '{{customer_apr}}',
+        '{{customer_may}}',
+        '{{customer_jun}}',
+        '{{customer_jul}}',
+        '{{customer_aug}}',
+        '{{customer_sep}}',
+        '{{customer_oct}}',
+        '{{customer_nov}}',
+        '{{customer_dec}}',
+
+      ]
+    },
+
+  ]
+}
+
+var yearlyCustomerOptions = {
+      maintainAspectRatio : false,
+      responsive : true,
+      legend: {
+        display: false
+      },
+      scales: {
+        xAxes: [{
+          gridLines : {
+            display : false,
+            }
+        }],
+        yAxes: [{
+          gridLines : {
+            display : false,
+          }
+        }]
+      }
+    }
+    
+</script>
+<script src="{% static 'js/customers-list.js' %}"></script>
+<!-- DataTables  & Plugins -->
+<script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/jszip/jszip.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/pdfmake.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/vfs_fonts.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
+<script>
+    $(function () {
+      $("#example1").DataTable({
+        "responsive": true, "lengthChange": false, "autoWidth": false,
+        "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+      }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+      $('#example2').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": false,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false,
+        "responsive": true,
+      });
+    });
+  </script>
+{% endblock scripts %}

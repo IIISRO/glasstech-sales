@@ -1,0 +1,487 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}<title>GlasstechSales | Təklif Detalları</title>{% endblock %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/offerdetail.css' %}">
+{% endblock %}
+{% block content %}
+
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Təklif NO:{{offer.number}}</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="{% url 'core:dashboard' %}">Dashboard</a></li>
+              <li class="breadcrumb-item active">Satış</li>
+              <li class="breadcrumb-item active">Təklif</li>
+              <li class="breadcrumb-item active">Təklif Detalları</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div  class="card" style="width: 100%;">
+            <div class="row">
+                <div class="col-2">
+                    <img id="offerIMG" width="286px" height="180px" class="blurIMG card-img-top"  src="{% static 'img/offer-detail-review.png' %}" alt="Card image cap">
+                    <div id="editLink" >
+                        {% if offer.status == 'Aktiv' %}
+                        <a href="{% url 'sales:offer-edit' number=offer.number %}"><i  style="color: rgb(220, 219, 219); margin: 1px; " class="fas fa-sharp fa-solid fa-pen"></i></a>
+                        {% endif %}
+                        <a href="{% url 'sales:offer-review' number=offer.number %}"><i style="color: rgb(220, 219, 219); margin: 1px;" class="fas fa-solid fa-eye"></i></a>
+                    </div>
+                </div>
+                <div class="col-10">
+                    <div class="card-body">
+                        <h5 class="card-title">Təklif : {{offer.number}} REV{{offer_revision.number}}</h5>
+                        <p class="card-text">
+                            <hr>
+                            <i style="font-size: small;" class="fas fa-solid fa-calendar"></i>Tarix: {{offer_revision.date}} <br>
+                            <i style="font-size: small;" class="nav-icon fas fa-solid fa-user"></i>Müştəri: {{offer.customer.get_full_name}} <br>
+                            <i style="font-size: small;" class="fas fa-regular fa-lightbulb"></i>Status: {{offer.status}}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row mt-5">
+          <div style=" border-right: 1px solid rgb(221, 221, 221);" class="col-8">
+            <form id="newBacklogWriteForm" action="" enctype="multipart/form-data">
+                <!-- newBacklogModal -->
+                <div class="modal fade" id="newBacklogModal" tabindex="-1" role="dialog" aria-labelledby="newBacklogModal" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="newBacklogModalLabel">Təklif NO: {{offer.number}} Yeni Backlog Yaz</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="row">
+                          <div class="col-6">
+                            <label for="">Kimdən:</label>
+                            <input disabled data-id="{{request.user.id}}" value="{{request.user}}" placeholder="{{request.user}}"  class="form-control" type="text" name="by" id="backlogBY">
+                          </div>
+                          <div class="col-6">
+                            <label for="">Tag:</label>
+                            <div class="mentionuser">
+                              <p>@</p>
+                              <select name="mention" id="newBacklogMentionUser">
+                                <option selected></option>
+                                {% for user in users %}
+                                <option value="{{user.id}}">{{user.username}}</option>
+                                {% endfor %}
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-12">
+                            <label for="">Haqqında:</label>
+                            <input disabled value="{{offer}}" class="form-control" type="text" name="about" id="about">
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-12">
+                            <label for="">Başlıq:</label>
+                            <input class="form-control" type="text" name="title" id="backlogTitle">
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-12">
+                            <label for="">Mesaj:</label>
+                            <input required class="form-control" maxlength="100" type="text" name="message" id="backlogMessage">
+                          </div>
+                        </div>
+                        
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Ləğv</button>
+                        <button class="btn btn-success" type="submit">Yaz</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </form>
+              <div class="row d-flex justify-content-center">
+                <div class="col-md">
+                  <div class="headings d-flex justify-content-between align-items-center">
+                      <h3>Backlogs({{backlogs.count}}):</h3>
+                  </div> 
+                  <div style="max-height: 400px; overflow-y: auto;">
+                    {% for backlog in backlogs %}
+                    <div class="card p-3 mt-2">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div class="user d-flex flex-row align-items-center">
+                          <img src="{% if backlog.by.pp %}{{backlog.by.pp.url}}{% else %}{% endif %}" onerror="userPPAlt(event)" width="30" class="user-img rounded-circle mr-2">
+                          <span><small class="font-weight-bold text-primary"><a href="">{{backlog.by}}</a></small> <small class="font-weight-bold">{% if backlog.title %}{{backlog.title}}{% else %}Başlıq yoxdur{% endif %}</small></span>
+                        </div>
+                        <small>{{backlog.date}}</small>
+                      </div>
+                      <div style="margin-left: 30px; color: #787878;">
+                        <p style="margin: 0%;" >{{backlog.message}}</p>
+                      </div>
+                      <div class="action d-flex justify-content-between mt-2 align-items-center">
+                        <div class="reply px-4">
+                            <small>{{backlog.about}}</small>
+                            <span class="dots"></span>
+                            <small>Haqqında</small>
+                        </div>
+                        {% if backlog.mention %}
+                        <div class="icons d-flex align-items-center">
+                            {% if backlog.mention == request.user %}
+                            <button onclick="reply(`{{backlog.by.id}}`)" data-toggle="modal" data-target="#newBacklogModal" class="btn"><i class="fas fa-solid fa-reply"></i></button>
+                            {% endif %}
+                            <a style="border-radius: 3px;  padding: 2px; background-color: rgba(0, 136, 255, 0.279);" href="">@{{backlog.mention}}</a>
+                        </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                    {% endfor %}
+                  </div>
+                  <button onclick="reply(null)" data-toggle="modal" data-target="#newBacklogModal" class="mt-2 btn btn-success" ><i style="font-size: 200; " class="fas fa-sharp fa-solid fa-pen"></i>  Yeni Backlog Yaz</button>
+                </div>
+              </div>
+          </div>
+          <div class="col-4">
+              <h3>Reviziyalar:</h3>
+              {% for revision in revisions %}
+                  {% if revision.is_active %}
+                  <div class="mt-4 mb-3 active_rev">
+                      <div style="display: flex;align-items: center; background-color: rgb(236, 236, 236); padding: 5px;">
+                          <p style="padding: 0%; margin: 0%;" class="rev-num">REV{{revision.number}}</p>
+                      </div>
+                      
+                      <p class="rev-detail-main" style="width: 100%; margin: 0; padding: 0; display: flex; justify-content: space-around; align-items: center;" >
+                          <span class="rev-detail" style="display: flex;  align-items: center;"><i style="font-size: small;" class="fas fa-solid fa-calendar"></i>Tarix: {{revision.date}}</span>
+                          | 
+                          <span class="rev-detail" style="display: flex;  align-items: center;"><i style="font-size: small;" class="fas fa-regular fa-lightbulb"></i>Status: Aktiv</span>
+                          |  
+                          <span class="rev-detail"><a href="{% url 'sales:offer-review' number=offer.number %}?rev={{revision.number}}"><i style="color: rgb(0, 0, 0); margin: 1px;" class="fas fa-solid fa-eye"></i></a></span> 
+                      </p>
+                  </div>
+                  {% else %}
+                  <div class="mb-3 deactive_rev">
+                      <div style="display: flex;align-items: center; background-color: rgb(190, 190, 190); padding: 5px;">
+                          <p style="padding: 0%; margin: 0%;" class="rev-num">REV{{revision.number}}</p>
+                      </div>
+                      
+                      <p class="rev-detail-main" style="width: 100%; margin: 0; padding: 0; display: flex; justify-content: space-around; align-items: center;" >
+                          <span class="rev-detail" style="display: flex;  align-items: center;"><i style="font-size: small;" class="fas fa-solid fa-calendar"></i>Tarix: {{revision.date}}</span>
+                          | 
+                          <span class="rev-detail" style="display: flex;  align-items: center;"><i style="font-size: small;" class="fas fa-regular fa-lightbulb"></i>Status: Deaktiv</span>
+                          |  
+                          <span class="rev-detail" ><a href="{% url 'sales:offer-review' number=offer.number %}?rev={{revision.number}}"><i style="color: rgb(0, 0, 0); margin: 1px;" class="fas fa-solid fa-eye"></i></a></span> 
+                      </p>
+                  </div>
+                  {% endif %}
+              {% endfor %}
+              {% if offer.status == 'Aktiv'  %}
+                <a class="btn btn-success" style="margin-top: 10px; width: 100%; font-weight: bold; padding: 2px;" href="{% url 'sales:offer-new-rev-create' number=offer.number %}">+</a>
+              {% endif %}
+          </div>
+
+        </div>
+        <hr>
+        <form id="updateOfferDetailForm" class="pt-3" action="" enctype="multipart/form-data">
+            <div class="row">
+                <div style="display: flex; justify-content: center; flex-direction: column;" class="col-5">
+                    <h3>Təklif Statusu:</h3>
+                    {% if offer.status == 'Aktiv' %}
+                      <select onchange="showStatusCNG(event)" class="form-control" name="" id="status_changer">
+                        <option selected value="Aktiv">Aktiv</option>
+                        <option value="Uğurlu">Satış(Uğurlu)</option>
+                        <option value="Uğursuz">Passif(Uğursuz)</option>
+                      </select>
+                    {% elif offer.status == 'Uğurlu' %}  
+                      <h5 style="font-weight: bold;" >Satış({{offer.status}})</h5>
+                    {% else %}
+                      <h5 style="font-weight: bold;" >Passif({{offer.status}})</h5>
+                    {% endif %}
+                    {% if offer.status != "Aktiv" %}
+                      <h5>Status Dəyişmə Səbəbi:</h5>
+                      <p style="border: 2px solid rgb(119, 119, 119); padding: 5px; border-radius: 5px; background-color: #e4e4e4;">{{offer.status_change_reason}}</p>
+                    {% endif %}
+                </div>
+                <div style="border-left: 1px  solid rgb(206, 206, 206);" class="col-7">
+                    <h3>Potensiyallıq Dərəcəsi:</h3>
+                    <div class="potency-container">
+                    {% if offer.status != 'Aktiv' %}
+                      <input type="radio" class="radio" name="potency" value="{{offer.potency}}" id="{{offer.potency}}" checked>
+                      <label for="{{offer.potency}}" class="label">{% if offer.potency %}{{offer.potency}}{% else %}Təyin edilmədi{% endif %}</label>
+                    {% else %}
+                      {% if offer.potency == "PİS" %}
+                      <input type="radio" class="radio" name="potency" value="PİS" id="PİS" checked>
+                      <label for="PİS" class="label">PİS</label>
+                  
+                      <input type="radio" class="radio" name="potency" value="ORTA" id="ORTA">
+                      <label for="ORTA" class="label">ORTA</label>
+                  
+                      <input type="radio" class="radio" name="potency" value="YAXŞI" id="YAXŞI">
+                      <label for="YAXŞI" class="label">YAXŞI</label>
+                      {% elif offer.potency == "ORTA" %}
+                      <input type="radio" class="radio" name="potency" value="PİS" id="PİS">
+                      <label for="PİS" class="label">PİS</label>
+                  
+                      <input type="radio" class="radio" name="potency" value="ORTA" id="ORTA" checked>
+                      <label for="ORTA" class="label">ORTA</label>
+                  
+                      <input type="radio" class="radio" name="potency" value="YAXŞI" id="YAXŞI">
+                      <label for="YAXŞI" class="label">YAXŞI</label>
+                      {% elif offer.potency == "YAXŞI" %}
+                      <input type="radio" class="radio" name="potency" value="PİS" id="PİS">
+                      <label for="PİS" class="label">PİS</label>
+                  
+                      <input type="radio" class="radio" name="potency" value="ORTA" id="ORTA">
+                      <label for="ORTA" class="label">ORTA</label>
+                  
+                      <input type="radio" class="radio" name="potency" value="YAXŞI" id="YAXŞI" checked>
+                      <label for="YAXŞI" class="label">YAXŞI</label>
+                      {% else %}
+                      <input type="radio" class="radio" name="potency" value="PİS" id="PİS">
+                      <label for="PİS" class="label">PİS</label>
+                  
+                      <input type="radio" class="radio" name="potency" value="ORTA" id="ORTA">
+                      <label for="ORTA" class="label">ORTA</label>
+                  
+                      <input type="radio" class="radio" name="potency" value="YAXŞI" id="YAXŞI">
+                      <label for="YAXŞI" class="label">YAXŞI</label>
+                      {% endif %}
+                    {% endif %}
+                      <div class="potency">
+                        <div class="potency-bar"></div>
+                      </div>
+                    </div>
+                    
+                </div>
+              </div>
+              <div style="margin-top: 10px;" class="row">
+                <div class="col">
+                  <!-- offerDeleteModal -->
+                  <div class="modal fade" id="offerDeleteModal" tabindex="-1" role="dialog" aria-labelledby="offerDeleteModal" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="offerDeleteModalLabel">Təklif NO: {{offer.number}} silməyi təsdiq edirsinizmi?</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          Təklifi sildikdə bağlı olduğu reviziyalar, kontrakt, satışlar silinəcək!
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Ləğv</button>
+                          <button onclick="deleteOffer()" class="btn btn-danger" type="button">Sil</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {% if offer.status == 'Aktiv' %}
+                  <button id="offerSubmitBTN" class="mb-2 btn btn-primary" type="submit">Yadda saxla</button>
+                  <a class="btn btn-primary  mb-2" href="{% url 'sales:offers-list' %}">Digər Təkliflər</a>
+                  <button type="button" class="mb-2 btn btn-danger" data-toggle="modal" data-target="#offerDeleteModal">Sil</button>
+                  {% elif offer.status == 'Uğurlu' %}
+                  <a class="btn btn-primary mb-2" href="{% url 'sales:order-detail' number=order_num %}">Sifariş detalları</a>
+                  <a class="btn btn-primary mb-2" href="{% url 'sales:offers-list' %}">Digər Təkliflər</a>
+                  <button type="button" class="mb-2 btn btn-danger" data-toggle="modal" data-target="#offerDeleteModal">Sil</button>
+                  {% else %}
+                  <a class="btn btn-primary  mb-2" href="{% url 'sales:offers-list' %}">Digər Təkliflər</a>
+                  <button type="button" class="mb-2 btn btn-danger" data-toggle="modal" data-target="#offerDeleteModal">Sil</button>
+                  {% endif %}
+                </div>
+              </div>
+            </form>
+          <!-- OFFERPACKAGECOUNTALERTMODAL -->
+          <div class="modal fade" id="offerPackCountAlertModal" tabindex="-1" role="dialog" aria-labelledby="offerPackCountAlertModal" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="offerPackCountAlertModalLabel">Təklif daxilindəbirdən çox versiya var</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  Təklif NO:{{offer.number}} aktiv reviziyası REV{{offer_revision.number}} daxilində {{offer_revision.revision_packages.count}} versiya var. Satış-a keçmək üçün yalnız bir versiya təqdim edə bilərsiz!
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Tamam</button>
+                </div>
+              </div>
+            </div>
+          </div>
+            
+          </section>
+          <!-- /.content -->
+  </div>        
+
+{% endblock content %}
+
+{% block scripts %}
+<script>
+  function reply(by){
+    if(by === null){
+      $('#newBacklogMentionUser').find(":selected").attr('selected',false)
+    }else{
+      $("#newBacklogMentionUser option").each(function(i){
+          if(by === $(this).val()){
+            $(this).attr('selected',true)
+          }
+      });
+    }
+
+ 
+  
+}
+
+function showStatusCNG(event){
+  loader.show()
+  let changedStatus = $(`#${event.target.id}`).val();
+  let offerStatus = '{{offer.status}}'
+  let statusChangeReasonTEXTAREA = `
+  <label class="mt-2" id="status_change_reason_label" for="status_change_reason">Status Dəyişmə Səbəbi:</label>
+  <textarea required class="form-control" name="status_change_reason" id="status_change_reason" rows="4"></textarea>
+  `
+  if (changedStatus != offerStatus){
+    if(changedStatus == 'Uğurlu'){
+      $('#offerSubmitBTN').text('Sifariş yarat və yadda saxla')
+    }else if(changedStatus == 'Uğursuz'){
+      $('#offerSubmitBTN').text('Təklifi ləğv et')
+    }
+    let createdStatusChangeReasonTEXTAREA = document.getElementById('status_change_reason')
+    if(!document.getElementById('status_change_reason')){
+     
+      event.target.insertAdjacentHTML('afterEnd', statusChangeReasonTEXTAREA)
+    }
+  }else{
+    $('#offerSubmitBTN').text('Yadda saxla')
+    if(document.getElementById('status_change_reason')){
+      $('#status_change_reason_label').remove()
+      document.getElementById('status_change_reason').remove()
+    }
+  }
+  loader.hide()
+
+}
+function deleteOffer(){
+  loader.show()
+  fetch('{% url "salesApi:offer-deleteapi" pk=offer.id %}',{
+      method:"DELETE",
+      headers: {
+          "X-CSRFToken": getCookie('csrftoken'),
+          "Accept": "application/json",
+          'Content-Type': 'application/json'
+        },
+  })
+  .then((response)=>{
+    window.location.href = '{% url "sales:offers-list" %}'
+  })
+  
+}
+var newBacklogWriteForm = document.getElementById('newBacklogWriteForm')
+newBacklogWriteForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  loader.show()
+  if(!isNaN(parseInt($('#newBacklogMentionUser').val()))){
+    var backlogMention = parseInt($('#newBacklogMentionUser').val())
+  }else{
+    var backlogMention = null
+  }
+  if($('#backlogTitle').val()){
+    var backlogTitle = $('#backlogTitle').val()
+  }else{
+    var backlogTitle = null
+  }
+  newBacklogBody = {
+        'title': backlogTitle,
+        'by': parseInt($('#backlogBY').data('id')),
+        'mention': backlogMention,
+        'message': $('#backlogMessage').val(),
+        'content_type': parseInt('{{content_type}}'),
+        'object_id': parseInt('{{offer.id}}')
+      }
+
+
+  fetch('{% url "coreApi:backlog-createapi" %}',{
+      method:"POST",
+      headers: {
+          "X-CSRFToken": getCookie('csrftoken'),
+          "Accept": "application/json",
+          'Content-Type': 'application/json'
+        },
+      body:JSON.stringify(newBacklogBody)
+  })
+  .then((response)=>{
+      return response.json()
+  })
+  .then((data)=>{
+    console.log(data)
+    window.location.href = window.location.href
+
+  })
+});
+var updateOfferDetailForm = document.getElementById('updateOfferDetailForm')
+updateOfferDetailForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  var changedStatus = $(`#status_changer`).val();
+  if(changedStatus == 'Uğurlu' && parseInt('{{offer_revision.revision_packages.count}}')>1){
+      $('#offerPackCountAlertModal').modal('show');
+    }else{
+      loader.show()
+      
+
+      if(document.querySelector('input[name="potency"]:checked')){
+        var new_potency = document.querySelector('input[name="potency"]:checked').value
+        }else{
+          var new_potency = null
+      }
+
+      if(changedStatus != '{{offer.status}}'){
+          var changeReason = $('#status_change_reason').val()
+      }else{ 
+        var changeReason = null
+      }
+      if(changedStatus == 'Uğurlu' ){
+        var redirect_url = '{% url "sales:create-order" %}?offer={{offer.number}}'
+        changedStatus = 'Aktiv'
+      }else{
+        var redirect_url = window.location.href
+      }
+      fetch('{% url "salesApi:offer-updateapi" pk=offer.id %}',{
+          method:"PATCH",
+          headers: {
+              "X-CSRFToken": getCookie('csrftoken'),
+              "Accept": "application/json",
+              'Content-Type': 'application/json'
+            },
+          body:JSON.stringify({
+            'potency': new_potency,
+            'status': changedStatus,
+            'status_change_reason': changeReason
+          })
+      })
+      .then((response)=>{
+          return response.json()
+      })
+      .then((data)=>{
+        console.log(data)
+        window.location.href = redirect_url
+    
+      })
+    }
+});
+
+
+</script>
+{% endblock scripts %}

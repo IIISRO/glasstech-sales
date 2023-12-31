@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}<title>GlasstechSales | Məhsul Satışları</title>{% endblock %}
+{% block style %}
+<!-- DataTables -->
+<link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+<!-- daterange picker -->
+<link rel="stylesheet" href="{% static 'plugins/daterangepicker/daterangepicker.css' %}">
+{% endblock %}
+{% block content %}
+
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Məhsul Satışları</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="{% url 'core:dashboard' %}">Dashboard</a></li>
+              <li class="breadcrumb-item active">Məhsul</li>
+              <li class="breadcrumb-item active">Məhsul Satışları</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+      <!-- Date range -->
+      <div  class="form-group">
+       <label>Zaman Aralığı:</label>
+
+       <div id="Q" class="input-group">
+       <div class="input-group-prepend">
+           <span class="input-group-text">
+           <i class="far fa-calendar-alt"></i>
+           </span>
+       </div>
+       <input type="text" class="form-control float-right" id="ordersdate">
+       </div>
+       <!-- /.input group -->
+       
+      </div>
+        <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Müştərilər</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                  <th>Adı</th>
+                  <th>Kategoriyası</th>
+                  <th>Sayı</th>
+                  <th>Vahidi</th>
+                  <th>Ümumi gəlir</th>
+                  <th>İstifadə olunan məhsul</th>
+                  <th>Kategoriyası</th>
+                  <th>Sayı</th>
+                  <th>Vahidi</th>
+                  <th>Ümumi dəyəri</th>          
+
+                </tr>
+                </thead>
+                <tbody>
+                  {% for product in  product_list %}
+                  <tr>
+                    <th>{{product.name}}</th>
+                    <th>{{product.category}}</th>
+                    <th>{{product.quantity}}</th>
+                    <th>{{product.unit}}</th>
+                    <th>{{product.total}}AZN</th>
+                    <th>{% if product.useds.name %}{{product.useds.name}}{% else %}-----{% endif %}</th>
+                    <th>{% if product.useds.name %}{{product.useds.category}}{% else %}-----{% endif %}</th>
+                    <th>{% if product.useds.name %}{{product.useds.quantity}}{% else %}-----{% endif %}</th>
+                    <th>{% if product.useds.name %}{{product.useds.unit}}{% else %}-----{% endif %}</th>
+                    <th>{% if product.useds.name %}{{product.useds.total}}AZN{% else %}-----{% endif %}</th>
+                  </tr>
+                  {% endfor %}
+      
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <th>Adı</th>
+                    <th>Kategoriyası</th>
+                    <th>Sayı</th>
+                    <th>Vahidi</th>
+                    <th>Ümumi gəlir</th>
+                    <th>İstifadə olunan məhsul</th>
+                    <th>Kategoriyası</th>
+                    <th>Sayı</th>
+                    <th>Vahidi</th>
+                    <th>Ümumi dəyəri</th>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+
+    </section>
+    <!-- /.content -->
+  </div>
+
+{% endblock content %}
+
+{% block scripts %}
+<!-- date-range-picker -->
+<script src="{%  static 'plugins/moment/moment.min.js' %}"></script>
+<script src="{%  static 'plugins/daterangepicker/daterangepicker.js' %}"></script>
+<!-- DataTables  & Plugins -->
+<script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/jszip/jszip.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/pdfmake.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/vfs_fonts.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
+<script>
+    $(function () {
+      $("#example1").DataTable({
+        "responsive": true, "lengthChange": false, "autoWidth": false,
+        "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
+      
+      }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+   
+    });
+</script>
+<script>
+    var url = new URL(window.location.href);
+    var search_params = url.searchParams;
+
+    if (!(search_params.get('date')===null)){
+      $('#ordersdate').daterangepicker({
+          startDate: search_params.get('date').split('-')[0],
+          endDate: search_params.get('date').split('-')[1],
+          locale: {
+              format: 'DD/MM/YYYY'
+                }
+      });
+      resetBTN = '<button type="button" onclick="resetQ()" style="margin: 4px; padding: 7px;" class="btn btn-secondary"><i  style="margin: 0; font-size: small;" class="fas fa-solid fa-retweet"></i></button>'
+
+      document.getElementById('Q').insertAdjacentHTML('afterend', resetBTN)
+
+    }else{
+      $('#ordersdate').daterangepicker({
+        locale: {
+            format: 'DD/MM/YYYY'
+                }
+      })
+    }
+  $('#ordersdate').on('change', function() {
+  
+      var url = new URL(window.location.href);
+      var search_params = url.searchParams;
+      search_params.set('date', $(this).val());
+      url.search = search_params.toString();
+      var new_url = url.toString();
+      let stateObj = { id: "100" };
+      window.history.replaceState(stateObj,"date", new_url);
+      window.location.href = window.location.href
+  });   
+  function resetQ(){
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams){
+            // Remove a specific parameter, for example, 'search'
+            urlParams.delete('date');
+            const newUrl = `${window.location.pathname}`;
+
+            // Use the new URL
+            window.history.replaceState({}, document.title, newUrl);
+            window.location.href= window.location.href
+        
+        }
+      
+  }  
+</script>
+{% endblock scripts %}

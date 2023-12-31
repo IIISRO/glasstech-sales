@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}<title>GlasstechSales | Yeni Məhsul</title>{% endblock %}
+
+{% block content %}
+
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Məhsul qeydiyyatı</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="{% url 'core:dashboard' %}">Dashboard</a></li>
+              <li class="breadcrumb-item active">Müştəri</li>
+              <li class="breadcrumb-item active">Məhsul qeydiyyatı</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+      <form class="pt-3" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+
+            <label>*Adı:</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fas fa-solid fa-receipt"></i></span>
+              </div>
+             {{form.name}}
+            </div>
+
+            <label>*Vahidi:</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fas fa-solid fa-cube"></i></span>
+              </div>
+              {{form.unit}}
+            </div>
+
+            <label>*Kategoriyası:</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fas fa-solid fa-list"></i></i></span>
+              </div>
+              {{form.category}}
+            </div>
+            
+        
+                  
+
+        <button  style="margin-top: 10px;" type="submit" class="mb-2 btn btn-primary">Əlavə et</button>
+        
+    </form>
+
+    </section>
+    <!-- /.content -->
+  </div>
+
+{% endblock content %}
+
+{% block scripts %}
+<script src="{% static 'plugins/bs-custom-file-input/bs-custom-file-input.min.js' %}"></script>
+
+<script>
+  $(function () {
+    bsCustomFileInput.init();
+  });
+  </script>
+{% endblock scripts %}

@@ -1,0 +1,654 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}<title>GlasstechSales | Təklif Detalları</title>{% endblock %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/offerdetail.css' %}">
+<!-- Ekko Lightbox -->
+<link rel="stylesheet" href="{% static 'plugins/ekko-lightbox/ekko-lightbox.css' %}">
+<style>
+.questions{
+    font-size: 10pt;
+    text-align: center;
+    color: red;
+}
+@media only screen and (max-width: 600px) {
+    .questions{
+        font-size: 8pt;
+    }
+    
+}
+.file-drop-area {       
+  position: relative;
+  display: flex;
+  align-items: center;
+  max-width: 100%;
+  padding: 25px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 10px 20px rgba(0,0,0,.1);
+  transition: .3s;
+}
+.file-drop-area.is-active {
+    -webkit-box-shadow: 8px 8px 50px 0px rgba(141, 185, 255, 0.578);
+    -moz-box-shadow: 8px 8px 50px 0px rgba(141, 185, 255, 0.578);
+    box-shadow: 8px 8px 50px 0px rgba(141, 185, 255, 0.578);
+}
+
+.fake-btn {
+  flex-shrink: 0;
+  color: white;
+  background-color: #0084ff;
+  border-radius: 3px;
+  padding: 8px 15px;
+  margin-right: 10px;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.file-msg {
+  color: #9699b3;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item-delete {
+  display: none;
+  position: absolute;
+  right: 10px;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.item-delete:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  transition: .3s;
+  top: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg fill='%23bac1cb' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 438.5 438.5'%3e%3cpath d='M417.7 75.7A8.9 8.9 0 00411 73H323l-20-47.7c-2.8-7-8-13-15.4-18S272.5 0 264.9 0h-91.3C166 0 158.5 2.5 151 7.4c-7.4 5-12.5 11-15.4 18l-20 47.7H27.4a9 9 0 00-6.6 2.6 9 9 0 00-2.5 6.5v18.3c0 2.7.8 4.8 2.5 6.6a8.9 8.9 0 006.6 2.5h27.4v271.8c0 15.8 4.5 29.3 13.4 40.4a40.2 40.2 0 0032.3 16.7H338c12.6 0 23.4-5.7 32.3-17.2a64.8 64.8 0 0013.4-41V109.6h27.4c2.7 0 4.9-.8 6.6-2.5a8.9 8.9 0 002.6-6.6V82.2a9 9 0 00-2.6-6.5zm-248.4-36a8 8 0 014.9-3.2h90.5a8 8 0 014.8 3.2L283.2 73H155.3l14-33.4zm177.9 340.6a32.4 32.4 0 01-6.2 19.3c-1.4 1.6-2.4 2.4-3 2.4H100.5c-.6 0-1.6-.8-3-2.4a32.5 32.5 0 01-6.1-19.3V109.6h255.8v270.7z'/%3e%3cpath d='M137 347.2h18.3c2.7 0 4.9-.9 6.6-2.6a9 9 0 002.5-6.6V173.6a9 9 0 00-2.5-6.6 8.9 8.9 0 00-6.6-2.6H137c-2.6 0-4.8.9-6.5 2.6a8.9 8.9 0 00-2.6 6.6V338c0 2.7.9 4.9 2.6 6.6a8.9 8.9 0 006.5 2.6zM210.1 347.2h18.3a8.9 8.9 0 009.1-9.1V173.5c0-2.7-.8-4.9-2.5-6.6a8.9 8.9 0 00-6.6-2.6h-18.3a8.9 8.9 0 00-9.1 9.1V338a8.9 8.9 0 009.1 9.1zM283.2 347.2h18.3c2.7 0 4.8-.9 6.6-2.6a8.9 8.9 0 002.5-6.6V173.6c0-2.7-.8-4.9-2.5-6.6a8.9 8.9 0 00-6.6-2.6h-18.3a9 9 0 00-6.6 2.6 8.9 8.9 0 00-2.5 6.6V338a9 9 0 002.5 6.6 9 9 0 006.6 2.6z'/%3e%3c/svg%3e");
+}
+
+.item-delete:after {
+  content: "";
+  position: absolute;
+  opacity: 0;
+  left: 50%;
+  top: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%) scale(0);
+  background-color: #f3dbff;
+  border-radius: 50%;
+  transition: .3s;
+}
+
+.item-delete:hover:after {
+  transform: translate(-50%, -50%) scale(2.2);
+  opacity: 1;
+}
+
+.item-delete:hover:before {
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg fill='%234f555f' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 438.5 438.5'%3e%3cpath d='M417.7 75.7A8.9 8.9 0 00411 73H323l-20-47.7c-2.8-7-8-13-15.4-18S272.5 0 264.9 0h-91.3C166 0 158.5 2.5 151 7.4c-7.4 5-12.5 11-15.4 18l-20 47.7H27.4a9 9 0 00-6.6 2.6 9 9 0 00-2.5 6.5v18.3c0 2.7.8 4.8 2.5 6.6a8.9 8.9 0 006.6 2.5h27.4v271.8c0 15.8 4.5 29.3 13.4 40.4a40.2 40.2 0 0032.3 16.7H338c12.6 0 23.4-5.7 32.3-17.2a64.8 64.8 0 0013.4-41V109.6h27.4c2.7 0 4.9-.8 6.6-2.5a8.9 8.9 0 002.6-6.6V82.2a9 9 0 00-2.6-6.5zm-248.4-36a8 8 0 014.9-3.2h90.5a8 8 0 014.8 3.2L283.2 73H155.3l14-33.4zm177.9 340.6a32.4 32.4 0 01-6.2 19.3c-1.4 1.6-2.4 2.4-3 2.4H100.5c-.6 0-1.6-.8-3-2.4a32.5 32.5 0 01-6.1-19.3V109.6h255.8v270.7z'/%3e%3cpath d='M137 347.2h18.3c2.7 0 4.9-.9 6.6-2.6a9 9 0 002.5-6.6V173.6a9 9 0 00-2.5-6.6 8.9 8.9 0 00-6.6-2.6H137c-2.6 0-4.8.9-6.5 2.6a8.9 8.9 0 00-2.6 6.6V338c0 2.7.9 4.9 2.6 6.6a8.9 8.9 0 006.5 2.6zM210.1 347.2h18.3a8.9 8.9 0 009.1-9.1V173.5c0-2.7-.8-4.9-2.5-6.6a8.9 8.9 0 00-6.6-2.6h-18.3a8.9 8.9 0 00-9.1 9.1V338a8.9 8.9 0 009.1 9.1zM283.2 347.2h18.3c2.7 0 4.8-.9 6.6-2.6a8.9 8.9 0 002.5-6.6V173.6c0-2.7-.8-4.9-2.5-6.6a8.9 8.9 0 00-6.6-2.6h-18.3a9 9 0 00-6.6 2.6 8.9 8.9 0 00-2.5 6.6V338a9 9 0 002.5 6.6 9 9 0 006.6 2.6z'/%3e%3c/svg%3e");
+}
+
+.file-input {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  cursor: pointer;
+  opacity: 0;
+}
+.file-input:focus {
+  outline: none;
+}
+</style>
+{% endblock %}
+{% block content %}
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+        <div class="col-sm-6">
+            <h1>Sifariş NO:{{object.number}}</h1>
+        </div>
+        <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{% url 'core:dashboard' %}">Dashboard</a></li>
+            <li class="breadcrumb-item active">Satış</li>
+            <li class="breadcrumb-item active">Sifariş</li>
+            <li class="breadcrumb-item active">Sifariş Detalları</li>
+            </ol>
+        </div>
+        </div>
+    </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div  class="card" style="width: 100%;">
+            <div class="row">
+                <div class="col-2">
+                    <img width="286px" height="180px" class="card-img-top blurIMG"  src="{% static 'img/order-detail-review.png' %}" alt="Card image cap">
+                    <div id="editLink" >
+                        {% if order.status == 'Davamedir' %}
+                        <a href="{% url 'sales:order-edit' number=order.number %}"><i  style="color: rgb(220, 219, 219); margin: 1px; " class="fas fa-sharp fa-solid fa-pen"></i></a>
+                        {% endif %}
+                        <a href="{% url 'sales:order-review' number=order.number %}"><i style="color: rgb(220, 219, 219); margin: 1px;" class="fas fa-solid fa-eye"></i></a>
+                    </div>
+                </div>
+                <div class="col-10">
+                    <div class="card-body">
+                        <h5 class="card-title">Sifariş : {{order.number}}</h5>
+                        <p class="card-text">
+                            <hr>
+                            <i style="font-size: small;" class="fas fa-solid fa-calendar"></i>Tarix: {{order.date}} <br>
+                            <i style="font-size: small;" class="nav-icon fas fa-solid fa-user"></i>Müştəri: {{order.contract.offer.customer.get_full_name}} <br>
+                            <i style="font-size: small;" class="fas fa-regular fa-lightbulb"></i>Status: {{order.status}}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row mt-5">
+            <div style=" border-right: 1px solid rgb(221, 221, 221);" class="col-5">
+                <h3>Təklif:</h3>
+                <div  class="card" style="width: 100%;">
+                    <div class="row">
+                        <div class="col-4">
+                            <img width="286px" height="150px"  class="blurIMG card-img-top"  src="{% static 'img/offer-detail-review.png' %}" alt="Card image cap">
+                            <div id="editLink" >
+                                <a href="{% url 'sales:offer-detail' number=order.contract.offer.number %}"><i style="color: rgb(220, 219, 219); margin: 1px;" class="fas fa-solid fa-eye"></i></a>
+                            </div>
+                        </div>
+                        <div class="col-8">
+                            <div class="p-1 card-body">
+                                <h5 class="card-title">Təklif : {{order.contract.offer.number}} REV{{order_contracted_offer_revision.number}}</h5>
+                                <p  class=" mb-0 card-text">
+                                    <hr>
+                                    <i style="font-size: small;" class="fas fa-solid fa-calendar"></i>Tarix: {{order_contracted_offer_revision.date}} <br>
+                                    <i style="font-size: small;" class="nav-icon fas fa-solid fa-user"></i>Müştəri: {{order.contract.offer.customer.get_full_name}} <br>
+                                    <i style="font-size: small;" class="fas fa-regular fa-lightbulb"></i>Status: {{order.contract.offer.status}}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row d-flex justify-content-center">
+                    <div class="col-md">
+                    <div class="headings d-flex justify-content-between align-items-center">
+                        <h3>Təklif Backlogs({{offer_backlogs.count}}):</h3>
+                    </div> 
+                    <div style="max-height: 200px; overflow-y: auto;">
+                        {% for backlog in offer_backlogs %}
+                        <div class="card p-3 mt-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="user d-flex flex-row align-items-center">
+                            <img src="{% if backlog.by.pp %}{{backlog.by.pp.url}}{% else %}{% endif %}" onerror="userPPAlt(event)" width="30" class="user-img rounded-circle mr-2">
+                            <span><small class="font-weight-bold text-primary"><a href="">{{backlog.by}}</a></small> <small class="font-weight-bold">{% if backlog.title %}{{backlog.title}}{% else %}Başlıq yoxdur{% endif %}</small></span>
+                            </div>
+                            <small>{{backlog.date}}</small>
+                        </div>
+                        <div style="margin-left: 30px; color: #787878;">
+                            <p style="margin: 0%;" >{{backlog.message}}</p>
+                        </div>
+                        <div class="action d-flex justify-content-between mt-2 align-items-center">
+                            <div class="reply px-4">
+                                <small>{{backlog.about}}</small>
+                                <span class="dots"></span>
+                                <small>Haqqında</small>
+                            </div>
+                            {% if backlog.mention %}
+                            <div class="icons d-flex align-items-center">
+                                <a style="border-radius: 3px;  padding: 2px; background-color: rgba(0, 136, 255, 0.279);" href="">@{{backlog.mention}}</a>
+                            </div>
+                            {% endif %}
+                        </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    </div>
+                </div>
+            </div>
+        <div class="col-7">
+            <form id="newBacklogWriteForm" action="" enctype="multipart/form-data">
+                <!-- newBacklogModal -->
+                <div class="modal fade" id="newBacklogModal" tabindex="-1" role="dialog" aria-labelledby="newBacklogModal" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="newBacklogModalLabel">Təklif NO: {{offer.number}} Yeni Backlog Yaz</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                        <div class="col-6">
+                            <label for="">Kimdən:</label>
+                            <input disabled data-id="{{request.user.id}}" value="{{request.user}}" placeholder="{{request.user}}"  class="form-control" type="text" name="by" id="backlogBY">
+                        </div>
+                        <div class="col-6">
+                            <label for="">Tag:</label>
+                            <div class="mentionuser">
+                            <p>@</p>
+                            <select name="mention" id="newBacklogMentionUser">
+                                <option selected></option>
+                                {% for user in users %}
+                                <option value="{{user.id}}">{{user.username}}</option>
+                                {% endfor %}
+                            </select>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="row">
+                        <div class="col-12">
+                            <label for="">Haqqında:</label>
+                            <input disabled value="{{order}}" class="form-control" type="text" name="about" id="about">
+                        </div>
+                        </div>
+                        <div class="row">
+                        <div class="col-12">
+                            <label for="">Başlıq:</label>
+                            <input class="form-control" type="text" name="title" id="backlogTitle">
+                        </div>
+                        </div>
+                        <div class="row">
+                        <div class="col-12">
+                            <label for="">Mesaj:</label>
+                            <input required class="form-control" maxlength="100" type="text" name="message" id="backlogMessage">
+                        </div>
+                        </div>
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Ləğv</button>
+                        <button class="btn btn-success" type="submit">Yaz</button>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </form>
+            <div class="row d-flex justify-content-center">
+                <div class="col-md">
+                <div class="headings d-flex justify-content-between align-items-center">
+                    <h3>Backlogs({{backlogs.count}}):</h3>
+                </div> 
+                <div style="max-height: 400px; overflow-y: auto;">
+                    {% for backlog in backlogs %}
+                    <div class="card p-3 mt-2">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="user d-flex flex-row align-items-center">
+                        <img src="{% if backlog.by.pp %}{{backlog.by.pp.url}}{% else %}{% endif %}" onerror="userPPAlt(event)" width="30" class="user-img rounded-circle mr-2">
+                        <span><small class="font-weight-bold text-primary"><a href="">{{backlog.by}}</a></small> <small class="font-weight-bold">{% if backlog.title %}{{backlog.title}}{% else %}Başlıq yoxdur{% endif %}</small></span>
+                        </div>
+                        <small>{{backlog.date}}</small>
+                    </div>
+                    <div style="margin-left: 30px; color: #787878;">
+                        <p style="margin: 0%;" >{{backlog.message}}</p>
+                    </div>
+                    <div class="action d-flex justify-content-between mt-2 align-items-center">
+                        <div class="reply px-4">
+                            <small>{{backlog.about}}</small>
+                            <span class="dots"></span>
+                            <small>Haqqında</small>
+                        </div>
+                        {% if backlog.mention %}
+                        <div class="icons d-flex align-items-center">
+                            {% if backlog.mention == request.user %}
+                            <button onclick="reply(`{{backlog.by.id}}`)" data-toggle="modal" data-target="#newBacklogModal" class="btn"><i class="fas fa-solid fa-reply"></i></button>
+                            {% endif %}
+                            <a style="border-radius: 3px;  padding: 2px; background-color: rgba(0, 136, 255, 0.279);" href="">@{{backlog.mention}}</a>
+                        </div>
+                        {% endif %}
+                    </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <button onclick="reply(null)" data-toggle="modal" data-target="#newBacklogModal" class="mt-2 btn btn-success" ><i style="font-size: 200; " class="fas fa-sharp fa-solid fa-pen"></i>  Yeni Backlog Yaz</button>
+                </div>
+            </div>
+        </div>
+    
+
+        </div>
+        <hr>
+        <form id="updateOfferDetailForm" class="pt-3" action="" enctype="multipart/form-data">
+            <div class="row">
+                <div style="display: flex; justify-content: center; flex-direction: column; align-items: center;" class="col-12">
+                    <h3 class="text-center" >Sifariş Statusu:</h3>
+                    {% if order.status == 'Davamedir' %}
+                    <select onchange="showStatusCNG(event)" class="form-control" name="" id="status_changer">
+                        <option selected value="Davamedir">Davamedir</option>
+                        <option value="Tamamlandı">Tamamlandı</option>
+                    </select>
+                    {% else %}
+                    <b class="mb-2 pb-2" style="border-bottom: 1px solid rgba(0, 0, 0, 0.219); width: 100%; text-align: center; color: green;">{{order.status}}</b>
+                    <h5>Status Dəyişmə Səbəbi:</h5>
+                    <p style="width: 100%; text-align: center; border: 2px solid rgb(119, 119, 119); padding: 5px; border-radius: 5px; background-color: #e4e4e4;">{{order.status_change_reason}}</p>
+                    <h5 style="border-top: 1px solid rgba(0, 0, 0, 0.235); width: 100%; text-align: center;" class="mt-2 pt-2">Təhvil Təslim Aktı:</h5>
+                    <div style="display: flex; justify-content: center;" class="filter-container p-0 row">
+                        <div class="filtr-item col-sm-2" data-category="1" data-sort="white sample">
+                        <a href="{{order.handover.url}}" data-toggle="lightbox" data-title="Sifariş NO:{{order.number}} Təhvil Təslim Aktı">
+                            <img src="{{order.handover.url}}" class="blurIMG img-fluid mb-2" alt="white sample"/>
+                        </a>
+                        </div>
+                    </div>
+                    <div class="row mt-2" style="border-top: 1px solid rgba(0, 0, 0, 0.235);display: flex; justify-content: space-around; align-items: center;">
+                        <div class="col-2">
+                            <label class="mt-2 questions" for="">Sizinlə iş birliyi zamanı peçəkarlığımızı necə dəyərləndirirsiniz?</label>
+                            <p class="questions" style="color: black; text-align: center; border: 2px solid rgb(119, 119, 119); padding: 5px; border-radius: 5px; background-color: #e4e4e4;">{{order.question_corporation_profency}}</p>
+
+                        </div>
+                        <div class="col-2">
+                            <label class="mt-2 questions" for="">Müraciətinizə qarşı operativliyimizi necə dəyərləndirirsiniz?</label>
+                            <p class="questions" style="color: black; text-align: center; border: 2px solid rgb(119, 119, 119); padding: 5px; border-radius: 5px; background-color: #e4e4e4;">{{order.question_operativeness}}</p>
+                        </div>
+                        <div class="col-2">
+                            <label class="mt-2 questions" for="">Komandamızın ünsiyyət yaratmaq qabiliyyətini necə dəyərləndirirsiniz?</label>
+                            <p class="questions" style="color: black; text-align: center; border: 2px solid rgb(119, 119, 119); padding: 5px; border-radius: 5px; background-color: #e4e4e4;">{{order.question_personals_communication}}</p>
+                        </div>
+                        <div class="col-2">
+                            <label class="mt-2 questions" for="">Çatdırılma və quraşdırılma komandasının peşəkarlığı:</label>
+                            <p class="questions" style="color: black; text-align: center; border: 2px solid rgb(119, 119, 119); padding: 5px; border-radius: 5px; background-color: #e4e4e4;">{{order.question_delv_install_team}}</p>
+                        </div>
+                        <div class="col-2">
+                            <label class="mt-2 questions" for="">Sifariş nə dərəcədə gözləntilərinizə uyğun gəldi?</label>
+                            <p class="questions" style="color: black; text-align: center; border: 2px solid rgb(119, 119, 119); padding: 5px; border-radius: 5px; background-color: #e4e4e4;">{{order.question_order_expectation}}</p>
+                        </div>
+                    </div>
+                    <h5 style="border-top: 1px solid rgba(0, 0, 0, 0.235); width: 100%; text-align: center;" class="mt-2 pt-2">Müştəri Rəyi:</h5>
+                    <p  style="width: 100%; text-align: center; border: 2px solid rgb(119, 119, 119); padding: 5px; border-radius: 5px; background-color: #e4e4e4;">{{order.customer_feedback}}</p>
+      
+                    {% endif %}
+                </div>
+            </div>
+            <a id="otherOrdersBTN" class="btn btn-primary  mb-2 mt-2" href="{% url 'sales:orders-list' %}">Digər Sifarişlər</a>
+        </form> 
+    </section>
+    <!-- /.content -->
+</div>        
+
+{% endblock content %}
+
+{% block scripts %}
+<script>
+  function reply(by){
+    if(by === null){
+      $('#newBacklogMentionUser').find(":selected").attr('selected',false)
+    }else{
+      $("#newBacklogMentionUser option").each(function(i){
+          if(by === $(this).val()){
+            $(this).attr('selected',true)
+          }
+      });
+    }
+
+ 
+  
+}
+
+
+var newBacklogWriteForm = document.getElementById('newBacklogWriteForm')
+newBacklogWriteForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  loader.show()
+  if(!isNaN(parseInt($('#newBacklogMentionUser').val()))){
+    var backlogMention = parseInt($('#newBacklogMentionUser').val())
+  }else{
+    var backlogMention = null
+  }
+  if($('#backlogTitle').val()){
+    var backlogTitle = $('#backlogTitle').val()
+  }else{
+    var backlogTitle = null
+  }
+  newBacklogBody = {
+        'title': backlogTitle,
+        'by': parseInt($('#backlogBY').data('id')),
+        'mention': backlogMention,
+        'message': $('#backlogMessage').val(),
+        'content_type': parseInt('{{content_type}}'),
+        'object_id': parseInt('{{order.id}}')
+      }
+
+
+  fetch('{% url "coreApi:backlog-createapi" %}',{
+      method:"POST",
+      headers: {
+          "X-CSRFToken": getCookie('csrftoken'),
+          "Accept": "application/json",
+          'Content-Type': 'application/json'
+        },
+      body:JSON.stringify(newBacklogBody)
+  })
+  .then((response)=>{
+      return response.json()
+  })
+  .then((data)=>{
+    console.log(data)
+    window.location.href = window.location.href
+
+  })
+});
+
+function showStatusCNG(event){
+  loader.show()
+  let changedStatus = $(`#${event.target.id}`).val();
+  let offerStatus = '{{order.status}}'
+  if (changedStatus != offerStatus){
+    let completedFinishForm = 
+    `
+      <div id='completedFinishForm' class="text-center w-100">
+        <label class="mt-2" for="status_change_reason">Status Dəyişmə Səbəbi:</label>
+        <textarea required class="form-control" name="status_change_reason" id="status_change_reason" rows="4"></textarea>
+        <label class="mt-2" for="">Təhvil Təsilim Aktı:</label>
+        <div class="file-drop-area">
+            <span class="fake-btn">Aktı seç</span>
+            <span class="file-msg">vəya çək at</span>
+            <input required class="file-input" type="file" accept="image/*" id="handover">
+            <div class="item-delete"></div>
+        </div>
+        <div class="row mt-2" style="display: flex; justify-content: space-around; align-items: center;">
+            <div class="col-2">
+                <label class="mt-2 questions" for="">Sizinlə iş birliyi zamanı peçəkarlığımızı necə dəyərləndirirsiniz?</label>
+            </div>
+            <div class="col-2">
+                <label class="mt-2 questions" for="">Müraciətinizə qarşı operativliyimizi necə dəyərləndirirsiniz?</label>
+            </div>
+            <div class="col-2">
+                <label class="mt-2 questions" for="">Komandamızın ünsiyyət yaratmaq qabiliyyətini necə dəyərləndirirsiniz?</label>
+            </div>
+            <div class="col-2">
+                <label class="mt-2 questions" for="">Çatdırılma və quraşdırılma komandasının peşəkarlığı:</label>
+            </div>
+            <div class="col-2">
+                <label class="mt-2 questions" for="">Sifariş nə dərəcədə gözləntilərinizə uyğun gəldi?</label>
+            </div>
+        </div>
+        <div class="row" style="display: flex; justify-content: space-around; align-items: center;">
+            <div class="col-2">
+                <select required class="form-control" name="" id="question_corporation_profency">
+                    <option selected disabled value="">-----</option>
+                    <option value="PİS">PİS</option>
+                    <option value="ORTA">ORTA</option>
+                    <option value="YAXŞI">YAXŞI</option>
+                </select>
+            </div>
+            <div class="col-2">
+                <select required class="form-control" name="" id="question_operativeness">
+                    <option selected disabled value="">-----</option>
+                    <option value="PİS">PİS</option>
+                    <option value="ORTA">ORTA</option>
+                    <option value="YAXŞI">YAXŞI</option>
+                </select>
+            </div>
+            <div class="col-2">
+                <select required class="form-control" name="" id="question_personals_communication">
+                    <option selected disabled value="">-----</option>
+                    <option value="PİS">PİS</option>
+                    <option value="ORTA">ORTA</option>
+                    <option value="YAXŞI">YAXŞI</option>
+                </select>
+            </div>
+            <div class="col-2">
+                <select required class="form-control" name="" id="question_delv_install_team">
+                    <option selected disabled value="">-----</option>
+                    <option value="PİS">PİS</option>
+                    <option value="ORTA">ORTA</option>
+                    <option value="YAXŞI">YAXŞI</option>
+                </select>
+            </div>
+            <div class="col-2">
+                <select required class="form-control" name="" id="question_order_expectation">
+                    <option selected disabled value="">-----</option>
+                    <option value="PİS">PİS</option>
+                    <option value="ORTA">ORTA</option>
+                    <option value="YAXŞI">YAXŞI</option>
+                </select>
+            </div>
+        
+        </div>
+        <label class="mt-2" for="">Müştəri Rəyi:</label>
+        <textarea required class="form-control" name="" id="customer_feedback" rows="4"></textarea>
+    </div>
+      `
+    let submitBTN = `<button id="orderUpdateBTN" class="btn btn-success m-2" type="submit">Sifarişi tamamla</button>`
+    if(!document.getElementById('completedFinishForm')){
+      document.getElementById('otherOrdersBTN').insertAdjacentHTML('afterEnd', submitBTN)
+      event.target.insertAdjacentHTML('afterEnd', completedFinishForm)
+      imgField()
+    }
+  }else{
+    if(document.getElementById('completedFinishForm')){
+      $('#completedFinishForm').remove()
+      $('#orderUpdateBTN').remove()
+    }
+  }
+  loader.hide()
+
+}
+
+
+var updateOfferDetailForm = document.getElementById('updateOfferDetailForm')
+updateOfferDetailForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+    loader.show()
+    let formData = new FormData()
+    formData.append('status', $(`#status_changer`).val())
+    formData.append('status_change_reason', $(`#status_change_reason`).val()) 
+    formData.append('question_operativeness', $(`#question_operativeness`).val()) 
+    formData.append('question_corporation_profency', $(`#question_corporation_profency`).val())
+    formData.append('question_personals_communication', $(`#question_personals_communication`).val())
+    formData.append('question_delv_install_team', $(`#question_delv_install_team`).val())
+    formData.append('question_order_expectation', $(`#question_order_expectation`).val())
+    formData.append('customer_feedback', $(`#customer_feedback`).val())
+    formData.append('handover', document.getElementById(`handover`).files[0])
+
+
+    fetch('{% url "salesApi:order-updateapi" pk=order.id %}',{
+        method:"PATCH",
+        headers: {
+            "X-CSRFToken": getCookie('csrftoken'),
+            "Accept": "application/json",
+        },
+        body: formData
+
+
+
+    })
+    .then((response)=>{
+        return response.json()
+    })
+    .then((data)=>{
+    console.log(data)
+    window.location.href = window.location.href
+
+    })
+});
+
+
+</script>
+<!-- img upload -->
+<script>
+function imgField(){
+    
+    const $fileInput = $('.file-input');
+    const $droparea = $('.file-drop-area');
+    const $delete = $('.item-delete');
+    
+    $fileInput.on('dragenter focus click', function () {
+      $droparea.addClass('is-active');
+    });
+    
+    $fileInput.on('dragleave blur drop', function () {
+      $droparea.removeClass('is-active');
+    });
+    
+    $fileInput.on('change', function () {
+      let filesCount = $(this)[0].files.length;
+      let $textContainer = $(this).prev();
+    
+      if (filesCount === 1) {
+        let fileName = $(this).val().split('\\').pop();
+        let extension = fileName.split('.').pop().toLowerCase();
+        if(extension==='png'||extension==='jpg'||extension==='jpeg'){
+            $textContainer.text(fileName);
+            $('.item-delete').css('display', 'inline-block');
+        }else{
+            $('.file-input').val(null);
+            $('.file-msg').text('PNG, JPG formatında fayl yüklənməlidir!');
+            $('.item-delete').css('display', 'none');
+        }
+      } else if (filesCount === 0) {
+        $textContainer.text('vəya çək at');
+        $('.item-delete').css('display', 'none');
+      } else {
+        $textContainer.text(filesCount + ' files selected');
+        $('.item-delete').css('display', 'inline-block');
+      }
+    });
+    
+    $delete.on('click', function () {
+      $('.file-input').val(null);
+      $('.file-msg').text('vəya çək at');
+      $('.item-delete').css('display', 'none');
+    });
+}
+</script>
+<!-- Filterizr-->
+<script src="{% static 'plugins/filterizr/jquery.filterizr.min.js' %}"></script>
+<!-- Ekko Lightbox -->
+<script src="{% static 'plugins/ekko-lightbox/ekko-lightbox.min.js' %}"></script>
+{% if order.status != 'Davamedir' %}
+<script>
+    $(function () {
+      $(document).on('click', '[data-toggle="lightbox"]', function(event) {
+        event.preventDefault();
+        $(this).ekkoLightbox({
+          alwaysShowClose: true
+        });
+      });
+  
+      $('.filter-container').filterizr({gutterPixels: 3});
+      $('.btn[data-filter]').on('click', function() {
+        $('.btn[data-filter]').removeClass('active');
+        $(this).addClass('active');
+      });
+    })
+</script>
+{% endif %}
+{% endblock scripts %}

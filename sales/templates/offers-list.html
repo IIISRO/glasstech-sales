@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}<title>GlasstechSales | Təkliflər</title>{% endblock %}
+{% block style %}
+<!-- daterange picker -->
+<link rel="stylesheet" href="{% static 'plugins/daterangepicker/daterangepicker.css' %}">
+<!-- DataTables -->
+<link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+{% endblock %}
+{% block content %}
+
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Təklif Siyahısı</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="{% url 'core:dashboard' %}">Dashboard</a></li>
+              <li class="breadcrumb-item active">Satış</li>
+              <li class="breadcrumb-item active">Təklif Siyahısı</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+             <!-- Date range -->
+             <div class="form-group">
+              <label>Zaman Aralığı:</label>
+
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="far fa-calendar-alt"></i>
+                  </span>
+                </div>
+                <input type="text" class="form-control float-right" id="offerdate">
+              </div>
+              <!-- /.input group -->
+            </div>
+            <!-- /.form group -->
+            <div class="card">
+                <div class="card-header border-0">
+                    <div class="d-flex justify-content-between">
+                    <h3 class="card-title">Ümumi Təklif Sayı</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex">
+                    <p class="d-flex flex-column">
+                        <span id="offerCount" class="text-bold text-lg">0</span>
+                        <span>Aylar Üzrə təkkliflər</span>
+                    </p>
+                    {% if precent >  0 %}
+                    <p id="precentOffers" class="ml-auto d-flex flex-column text-right">
+                        <span style="color: #008000;" class="text-success">
+                        <i class="fas fa-arrow-up"></i> {{precent}}%
+                        </span>
+                        <span class="text-muted">Keçən aydan etibarən</span>
+                    </p>
+                    {% else %}
+                    <p id="precentOffers" class="ml-auto d-flex flex-column text-right">
+                      <span style="color: #c70000;" class="text-danger">
+                      <i class="fas fa-arrow-down"></i> {{precent}}%
+                      </span>
+                      <span class="text-muted">Keçən aydan etibarən</span>
+                    </p>
+                    {% endif %}
+                    </div>
+                    <!-- /.d-flex -->
+    
+                    <div class="position-relative mb-4">
+                    <canvas id="visitors-chart" height="200"></canvas>
+                    </div>
+    
+                    <div class="d-flex flex-row justify-content-end">
+                    <span class="mr-2">
+                        <i class="fas fa-square text-primary"></i> Aktiv
+                    </span>
+                    <span class="mr-2">
+                      <i class="fas fa-square text-success"></i> Uğurlu
+                    </span>
+                    <span>
+                        <i class="fas fa-square text-gray"></i> Passif
+                    </span>
+                    </div>
+                </div>
+            </div>
+            <!-- /.card -->
+            
+        <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Təkliflər</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th>Müştəri</th>
+                    <th>Nömrə</th>
+                    <th>Statusu</th>
+                    <th>Potensiyallığı</th>
+                    <th>Tarix</th>
+                </tr>
+                </thead>
+                <tbody id="offersListBody">
+             
+               
+                
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>Müştəri</th>
+                        <th>Nömrə</th>
+                        <th>Statusu</th>
+                        <th>Potensiyallığı</th>
+                        <th>Tarix</th>
+                    </tr>
+                </tfoot>
+              </table>
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+
+    </section>
+    <!-- /.content -->
+  </div>
+
+{% endblock content %}
+
+{% block scripts %}
+<!-- ChartJS -->
+<script>
+    var getOfferApiURL = '{% url "salesApi:offers-listapi" %}'
+
+</script>
+<!-- InputMask -->
+<script src="{%  static 'plugins/moment/moment.min.js' %}"></script>
+<script src="{%  static 'plugins/inputmask/jquery.inputmask.min.js' %}"></script>
+<!-- date-range-picker -->
+<script src="{%  static 'plugins/daterangepicker/daterangepicker.js' %}"></script>
+<script src="{%  static 'plugins/chart.js/Chart.min.js' %}"></script>
+<!-- DataTables  & Plugins -->
+<script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/jszip/jszip.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/pdfmake.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/vfs_fonts.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
+<script src="{% static 'js/offers-list.js' %}"></script>
+
+{% endblock scripts %}

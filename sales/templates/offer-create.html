@@ -1,0 +1,351 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}<title>GlasstechSales | Yeni Təklif</title>{% endblock %}
+
+{% block style %}
+
+{% endblock style %}
+
+{% block content %}
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Yeni Təklif Yarat</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="{% url 'core:dashboard' %}">Dashboard</a></li>
+              <li class="breadcrumb-item active">Satış</li>
+              <li class="breadcrumb-item active">Təklif</li>
+              <li class="breadcrumb-item active">Yeni Təklif Yarat</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <form id="createOfferForm" class="pt-3" action="" enctype="multipart/form-data">
+        <hr>
+        <div style="display: flex; justify-content: end;">
+          <ul style="list-style: none; ">
+            <li>Ünvan:  Bakı, Səməd Vurğun küç.100,<br> Vurgun Residence</li>
+            <li>Tel:  +994 50 228 40 34</li>
+            <li>E-mail:   info@glasstech.az</li>
+            <li>Web:   www.glasstech.az</li>
+          </ul>
+        </div>
+        <hr>
+        <div style="display: flex; justify-content: space-between;">
+          <div  style="color: rgb(58, 106, 90);">
+            <h3 style="font-weight: bold; margin: 0%;">Qiymət Təklifi</h3>
+            <h6 style="margin: 0%;">No     : {{offer_number}}   REV001</h6>
+            <h6>Tarix:  {{date}}</h6>
+          </div>
+          <div>
+            <ul style="list-style: none; ">
+              <li>Firma Adı:  {{customer.company_name}}</li>
+              <li>Adı Soyadı:  {{customer.name}} {{customer.surname}}</li>
+              <li>Tel:  {{customer.phone}}</li>
+              <li> Mob: {{customer.mobile}}</li>
+              <li> Email: {{customer.email}}</li>
+            </ul>
+          </div>
+        </div>
+        <hr>
+        <p >Hörmətli {{customer.name}} {{customer.surname}},<br>  
+          Bizdən tələb etdiyiniz işlərlə bağlı qiymət təklifimizi əlavədə sizə təqdim edirik. Xahiş edirik <br>
+          tanış olasınız və öz fikirlərinizi bizə bildirəsiniz. <br>
+          Hörmətlə <br><br>
+          <span style="display: flex; justify-content: space-between;">
+            <span>Təklifi Hazırlayan <br> 
+              <select class="form-control" required style="background: rgb(245, 245, 245); border: 0;" id="offer_creator" name="offer_creator">
+                <option disabled selected value="">------------</option>
+                    {% for user in users %}
+                      <option value="{{user.id}}">{{user.get_full_name}}</option>
+                    {% endfor %}
+              </select> 
+            </span>			
+            <span>Təklifi Təsdiqləyən <br> 
+              <select class="form-control" required style="background: rgb(245, 245, 245); border: 0;" id="offer_approver" name="offer_approver">
+                <option disabled selected value="">------------</option>
+                    {% for user in users %}
+                      <option value="{{user.id}}">{{user.get_full_name}}</option>
+                    {% endfor %}
+              </select>
+            </span>					       
+          </span>
+        </p>
+        <hr><hr>
+        <h3 style="text-align: center; color: rgb(58, 106, 90); font-weight: bold;">Qiymət Cədvəli</h3>
+        <!-- package -->
+        <table class="packages" data-package_id="1" id="package-1" style="margin-bottom: 30px; width: 100%;" cellspacing="0" cellpadding="0" >
+
+          <tbody>
+            <!-- header -->
+            <tr style="height: 39.6pt;">
+                <!-- version -->
+                <td width="36" style=" text-align: center; width: 27.3pt; border: 1pt solid windowtext; background: rgb(231, 230, 230); padding: 0cm 5.4pt; height: 39.6pt;">
+                  <b id="package-1-version" style="color: red;"></b>
+                  <button type="button" id="package-1-addbtn" data-package_id="1" onclick="addPackage(event)" style="margin-bottom: 10px; display: flex; justify-content: center; align-items: center;  height: 20px; width: 100%; font-weight: bold;" class="btn btn-success">+</button>
+                </td>
+                <!-- header titles -->
+                <td width="332" style=" text-align: center; width: 249.15pt; border-top: 1pt solid windowtext; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-image: initial; border-left: none; background: rgb(231, 230, 230); padding: 0cm 5.4pt; height: 39.6pt;">
+                  <b>İşin  adı</b>
+                </td>
+                <td width="76" style="text-align: center; width: 2cm; border-top: 1pt solid windowtext; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-image: initial; border-left: none; background: rgb(231, 230, 230); padding: 0cm 5.4pt; height: 39.6pt;">
+                  <b>Vahidi</b>
+                </td>
+                <td width="66" style="text-align: center; width: 49.6pt; border-top: 1pt solid windowtext; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-image: initial; border-left: none; background: rgb(231, 230, 230); padding: 0cm 5.4pt; height: 39.6pt;">
+                  <b>Miqdarı</b>
+                </td>
+                <td width="76"  style=" text-align: center; width: 2cm; border-top: 1pt solid windowtext; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-image: initial; border-left: none; background: rgb(231, 230, 230); padding: 0cm 5.4pt; height: 39.6pt;">
+                  <b>Vahidin qiyməti Azn</b>
+                </td>
+                <td width="85" style="text-align: center; width: 63.8pt; border-top: 1pt solid windowtext; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-image: initial; border-left: none; background: rgb(231, 230, 230); padding: 0cm 5.4pt; height: 39.6pt;">
+                  <b>Məbləğ AZN</b>
+                </td>
+            </tr>
+          </tbody>
+
+
+          <tbody data-package_id="1" data-service_id="1" class="services" id="package-1-service-1">
+            <!-- service -->
+            <tr style="height: 138.95pt;">
+              <!-- service num -->
+              <td width="36" style="text-align: center; width: 27.3pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; padding: 0cm 5.4pt; height: 138.95pt;">
+                <p id="package-1-service-1-index" style="margin: 10px 0px 10px 0px;">1</p>
+                <button type="button" id="package-1-service-1-addbutton" data-package_id='1' data-service_id="1" onclick="addService(event)" style="display: flex; justify-content: center; align-items: center;  height: 20px; width: 100%; font-weight: bold;" class="btn btn-success">+</button>
+              </td>
+
+              <!-- service -->
+              <td width="332" style="width: 500.15pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; padding: 0cm 5.4pt; height: 138.95pt;">
+                <select required class="form-control" style="background: rgb(245, 245, 245); border: 0;" onchange="findUnit(event)" data-package_id="1" data-service_id="1" name="package-1-service-1-product" id="package-1-service-1-product">
+                  <option disabled selected value="">------------</option>
+                  {% for product in products %}
+                    <option data-unit="{{product.unit}}" value="{{product.id}}">{{product.name}}({{product.category}})</option>
+                  {% endfor %}
+                </select>
+                <button onclick="checkServiceUsedProd(event)" data-package_id="1" data-service_id="1" class="btn-xs btn mt-1 btn-success" type="button" data-toggle="collapse" data-target="#package-1-service-1-UsedServiceModal" aria-expanded="false" id='package-1-service-1-UsedServiceModalBTN' aria-controls="package-1-service-1-UsedServiceModal">
+                İstifadə olunan material
+                </button>
+                <div class="collapse" id="package-1-service-1-UsedServiceModal">
+                  <div class="card usedmaterials  card-body">
+                      <label for="">Məhsul:</label>
+                      <select style="height: 30px;" class="form-control" id="package-1-service-1-usedprod">
+                          <option value="" selected disabled>------</option>
+                          {% for product in products %}
+                            <option  value="{{product.id}}">{{product.name}}({{product.category}})</option>
+                          {% endfor %}
+                      </select>
+                      <div class="row">
+                          <div class="col">
+                              <label for="">Qiymət:</label>
+                              <input style="height: 30px;" class="floatfield form-control" id="package-1-service-1-usedprodprice" type="text">
+                          </div>
+                          <div class="col">
+                              <label for="">Say:</label>
+                              <input style="height: 30px;" class="floatfield form-control" id="package-1-service-1-usedprodquantity" type="text">
+                          </div>
+                      </div>
+                  </div>
+                </div>
+                <p class="MsoNormal" style="margin: 0cm 0cm 0cm 2.1pt; font-size: 12pt">
+                    <b><span lang="AZ-LATIN" style="font-family: Arial, sans-serif;">&nbsp;</span></b>
+                </p>
+
+                <!-- serivce detail -->
+                  <textarea required name="package-1-service-1-detail" id="package-1-service-1-detail" cols="30" rows="10"></textarea>
+
+              </td>
+
+              <!-- service unit -->
+              <td width="80" style="text-align: center; width: 103.8pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; padding: 0cm 5.4pt; height: 138.95pt;">
+                <p id="package-1-service-1-unit">---</p>
+              </td>
+
+              <!-- service quantity -->
+              <td width="80" style="text-align: center; width: 103.8pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; padding: 0cm 5.4pt; height: 138.95pt;">
+                <input required data-package_id="1" data-service_id="1" onchange="calcServiceTotalPrice(event)" style="background: rgb(245, 245, 245); border: 0;" placeholder="0.0" class="floatfield form-control" type="text" name="package-1-service-1-quantity" id="package-1-service-1-quantity">
+              </td>
+
+              <!-- service price -->
+              <td width="80"  style="text-align: center; width: 103.8pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; padding: 0cm 5.4pt; height: 138.95pt;">
+              <input required data-package_id="1" data-service_id="1" onchange="calcServiceTotalPrice(event)" style="background: rgb(245, 245, 245); border: 0;" placeholder="0.0" class="floatfield form-control" type="text" name="package-1-service-1-price" id="package-1-service-1-price">
+              </td>
+
+              <!-- service total price -->
+              <td width="80" style="text-align: center; width: 123.8pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; padding: 0cm 5.4pt; height: 138.95pt;">
+                <b class="servicetotalprice" id="package-1-service-1-totalprice" >0</b>
+              </td>
+            </tr>
+          </tbody>
+            
+          <tbody>
+            <!-- summa -->
+            <tr style="height: 26.05pt;">
+              <td width="85" colspan="2" style="width: 39.1pt; border-right:0pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; background: rgb(229, 229, 229); padding: 0cm 5.4pt; height: 26.05pt;">
+                <button id="package-1-discountbtn" data-package_id="1" onclick="packageDiscountField(event)" style="font-size: 12px;" type="button" class="btn-sm btn btn-secondary">ENDİRİM</button>
+                <button id="package-1-taxbtn" data-package_id="1" onclick="packageTaxField(event)" style="font-size: 12px;" type="button" class="btn-sm btn btn-secondary">ƏDV</button>
+              </td>
+              <td width="500" colspan="3" style="width: 400pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 0pt solid windowtext; border-image: initial; border-top: none; background: rgb(229, 229, 229); padding: 0cm 5.4pt; height: 26.05pt;">
+                  <p style="margin: 0cm; font-size: 12pt; text-align: right;"><b>Ümumi (ƏDV Xaric)</b></p>
+              </td>
+              <td width="86" colspan="2" style="width: 64.15pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; background: rgb(229, 229, 229); padding: 0cm 5.4pt; height: 26.05pt;">
+                <p style="margin: 0cm; font-size: 12pt; text-align: center; font-weight: bold;"><span id="package-1-totalprice">0</span> AZN</p>
+              </td>
+            </tr>
+          </tbody>
+
+        </table>
+      
+        <h3 style="color: rgb(58, 106, 90); font-weight: bold;">Qeyd!</h3>
+        <textarea required name="offer_note" id="offer_note" cols="30" rows="10"></textarea>
+        <p><span style="font-size:12pt"><span ><strong><span dir="ltr" lang="AZ-LATIN" style="font-size:18.0pt"><span ><span style="color:#336260">Satış şərtləri</span></span></span></strong></span></span></p>
+
+
+        <table cellspacing="0" class="Table" style="border-collapse:collapse; border:none; margin-left:7px; ">
+          <tbody>
+            <tr>
+              <td style="border-bottom:1px solid black; border-left:none; border-right:none; border-top:1px solid black; height:19px; vertical-align:top; ">
+              <p><span style="font-size:12pt"><span ><strong><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Satıcının h&uuml;quq və &ouml;hdəlikləri</span></span></strong></span></span></p>
+              </td>
+            </tr>
+            <tr>
+              <td style="border-bottom:1px solid black; border-left:none; border-right:none; border-top:none; height:35px; vertical-align:top; ">
+              <ul>
+                <li style="text-align:justify"><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >&Ouml;dənişi tələb etmək </span></span></span></span></li>
+                <li style="text-align:justify"><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Uyğun şəraiti tələb etmək</span></span></span></span></li>
+                <li style="text-align:justify"><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Malların dəyərini m&uuml;əyyənləşdirilmiş şərtlər və qaydalara uyğun olaraq vaxtında və tam həcmdə &ouml;dəməyi Alıcıdan tələb etmək;</span></span></span></span></li>
+                <li style="text-align:justify"><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Malı və xidməti m&uuml;qavilə ilə m&uuml;əyyən olunan şərtlərlə və qaydada Alıcıya təhvil vermək;</span></span></span></span></li>
+                <li style="text-align:justify"><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Malın keyfiyyət kriteriyalarına uyğun olmasını təmin etmək və Alıcıya zəmanət &ouml;hdəliyi vermək;</span></span></span></span></li>
+                <li style="text-align:justify"><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Malın Alıcıya təhvil verilən anadək, malda aşkar edilən q&uuml;surları &ouml;z q&uuml;vvə və vəsaiti hesabına aradan qaldırmağı, eləcədə malın təsad&uuml;fən zay olması və ya zədələnməsi riskini daşımağı və zay olmuş məhsulu malı dərhal yenisi ilə əvəzləməyi &ouml;hdəsinə g&ouml;t&uuml;rmək.</span></span></span></span></li>
+                <li style="text-align:justify"><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Texniki təhl&uuml;kəsizlik qaydalarına riayyət etmək</span></span></span></span></li>
+              </ul>
+
+              <p style="margin-left:48px; text-align:justify">&nbsp;</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="border-bottom:1px solid black; border-left:none; border-right:none; border-top:none; height:19px; vertical-align:top; ">
+              <p style="text-align:justify"><span style="font-size:12pt"><span ><strong><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Alıcının h&uuml;quq və &ouml;hdəlikləri </span></span></strong></span></span></p>
+              </td>
+            </tr>
+            <tr>
+              <td style="border-bottom:1px solid black; border-left:none; border-right:none; border-top:none; height:35px; vertical-align:top; ">
+              <ul>
+                <li><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Malı m&uuml;əyyənləşdirilmiş keyfiyyət kriteriayalarına g&ouml;rə tələb etmək </span></span></span></span></li>
+                <li><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Malı m&uuml;əyyənləşdirilmiş təhvil tarixinə g&ouml;rə tələb etmək </span></span></span></span></li>
+                <li><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >&Ouml;dənişi razılaşdırılmış şərtlərə əsasən vaxtında və qeyd olunmuş miqdarında &ouml;dəmək </span></span></span></span></li>
+                <li><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Quraşdırma işlərinin d&uuml;zg&uuml;n aparılması &uuml;&ccedil;&uuml;n m&uuml;qavilədə qeyd olunan lazımı iş şəraitinin təmin etmək (yol, texniki təhl&uuml;kəsizlik, elektrik, hava, su&nbsp; və s.) </span></span></span></span></li>
+                <li><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Malı təhvil aldıqdan sonra onu qorumaq və d&uuml;zg&uuml;n istifadə etmək</span></span></span></span></li>
+              </ul>
+
+              <p style="margin-left:48px">&nbsp;</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="border-bottom:1px solid black; border-left:none; border-right:none; border-top:none; height:19px; vertical-align:top; ">
+              <p style="text-align:justify"><span style="font-size:12pt"><span ><strong><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >&Ouml;dəniş və &ccedil;atdırılma şərtləri </span></span></strong></span></span></p>
+              </td>
+            </tr>
+            <tr>
+              <td style="border-bottom:1px solid black; border-left:none; border-right:none; border-top:none; height:35px; vertical-align:top; ">
+                <textarea required name="offer_pay_delv_cond" id="offer_pay_delv_cond"></textarea>
+
+                <p style="margin-left:48px">&nbsp;</p>
+
+                <p style="margin-left:42px"><span style="font-size:12pt"><span ><strong><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Qeyd: Qiymətlər hal hazırda olan ABŞ Daolları məzənnəsinə uyğun olaraq &ccedil;ıxarılmışdır. Məzənnədəki dəyişikliklər qiymətlərə uyğun şəkildə əks etdiriləcəkdir.</span></span></strong></span></span></p>
+
+                <p>&nbsp;</p>
+              </td>
+            </tr>
+          </tbody>
+          <tbody>
+            <tr>
+              <td style="border-bottom:1px solid black; border-left:none; border-right:none; border-top:1px solid black; height:24px; vertical-align:top;">
+              <p><strong><span dir="ltr" lang="AZ-LATIN" style="font-size:11pt"><span style="font-family:Arial,sans-serif">Təhvil və təklif m&uuml;ddəti və qaydaları&nbsp;</span></span></strong></p>
+              </td>
+            </tr>
+            <tr>
+              <td style="border-bottom:1px solid black; border-left:none; border-right:none; border-top:none; height:35px; vertical-align:top;"> 
+              <p><strong><span dir="ltr" lang="AZ-LATIN" style="font-size:11pt"><span style="display: flex; align-items: center;  font-family:Arial,sans-serif">&middot;Təhvil m&uuml;ddəti: avans &ouml;dənişi, &ouml;l&ccedil;&uuml; və texniki detallar təsdiqləndikdən sonra &ndash;&nbsp;<input required id="offer_delv_time" name="offer_delv_time" class="form-control" placeholder="....." style="background: rgb(245, 245, 245); border: 0; font-weight: bold; padding: 0px 5px 0px 5px; width: 60px; color:red">&nbsp;iş g&uuml;n&uuml; ərzində yerinə yetiriləcəkdir</span></span></strong></p>
+        
+              <p><span dir="ltr" lang="AZ-LATIN" style="font-size:11pt"><span style="font-family:Symbol">&middot;</span></span><span dir="ltr" lang="AZ-LATIN" style="font-size:11pt"><span style="font-family:Arial,sans-serif">Malın təhvili tərəflər arasında imzalanmış təhvil-təslim aktı ilə təsdiqlənməlidir.</span></span></p>
+        
+              <p><span dir="ltr" lang="AZ-LATIN" style="font-size:11pt"><span style="font-family:Symbol">&middot;</span></span><span dir="ltr" lang="AZ-LATIN" style="font-size:11pt"><span style="font-family:Arial,sans-serif">Təklifin q&uuml;vvədə qalma m&uuml;ddəti:&nbsp;<strong>15</strong>&nbsp;iş g&uuml;n&nbsp;</span></span></p>
+        
+              <p>&nbsp;</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+   
+        
+
+        <button style="margin-top: 10px;" class="mb-2 btn btn-primary" type="submit">Yarat</button>
+      </form>
+    </section>
+    <!-- /.content -->
+  </div>
+{% endblock content %}
+
+{% block scripts %}
+
+<script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+<script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+<script>
+  var ckeditor_upload = "{% url 'ckeditor_upload' %}"
+  var ckeditor_browse = "{% url 'ckeditor_browse' %}"
+  var productsList = []
+  '{% for product in products %}'
+  var product = {
+    name:'{{product.name}}({{product.category}})',
+    id:'{{product.id}}',
+    unit:'{{product.unit}}'
+  }
+  productsList.push(product)
+  '{% endfor %}'
+
+  var url = '{% url "sales:create-offer" %}'
+  var customer_id = parseInt('{{customer.id}}')
+  var offer_number = '{{offer_number}}'
+  var redirectURL = '{% url "sales:offer-detail" number=offer_number %}'
+</script>
+
+<script>
+  CKEDITOR.replace('offer_note', {
+    filebrowserImageUploadUrl: "{% url 'ckeditor_upload' %}",
+      filebrowserImageBrowseUrl: "{% url 'ckeditor_browse' %}",
+      removePlugins: 'exportpdf',
+      toolbarCanCollapse: true
+  });
+</script>
+<script>
+  CKEDITOR.replace('package-1-service-1-detail', {
+      filebrowserImageUploadUrl: "{% url 'ckeditor_upload' %}",
+      filebrowserImageBrowseUrl: "{% url 'ckeditor_browse' %}",
+      removePlugins: 'exportpdf',
+      toolbarCanCollapse: true,
+    });
+  </script>
+<script>
+  CKEDITOR.replace('offer_pay_delv_cond', {
+    filebrowserImageUploadUrl: "{% url 'ckeditor_upload' %}",
+    filebrowserImageBrowseUrl: "{% url 'ckeditor_browse' %}",
+    removePlugins: 'exportpdf',
+    toolbarCanCollapse: true
+  });
+</script>
+<script type="text/javascript" src="{% static 'js/createoffer.js' %}"></script>
+
+
+
+
+{% endblock scripts %}

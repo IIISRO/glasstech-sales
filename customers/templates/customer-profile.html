@@ -1,0 +1,366 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}<title>GlasstechSales | Yeni Müştəri</title>{% endblock %}
+{% block style %}
+<style>
+  .reply{
+
+margin-left: 12px;
+}
+
+.reply small{
+
+color: #b7b4b4;
+
+}
+
+.mentionuser{
+display: flex;
+align-items: center;
+color: rgb(96, 163, 251);
+}
+
+.mentionuser select{
+border: 0;
+-webkit-appearance: none;
+-moz-appearance: none;
+text-indent: 1px;
+text-overflow: '';
+color: rgb(96, 163, 251);
+&:focus, &:active {
+outline: 0;
+}
+}
+
+
+
+.mentionuser p{
+margin: 0%;
+}
+  .card {
+  position: relative;
+  transition: 0.3s ease-in;
+}
+
+
+.card:hover{
+
+    -webkit-box-shadow: 8px 8px 50px 0px rgba(141, 185, 255, 0.578);
+    -moz-box-shadow: 8px 8px 50px 0px rgba(141, 185, 255, 0.578);
+    box-shadow: 8px 8px 50px 0px rgba(141, 185, 255, 0.578);
+}
+  .dots{
+
+height: 4px;  
+width: 4px;
+margin-bottom: 2px;
+background-color: #bbb;
+border-radius: 50%;
+display: inline-block;
+}
+@media only screen and (max-width: 650px) {
+   #logDiv{
+    max-height: 300px;
+
+   }
+}
+
+</style>
+{% endblock %}
+{% block content %}
+
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Müştəri Profil</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="{% url 'core:dashboard' %}">Dashboard</a></li>
+              <li class="breadcrumb-item active">Müştəri</li>
+              <li class="breadcrumb-item active">Müştəri Profil</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-3">
+
+            <!-- Profile Image -->
+            <div class="card card-primary card-outline">
+              <div class="card-body box-profile">
+                <div class="text-center">
+                  <img onerror="userPPAlt(event)" class="profile-user-img img-fluid img-circle"
+                       src="{% if customer.pp %}{{customer.pp.url}}{% else %}{% endif %}"
+                       alt="User profile picture">
+                       
+                </div>
+
+                <h3 class="profile-username text-center">{{customer.get_full_name}}</h3>
+
+                <p class="text-muted text-center">{{customer.c_type}}</p>
+
+                <ul class="list-group list-group-unbordered mb-3">
+                  <li class="list-group-item">
+                    <b>Potensiyallığı</b><a class="float-right">{% if customer.potency == "YAXŞI" %}<span style="font-weight: bold; color: green;">YAXŞI</span>{% elif customer.potency == "ORTA" %}<span style="font-weight: bold; color: rgb(255, 157, 0);">ORTA</span>{% elif customer.potency == "PİS" %}<span style="font-weight: bold; color: rgb(189, 0, 0);">PİS</span>{% else %}<span style="color: black;" >Təyin Edilməyib</span>{% endif %}</a>
+                  </li>
+                  <li class="list-group-item">
+                    <b>Kategoriyası</b> <a class="float-right">{{customer.c_category}}</a>
+                  </li>
+                  <li class="list-group-item">
+                    <b>Referansı</b> <a class="float-right">{{customer.reference}}</a>
+                  </li>
+                  <li class="list-group-item">
+                    <b><a style="color: black;" href="#">Təklif</a></b> <a class="float-right">{{offers_count}}</a>
+                  </li>
+                  <li class="list-group-item">
+                    <b><a style="color: black;" href="#">Sifariş</a></b> <a class="float-right">{{orders_count}}</a>
+                  </li>
+                </ul>
+
+                <!-- <a href="#" class="btn btn-primary btn-block"><b>Follow</b></a> -->
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+
+            <!-- About Me Box -->
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Haqqında</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                {% if customer.company_name %}
+                <strong><i class="fas fa-solid fa-building"></i> Şirkət adı</strong>
+
+                <p class="text-muted">{{customer.company_name}}</p>
+
+                <hr>
+                {% endif %}
+                <strong><i class="fas fa-solid fa-mobile fa-lg"></i> Mobil</strong>
+
+                <p class="text-muted">{{customer.mobile}}</p>
+
+                <hr>
+                {% if customer.phone %}
+                <strong><i class="fas fa-phone"></i> Telefon</strong>
+
+                <p class="text-muted">{{customer.phone}}</p>
+
+                <hr>
+                {% endif %}
+                {% if customer.email %}
+                <strong><i class="fas fa-solid fa-envelope"></i> E-mail</strong>
+
+                <p class="text-muted"><a href="mailto:{{customer.email}}">{{customer.email}}</a></p>
+
+                <hr>
+                {% endif %}
+                {% if customer.web %}
+                <strong><i class="fas fa-solid fa-globe"></i> WEB</strong>
+
+                <p class="text-muted"><a href="https://{{customer.web}}">{{customer.web}}</a></p>
+
+                <hr>
+                {% endif %}
+                {% if customer.bio %}
+                <strong><i class="fas fa-solid fa-book"></i> BIO</strong>
+
+                <p class="text-muted">{{customer.bio}}</p>
+
+                {% endif %}
+                
+
+              
+                
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-9">
+            <div class="card">
+              <div class="card-header p-2">
+                <ul class="nav nav-pills">
+                  <li class="nav-item"><a class="nav-link active" href="#baclogs" data-toggle="tab">Backloglar</a></li>
+                </ul>
+              </div><!-- /.card-header -->
+              <div class="card-body">
+                <div class="tab-content">
+                  <div class="active tab-pane" id="baclogs">
+                    <div class="row d-flex justify-content-center">
+                      <div class="col-md">
+                        <div id="logDiv" style="max-height: 700px; overflow-y: auto;">
+                          {% for backlog in backlogs %}
+                          <div class="card p-3 mt-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                              <div class="user d-flex flex-row align-items-center">
+                                <img src="{% if backlog.by.pp %}{{backlog.by.pp.url}}{% else %}{% endif %}" onerror="userPPAlt(event)" width="30" class="user-img rounded-circle mr-2">
+                                <span><small class="font-weight-bold text-primary"><a href="">{{backlog.by}}</a></small> <small class="font-weight-bold">{% if backlog.title %}{{backlog.title}}{% else %}Başlıq yoxdur{% endif %}</small></span>
+                              </div>
+                              <small>{{backlog.date}}</small>
+                            </div>
+                            <div style="margin-left: 30px; color: #787878;">
+                              <p style="margin: 0%;" >{{backlog.message}}</p>
+                            </div>
+                            <div class="action d-flex justify-content-between mt-2 align-items-center">
+                              <div class="reply px-4">
+                                  {% if backlog.about.id != customer.id %}
+                                  <small><a href="/sales/detail/{{backlog.content_type.model}}/{{backlog.about.number}}">{{backlog.about}}</a></small>
+                                  {% else %}
+                                  <small>{{customer.get_full_name}}</small>
+                                  {% endif %}
+                                  <span class="dots"></span>
+                                  <small>Haqqında</small>
+                              </div>
+                              {% if backlog.mention %}
+                              <div class="icons d-flex align-items-center">
+                                  {% if backlog.mention == request.user %}
+                                  <button onclick="reply(`{{backlog.by.id}}`)" data-toggle="modal" data-target="#newBacklogModal" class="btn"><i class="fas fa-solid fa-reply"></i></button>
+                                  {% endif %}
+                                  <a style="border-radius: 3px;  padding: 2px; background-color: rgba(0, 136, 255, 0.279);" href="">@{{backlog.mention}}</a>
+                              </div>
+                              {% endif %}
+                            </div>
+                          </div>
+                          {% endfor %}
+                        </div>
+                        <button onclick="reply(null)" data-toggle="modal" data-target="#newBacklogModal" class="mt-2 btn btn-success" ><i style="font-size: 200; " class="fas fa-sharp fa-solid fa-pen"></i>  Yeni Backlog Yaz</button>
+                        <form id="newBacklogWriteForm" action="" enctype="multipart/form-data">
+                          <!-- newBacklogModal -->
+                          <div class="modal fade" id="newBacklogModal" tabindex="-1" role="dialog" aria-labelledby="newBacklogModal" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="newBacklogModalLabel">{{customer.get_full_name}} Yeni Backlog Yaz</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <div class="modal-body">
+                                  <div class="row">
+                                    <div class="col-6">
+                                      <label for="">Kimdən:</label>
+                                      <input disabled data-id="{{request.user.id}}" value="{{request.user}}" placeholder="{{request.user}}"  class="form-control" type="text" name="by" id="backlogBY">
+                                    </div>
+                                    <div class="col-6">
+                                      <label for="">Tag:</label>
+                                      <div class="mentionuser">
+                                        <p>@</p>
+                                        <select name="mention" id="newBacklogMentionUser">
+                                          <option selected></option>
+                                          {% for user in users %}
+                                          <option value="{{user.id}}">{{user.username}}</option>
+                                          {% endfor %}
+                                        </select>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-12">
+                                      <label for="">Haqqında:</label>
+                                      <input disabled value="{{customer.get_full_name}}" class="form-control" type="text" name="about" id="about">
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-12">
+                                      <label for="">Başlıq:</label>
+                                      <input class="form-control" type="text" name="title" id="backlogTitle">
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-12">
+                                      <label for="">Mesaj:</label>
+                                      <input required class="form-control" maxlength="100" type="text" name="message" id="backlogMessage">
+                                    </div>
+                                  </div>
+                                  
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Ləğv</button>
+                                  <button class="btn btn-success" type="submit">Yaz</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                      </form>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- /.tab-pane -->
+       
+
+                 
+                  <!-- /.tab-pane -->
+                </div>
+                <!-- /.tab-content -->
+              </div><!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+
+{% endblock content %}
+
+{% block scripts %}
+<script>
+  var newBacklogWriteForm = document.getElementById('newBacklogWriteForm')
+  newBacklogWriteForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    loader.show()
+    if(!isNaN(parseInt($('#newBacklogMentionUser').val()))){
+      var backlogMention = parseInt($('#newBacklogMentionUser').val())
+    }else{
+      var backlogMention = null
+    }
+    if($('#backlogTitle').val()){
+      var backlogTitle = $('#backlogTitle').val()
+    }else{
+      var backlogTitle = null
+    }
+    newBacklogBody = {
+          'title': backlogTitle,
+          'by': parseInt($('#backlogBY').data('id')),
+          'mention': backlogMention,
+          'message': $('#backlogMessage').val(),
+          'content_type': parseInt('{{content_type}}'),
+          'object_id': parseInt('{{customer.id}}')
+        }
+
+
+    fetch('{% url "coreApi:backlog-createapi" %}',{
+        method:"POST",
+        headers: {
+            "X-CSRFToken": getCookie('csrftoken'),
+            "Accept": "application/json",
+            'Content-Type': 'application/json'
+          },
+        body:JSON.stringify(newBacklogBody)
+    })
+    .then((response)=>{
+        return response.json()
+    })
+    .then((data)=>{
+      console.log(data)
+      window.location.href = window.location.href
+
+    })
+  });
+</script>
+{% endblock scripts %}

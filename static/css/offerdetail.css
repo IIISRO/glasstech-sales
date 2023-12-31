@@ -1,0 +1,202 @@
+
+#editLink{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 10px;
+    border-radius: 5px;
+    display: none;
+    transition: 0.2s ease-in;
+
+}
+.card {
+  position: relative;
+  transition: 0.3s ease-in;
+}
+
+
+.card:hover{
+
+    -webkit-box-shadow: 8px 8px 50px 0px rgba(141, 185, 255, 0.578);
+    -moz-box-shadow: 8px 8px 50px 0px rgba(141, 185, 255, 0.578);
+    box-shadow: 8px 8px 50px 0px rgba(141, 185, 255, 0.578);
+
+}
+.card:hover #editLink{
+    
+    display: block;
+ 
+}
+.blurIMG{
+  filter: blur(1px);
+  transition: 0.2s ease-in;
+
+}
+.card:hover .blurIMG{
+    filter: blur(1px) brightness(50%);
+}
+.deactive_rev{
+    display: flex;
+    background-color: rgb(157, 157, 157);
+    border-radius: 5px;
+    
+}
+.active_rev{
+    display: flex;
+    border-radius: 5px;
+    -webkit-box-shadow: 8px 8px 50px 0px rgba(141, 185, 255, 0.734);
+    -moz-box-shadow: 8px 8px 50px 0px rgba(110, 163, 247, 0.748);
+    box-shadow: 8px 8px 50px 0px rgba(129, 176, 252, 0.867);
+    
+}
+
+
+.potency-container {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.potency-container .potency {
+  margin: 0 auto;
+}
+
+.potency {
+  height: 30px;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 2px;
+  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25), 0 1px rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25), 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.potency-bar {
+
+  height: 30px;
+  border-radius: 2px;
+	background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.05));
+  background-image: -moz-linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.05));
+  background-image: -o-linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.05));
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.05));
+  -webkit-transition: 0.4s linear;
+  -moz-transition: 0.4s linear;
+  -o-transition: 0.4s linear;
+  transition: 0.4s linear;
+  -webkit-transition-property: width, background-color;
+  -moz-transition-property: width, background-color;
+  -o-transition-property: width, background-color;
+  transition-property: width, background-color;
+  -webkit-box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.25), inset 0 1px rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.25), inset 0 1px rgba(255, 255, 255, 0.1);
+}
+
+
+#PİS:checked ~ .potency > .potency-bar {
+  width: 25%;
+  background-color: #f27011;
+}
+
+#ORTA:checked ~ .potency > .potency-bar {
+  width: 50%;
+  background-color: #f2b01e;
+}
+
+
+#YAXŞI:checked ~ .potency > .potency-bar {
+  width: 100%;
+  background-color: #86e01e;
+}
+
+.radio {
+  display: none;
+}
+
+.label {
+  display: inline-block;
+  margin: 0 5px 20px;
+  padding: 3px 8px;
+  color: #aaa;
+  text-shadow: 0 1px black;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.radio:checked + .label {
+  color: white;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+@media only screen and (max-width: 1260px) {
+    .rev-detail{
+        font-size: small;
+    }
+    .rev-num{
+        font-size: small;
+    }
+}
+@media only screen and (max-width: 650px) {
+    .rev-detail{
+        font-size: small;
+    }
+    .rev-num{
+        font-size: small;
+    }
+    .rev-detail-main{
+        flex-direction: column;
+    }
+}
+
+
+.dots{
+
+  height: 4px;  
+  width: 4px;
+  margin-bottom: 2px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.user-img{
+
+    margin-top: 4px;
+}
+
+.icons i{
+
+    margin-left: 8px;
+}
+.reply{
+
+    margin-left: 12px;
+}
+
+.reply small{
+
+    color: #b7b4b4;
+
+}
+
+.mentionuser{
+  display: flex;
+  align-items: center;
+  color: rgb(96, 163, 251);
+}
+
+.mentionuser select{
+  border: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  text-indent: 1px;
+  text-overflow: '';
+  color: rgb(96, 163, 251);
+  &:focus, &:active {
+    outline: 0;
+  }
+}
+
+
+
+.mentionuser p{
+  margin: 0%;
+}
+
