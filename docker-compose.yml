@@ -12,7 +12,17 @@ services:
 
     volumes:
       - ./database:/var/lib/postgresql/data
-      
+  pgadmin:
+      image: dpage/pgadmin4
+      container_name: glasstechsales-pgadmin #you can change this
+      depends_on:
+        - db
+      ports:
+        - "5051:80"
+      environment:
+        PGADMIN_DEFAULT_EMAIL: glasstechsales01@gmail.com
+        PGADMIN_DEFAULT_PASSWORD: glasscomp12
+      restart: always
   web:
     container_name: glasstechsales
     build: .
@@ -23,7 +33,7 @@ services:
     ports:
       - 8000:8000
     depends_on:
-      - 'db'
+      - 'pgadmin'
     env_file: .env 
 
   nginx:
