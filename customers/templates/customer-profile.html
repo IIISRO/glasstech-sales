@@ -215,7 +215,7 @@ display: inline-block;
                             </div>
                             <div class="action d-flex justify-content-between mt-2 align-items-center">
                               <div class="reply px-4">
-                                  {% if backlog.about.id != customer.id %}
+                                  {% if backlog.about != customer %}
                                   <small><a href="/sales/detail/{{backlog.content_type.model}}/{{backlog.about.number}}">{{backlog.about}}</a></small>
                                   {% else %}
                                   <small>{{customer.get_full_name}}</small>
