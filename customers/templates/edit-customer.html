@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}<title>GlasstechSales | Müştəri Düzəliş</title>{% endblock %}
+
+{% block content %}
+
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Müştəri düzəliş</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="{% url 'core:dashboard' %}">Dashboard</a></li>
+              <li class="breadcrumb-item active">Müştəri</li>
+              <li class="breadcrumb-item active">Müştəri düzəliş</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+      <form class="pt-3" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="row">
+          <div class="col">
+
+            <label>*Ad:</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fas fa-solid fa-user"></i></span>
+              </div>
+             {{form.name}}
+            </div>
+
+            <label>*Soyad:</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fas fa-solid fa-user"></i></span>
+              </div>
+              {{form.surname}}
+            </div>
+
+            <label>*Mobil:</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fas fa-solid fa-mobile fa-lg"></i></span>
+              </div>
+              {{form.mobile}}
+            </div>
+
+            <label>*Referans:</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fas fa-solid fa-list"></i></span>
+              </div>
+              {{form.reference}}
+            </div>
+
+            <label>*Müştəri tipi:</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fas fa-solid fa-list"></i></span>
+              </div>
+              {{form.c_type}}
+            </div>
+
+            <label>*Müştəri kateqoriyası:</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fas fa-solid fa-list"></i></span>
+              </div>
+              {{form.c_category}}
+            </div>
+
+          </div>
+          <div class="col">
+
+            <label style="font-weight: 400;">BIO:</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fas fa-solid fa-book"></i></span>
+              </div>
+              {{form.bio}}
+            </div>
+
+            <label style="font-weight: 400;">Telefon:</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fas fa-phone"></i></span>
+              </div>
+              {{form.phone}}
+            </div>
+
+            <label style="font-weight: 400;">Email:</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fas fa-solid fa-envelope"></i></span>
+              </div>
+              {{form.email}}
+            </div>
+
+            <label style="font-weight: 400;">WEB:</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fas fa-solid fa-globe"></i></span>
+              </div>
+              {{form.web}}
+            </div>
+
+            <label style="font-weight: 400;">Firma adı:</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fas fa-solid fa-building"></i></span>
+              </div>
+              {{form.company_name}}
+            </div>
+
+            <label style="font-weight: 400;">Şəkil:</label>
+            <div class="form-group">
+              <div class="custom-file">
+                {{form.pp}}
+                <label class="custom-file-label" for="customFile">Şəkil seç</label>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+                  
+
+        <button  style="margin-top: 10px;" type="submit" class="mb-2 btn btn-primary">Yadda saxla</button>
+        
+    </form>
+
+    </section>
+    <!-- /.content -->
+  </div>
+
+{% endblock content %}
+
+{% block scripts %}
+<script src="{% static 'plugins/bs-custom-file-input/bs-custom-file-input.min.js' %}"></script>
+
+<script>
+  $(function () {
+    bsCustomFileInput.init();
+  });
+  </script>
+{% endblock scripts %}

@@ -78,9 +78,9 @@ class OffersListApi(APIView):
             from_date = list(map(int, list(request.GET.get('date', '').split('-')[0].split('/'))))
             to_date = list(map(int, list(request.GET.get('date', '').split('-')[1].split('/'))))
             offers_list = Offer.objects.filter(created_at__gte=date(from_date[2],from_date[1],from_date[0]),
-                                created_at__lte=date(to_date[2],to_date[1],to_date[0])).order_by('created_at')
+                                created_at__lte=date(to_date[2],to_date[1],to_date[0])).order_by('-created_at')
         else:
-            offers_list = Offer.objects.all().order_by('created_at')
+            offers_list = Offer.objects.all().order_by('-created_at')
         offers = OffersListSerializer(offers_list, many=True).data
        
         return Response(offers)  
@@ -93,9 +93,9 @@ class OrdersListApi(APIView):
             from_date = list(map(int, list(request.GET.get('date', '').split('-')[0].split('/'))))
             to_date = list(map(int, list(request.GET.get('date', '').split('-')[1].split('/'))))
             orders_list = Order.objects.filter(created_at__gte=date(from_date[2],from_date[1],from_date[0]),
-                                created_at__lte=date(to_date[2],to_date[1],to_date[0])).order_by('created_at')
+                                created_at__lte=date(to_date[2],to_date[1],to_date[0])).order_by('-created_at')
         else:
-            orders_list = Order.objects.all().order_by('created_at')
+            orders_list = Order.objects.all().order_by('-created_at')
         offers = OrdersListSerializer(orders_list, many=True).data
        
         return Response(offers)  

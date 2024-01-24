@@ -2,70 +2,8 @@
 {% load static %}
 {% block title %}<title>GlasstechSales | Yeni Müştəri</title>{% endblock %}
 {% block style %}
-<style>
-  .reply{
+<link rel="stylesheet" href="{% static 'css/customerprofile.css' %}">
 
-margin-left: 12px;
-}
-
-.reply small{
-
-color: #b7b4b4;
-
-}
-
-.mentionuser{
-display: flex;
-align-items: center;
-color: rgb(96, 163, 251);
-}
-
-.mentionuser select{
-border: 0;
--webkit-appearance: none;
--moz-appearance: none;
-text-indent: 1px;
-text-overflow: '';
-color: rgb(96, 163, 251);
-&:focus, &:active {
-outline: 0;
-}
-}
-
-
-
-.mentionuser p{
-margin: 0%;
-}
-  .card {
-  position: relative;
-  transition: 0.3s ease-in;
-}
-
-
-.card:hover{
-
-    -webkit-box-shadow: 8px 8px 50px 0px rgba(141, 185, 255, 0.578);
-    -moz-box-shadow: 8px 8px 50px 0px rgba(141, 185, 255, 0.578);
-    box-shadow: 8px 8px 50px 0px rgba(141, 185, 255, 0.578);
-}
-  .dots{
-
-height: 4px;  
-width: 4px;
-margin-bottom: 2px;
-background-color: #bbb;
-border-radius: 50%;
-display: inline-block;
-}
-@media only screen and (max-width: 650px) {
-   #logDiv{
-    max-height: 300px;
-
-   }
-}
-
-</style>
 {% endblock %}
 {% block content %}
 
@@ -312,6 +250,9 @@ display: inline-block;
         </div>
         <!-- /.row -->
       </div><!-- /.container-fluid -->
+
+      <a  style="margin-top: 10px;"  href="{% url 'customers:edit-customer' pk=customer.id %}" class="mb-2 btn btn-primary"><i class="fas fa-sharp fa-solid fa-pen"></i> Düzəliş et</a>
+
     </section>
     <!-- /.content -->
   </div>

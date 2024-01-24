@@ -92,7 +92,34 @@ function getOfferFetch(){
                             serviceStartLine.insertAdjacentHTML('beforeBegin',newerService)
                             newerServiceID++;
                         }
-                        $('#orderTotalPrice').text(packageTotalPrice)
+                        if(package.delv>1){
+                            packageTotalPrice += package.delv
+                            let delvBody = 
+                            `
+                            <tr style="height: 13.15pt;">
+                                <td width="633" colspan="5" valign="top"
+                                    style="width: 475.05pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; background: rgb(242, 242, 242); padding: 0cm 5.4pt; height: 13.15pt;">
+                                    <p class="MsoNormal" align="right"
+                                        style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif; text-align: right;">
+                                        <span lang="AZ-LATIN"
+                                            style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            Çatdırılma
+                                            <o:p></o:p></span></p>
+                                </td>
+                                <td width="75" valign="top"
+                                    style="width: 56.5pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; background: rgb(242, 242, 242); padding: 0cm 5.4pt; height: 13.15pt;">
+                                    <p class="MsoNormal"
+                                        style="margin: 0cm; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><span
+                                            lang="AZ-LATIN"
+                                            style="display: flex; justify-content: center; font-size: 10pt; font-family: Arial, sans-serif; color: black;"><span>${package.delv}</span>AZN</span></p>
+                                </td>
+                            </tr>
+                        
+                            `
+                            document.getElementById('orderTotalPriceBody').insertAdjacentHTML('beforeBegin', delvBody)
+                        }
                         if(package.tax){
                             let taxBody =
                             `
@@ -152,7 +179,7 @@ function getOfferFetch(){
                                                 var total = packageTotalPrice
                                             }
             
-                                            return packageTotalPrice + parseInt(total*18/100)
+                                            return total + parseInt(total*18/100)
                                             })()
                                         }</span>AZN</span></p>
                             </td>
@@ -208,6 +235,7 @@ function getOfferFetch(){
                             `
                             document.getElementById('orderTotalPriceBody').insertAdjacentHTML('afterEnd', discountBody)
                         }
+                        $('#orderTotalPrice').text(packageTotalPrice)
                       
                     }
                     break;

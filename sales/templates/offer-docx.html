@@ -1103,12 +1103,50 @@
                                                         </span></b></p>
                                             </td>
                                         </tr>
+                                        
+                                        
+                                        
+                                        <tr id='package-${newerPackageID}-services_start_line'>
+                                        </tr>
+                                            ${
+                                           (function delvcheck() {
+                                               if(package.delv>0){
+                                                   return `
+                                                   <!-- delv -->
+                                                       <td width="585" colspan="5"
+                                                           style="width: 439.1pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; background: rgb(229, 229, 229); padding: 0cm 5.4pt; height: 26.05pt;">
+                                                           <p class="MsoNormal" align="right"
+                                                               style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: right;">
+                                                               <b><span lang="AZ-LATIN"
+                                                                       style="font-size: 10pt; font-family: Arial, sans-serif; color: black;">Çatdırılma
+                                                                       </span></b><b><span lang="AZ-LATIN"
+                                                                       style="font-size: 10pt; font-family: Arial, sans-serif;">
+                                                                       <o:p></o:p>
+                                                                   </span></b></p>
+                                                       </td>
+                                                       <td width="86" colspan="2"
+                                                           style="width: 64.15pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; background: rgb(229, 229, 229); padding: 0cm 5.4pt; height: 26.05pt;">
+                                                           <p class="MsoNormal" align="center"
+                                                               style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; text-align: center;">
+                                                               <b lang="AZ-LATIN"
+                                                                       style="font-size: 10pt; font-family: Arial, sans-serif; color: black;"><span lang="AZ-LATIN"
+                                                                       style="font-size: 10pt; font-family: Arial, sans-serif; color: black;" id="package-${newerPackageID}-delvfee">${package.delv}</span> AZN</b><b><span
+                                                                       lang="AZ-LATIN" style="font-size: 10pt; font-family: Arial, sans-serif;">
+                                                                       <o:p></o:p>
+                                                                   </span></b></p>
+                                                       </td>
+                                                   </tr>
+                                                   `
+                                               
+                                           }else{
+           
+                                           return ''
+                                           }
+                                           })()
+                                           }
+                                          <!-- summa -->
+                                          <tr  style="height: 26.05pt;">
 
-                                    
-                
-
-                                        <!-- summa -->
-                                        <tr id='package-${newerPackageID}-services_start_line' style="height: 26.05pt;">
                                             <td width="585" colspan="5"
                                                 style="width: 439.1pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; background: rgb(229, 229, 229); padding: 0cm 5.4pt; height: 26.05pt;">
                                                 <p class="MsoNormal" align="right"

@@ -129,7 +129,7 @@
                 <select required class="form-control" style="background: rgb(245, 245, 245); border: 0;" onchange="findUnit(event)" data-package_id="1" data-service_id="1" name="package-1-service-1-product" id="package-1-service-1-product">
                   <option disabled selected value="">------------</option>
                   {% for product in products %}
-                    <option data-unit="{{product.unit}}" value="{{product.id}}">{{product.name}}({{product.category}})</option>
+                    <option data-prodid="{{product.id}}" data-unit="{{product.unit}}" value="{{product.id}}">{{product.name}}({{product.category}})</option>
                   {% endfor %}
                 </select>
                 <button onclick="checkServiceUsedProd(event)" data-package_id="1" data-service_id="1" class="btn-xs btn mt-1 btn-success" type="button" data-toggle="collapse" data-target="#package-1-service-1-UsedServiceModal" aria-expanded="false" id='package-1-service-1-UsedServiceModalBTN' aria-controls="package-1-service-1-UsedServiceModal">
@@ -161,6 +161,9 @@
                 </p>
 
                 <!-- serivce detail -->
+                  <select data-package_id="1" data-service_id="1" onchange="setTemplate(event)" class="form-control" name="" id="package-1-service-1-templates">
+                    <option value="">Boş şablon</option>
+                  </select>
                   <textarea required name="package-1-service-1-detail" id="package-1-service-1-detail" cols="30" rows="10"></textarea>
 
               </td>
@@ -193,9 +196,11 @@
               <td width="85" colspan="2" style="width: 39.1pt; border-right:0pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; background: rgb(229, 229, 229); padding: 0cm 5.4pt; height: 26.05pt;">
                 <button id="package-1-discountbtn" data-package_id="1" onclick="packageDiscountField(event)" style="font-size: 12px;" type="button" class="btn-sm btn btn-secondary">ENDİRİM</button>
                 <button id="package-1-taxbtn" data-package_id="1" onclick="packageTaxField(event)" style="font-size: 12px;" type="button" class="btn-sm btn btn-secondary">ƏDV</button>
+                <button id="package-1-delvbtn" data-package_id="1" onclick="packageDelvField(event)" style="font-size: 12px;" type="button" class="btn-sm btn btn-secondary">Çatdırılma</button>
+
               </td>
               <td width="500" colspan="3" style="width: 400pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 0pt solid windowtext; border-image: initial; border-top: none; background: rgb(229, 229, 229); padding: 0cm 5.4pt; height: 26.05pt;">
-                  <p style="margin: 0cm; font-size: 12pt; text-align: right;"><b>Ümumi (ƏDV Xaric)</b></p>
+                  <p style="margin: 0cm; font-size: 12pt; text-align: right;"><b>Ümumi Məbləğ (ƏDV Xaric)</b></p>
               </td>
               <td width="86" colspan="2" style="width: 64.15pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; background: rgb(229, 229, 229); padding: 0cm 5.4pt; height: 26.05pt;">
                 <p style="margin: 0cm; font-size: 12pt; text-align: center; font-weight: bold;"><span id="package-1-totalprice">0</span> AZN</p>

@@ -143,8 +143,8 @@ function getOfferFetch(){
                 document.getElementById('offersListBody').innerHTML += 
                 `  
                 <tr>
-                    <td><a href="/customers/profile/${offer.customer.id}">${offer.customer.name}</a></td>
                     <td><a href="/sales/detail/offer/${offer.number}">${offer.number}</a></td>
+                    <td><a href="/customers/profile/${offer.customer.id}">${offer.customer.name}</a></td>
                     <td>${offer.status}</td>
                     <td>
                     ${
@@ -156,7 +156,7 @@ function getOfferFetch(){
                             }else if(offer.potency == 'PİS'){
                                 return '<span style="color: rgb(189, 0, 0);">PİS</span>'
                             }else{
-                                return '<span style="color: black;" >Təyin Edilməyin</span>'
+                                return '<span style="color: black;" >Təyin Edilməyib</span>'
                             }
                         })()
                     }

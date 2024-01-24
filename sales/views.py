@@ -44,7 +44,8 @@ def create_offer(request):
             new_package = OfferRevisionPackage.objects.create(
                 revision = revision,
                 tax = package['tax'],
-                discount = package['discount']
+                discount = package['discount'],
+                delv = package['delv']
             )
             for service in package['services']:
                 new_service = OfferRevisionPackageService.objects.create(
@@ -81,7 +82,7 @@ def create_offer(request):
                 'customer':customer,
                 'offer_number':offer_number,
                 'date':datetime.now().strftime('%d.%m.%Y'),
-                'users':User.objects.all(),
+                'users':User.objects.filter(id__gt = 1),
                 'products':Product.objects.all(),
             }   
 
@@ -92,12 +93,11 @@ class OfferEdit(View):
     def get(self, request, number):
 
         offer = get_object_or_404(Offer , number = number, status = "Aktiv")
-        users = User.objects.all()
-        products = Product.objects.all()
+
         context = {
             'offer': offer,
-            'products': products,
-            'users': users,
+            'products': Product.objects.all(),
+            'users': User.objects.filter(id__gt = 1),
         }
 
         return render(request, 'offer-edit.html', context)
@@ -118,7 +118,9 @@ class OfferEdit(View):
                 new_package = OfferRevisionPackage.objects.create(
                 revision = revision,
                 tax = updated_package['tax'],
-                discount = updated_package['discount']
+                discount = updated_package['discount'],
+                delv = updated_package['delv']
+
                 )
                 for service in updated_package['services']:
                     OfferRevisionPackageService.objects.create(
@@ -132,6 +134,7 @@ class OfferEdit(View):
                 package = OfferRevisionPackage.objects.get(id = updated_package['id'])
                 package.tax = updated_package['tax']
                 package.discount = updated_package['discount']
+                package.delv = updated_package['delv']
                 package.save()
                 for updated_service in updated_package['services']:
                     if not updated_service['id']:
@@ -201,7 +204,7 @@ class OfferNewRevisionCreate(View):
             'offer': offer,
             'revisions': revisions,
             'products': Product.objects.all(),
-            'users': User.objects.all(),
+            'users':User.objects.filter(id__gt = 1),
             'date': datetime.now().strftime('%d.%m.%Y'),
             'new_revision_number': "{:03d}".format(int(revisions.first().number) + 1)
         }
@@ -229,7 +232,9 @@ class OfferNewRevisionCreate(View):
             new_package = OfferRevisionPackage.objects.create(
                 revision = revision,
                 tax = package['tax'],
-                discount = package['discount']
+                discount = package['discount'],
+                delv = package['delv']
+
             )
             for service in package['services']:
                 new_service = OfferRevisionPackageService.objects.create(
@@ -279,7 +284,7 @@ class OfferDetail(DetailView):
         context['revisions'] = revisions
         context['offer_revision'] = offer_revision
         context['backlogs'] = backlogs.order_by('created_at')
-        context['users'] = User.objects.all()
+        context['users'] =  User.objects.filter(id__gt = 1),
         context['content_type'] = content_type.id
         if Order.objects.filter(contract__offer = offer).exists():
             context['order_num'] = Order.objects.get(contract__offer = offer).number
@@ -295,9 +300,8 @@ class OffersList(View):
             precent = ((this_month_offer - last_month_offer) / last_month_offer) * 100
         else:
             precent = this_month_offer * 100
-       
         context = {
-            'offers': Offer.objects.all(),
+            'offers': Offer.objects.all().order_by('-created_at'),
             'precent': round(precent, 2)
         }
         return render(request, 'offers-list.html', context) 
@@ -354,7 +358,7 @@ def create_order(request):
                 'offer':offer,
                 'number': number,
                 'date':datetime.now().strftime('%d.%m.%Y'),
-                'users':User.objects.all(),
+                'users':User.objects.filter(id__gt = 1),
                 'products':Product.objects.all(),
             }   
 
@@ -378,7 +382,7 @@ class OrderDetail(DetailView):
         order = self.get_object()
         order_contracted_offer_revision = order.contract.offer.offer_revisions.filter(is_active = True).first()
         content_type = ContentType.objects.get_for_model(order)
-        context['users'] = User.objects.all()
+        context['users'] = User.objects.filter(id__gt = 1),
         context['order_contracted_offer_revision'] = order_contracted_offer_revision
         context['backlogs'] = Backlog.objects.filter(content_type=ContentType.objects.get_for_model(order), object_id=order.id)
         context['offer_backlogs'] =  Backlog.objects.filter(content_type=ContentType.objects.get_for_model(order.contract.offer), object_id=order.contract.offer.id)
@@ -395,12 +399,11 @@ class OrderEdit(View):
     def get(self, request, number):
 
         order = get_object_or_404(Order , number = number, status = "Davamedir")
-        users = User.objects.all()
         products = Product.objects.all()
         context = {
             'order': order,
             'products': products,
-            'users': users,
+            'users':User.objects.filter(id__gt = 1),
             "offer": order.contract.offer
         }
 

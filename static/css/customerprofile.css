@@ -1,0 +1,61 @@
+.reply{
+
+    margin-left: 12px;
+    }
+    
+    .reply small{
+    
+    color: #b7b4b4;
+    
+    }
+    
+    .mentionuser{
+    display: flex;
+    align-items: center;
+    color: rgb(96, 163, 251);
+    }
+    
+    .mentionuser select{
+    border: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-indent: 1px;
+    text-overflow: '';
+    color: rgb(96, 163, 251);
+    &:focus, &:active {
+    outline: 0;
+    }
+    }
+    
+    
+    
+    .mentionuser p{
+    margin: 0%;
+    }
+      .card {
+      position: relative;
+      transition: 0.3s ease-in;
+    }
+    
+    
+    .card:hover{
+    
+        -webkit-box-shadow: 8px 8px 50px 0px rgba(141, 185, 255, 0.578);
+        -moz-box-shadow: 8px 8px 50px 0px rgba(141, 185, 255, 0.578);
+        box-shadow: 8px 8px 50px 0px rgba(141, 185, 255, 0.578);
+    }
+      .dots{
+    
+    height: 4px;  
+    width: 4px;
+    margin-bottom: 2px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    }
+    @media only screen and (max-width: 650px) {
+       #logDiv{
+        max-height: 300px;
+    
+       }
+    }

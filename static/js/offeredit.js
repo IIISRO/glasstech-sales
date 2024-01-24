@@ -81,8 +81,34 @@ function getOfferFetch(){
 
                          
                           
-                            
                             <tbody id='package-${newerPackageID}-services_start_line'>
+                             </tbody>                           
+                          ${
+                            (function delvcheck() {
+                                if(package.delv > 0){
+                                    return `
+                                    <tbody id="package-${newerPackageID}-delv" >
+                                    <!-- delv -->
+                                    <tr style="height: 26.05pt;">
+                                      <td width="585" colspan="5" style="width: 439.1pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; background: rgb(229, 229, 229); padding: 0cm 5.4pt; height: 26.05pt;">
+                                            <p style="margin: 0cm; font-size: 12pt; text-align: right;"><b>Çatdırılma</b></p>
+                                        </td>
+                                        <td width="86" colspan="2" style="width: 64.15pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; background: rgb(229, 229, 229); padding: 0cm 5.4pt; height: 26.05pt;">
+                                        <span style="display: flex; align-items: center; justify-content:center; ">
+                                        <input required onchange="calcDelvTotalPrice(event,null)" data-package_id = ${newerPackageID} class='form-control integerfield' placeholder='0' id="package-${newerPackageID}-delvfield" value='${package.delv}' style="padding:0px; width:50px; background: rgb(229, 229, 229); border:0px; margin: 0cm; font-size: 12pt; text-align: center; font-weight: bold;"><b>AZN</b>
+                                        </span>  
+                                        </td>
+                                    </tr>
+                                  
+                                  </tbody>
+                                    `
+                                }else{
+
+                                    return ''
+                                }
+                            })()
+                            }
+                            <tbody>
                             <!-- summa -->
                             <tr style="height: 26.05pt;">
                               <td width="85" colspan="2" style="width: 39.1pt; border-right:0pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; background: rgb(229, 229, 229); padding: 0cm 5.4pt; height: 26.05pt;">
@@ -106,7 +132,18 @@ function getOfferFetch(){
                                         }
                                     })()
                                     }
+                                    ${
+                                      (function delvbtncheck() {
+                                          if(package.delv > 0){
+                                              return `<button id="package-1-delvbtn" data-package_id="1" onclick="packageDelvField(event)" style="font-size: 12px;" type="button" class="btn-sm btn btn-warning">Çatdırılma</button>`
+                                          }else{
+                                            return `<button id="package-1-delvbtn" data-package_id="1" onclick="packageDelvField(event)" style="font-size: 12px;" type="button" class="btn-sm btn btn-secondary">Çatdırılma</button>`
+          
+                                          }
+                                      })()
+                                      }
                               </td>
+
                               <td width="500" colspan="3" style="width: 400pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 0pt solid windowtext; border-image: initial; border-top: none; background: rgb(229, 229, 229); padding: 0cm 5.4pt; height: 26.05pt;">
                                   <p style="margin: 0cm; font-size: 12pt; text-align: right;"><b>Ümumi (ƏDV Xaric)</b></p>
                               </td>
@@ -234,9 +271,9 @@ function getOfferFetch(){
                                           var options = []
                                           for(let product of productsList){
                                             if (parseInt(product.id) === service.product.id){
-                                                options.push(`<option selected class="form-control" data-unit="${product.unit}" value="${product.id}">${product.name}</option>`)
+                                                options.push(`<option selected class="form-control" data-prodid="${product.id}" data-unit="${product.unit}" value="${product.id}">${product.name}</option>`)
                                             }else{
-                                                options.push(`<option class="form-control" data-unit="${product.unit}" value="${product.id}">${product.name}</option>`)
+                                                options.push(`<option class="form-control" data-prodid="${product.id}" data-unit="${product.unit}" value="${product.id}">${product.name}</option>`)
                                             }
                                           }
                                           return options
@@ -278,6 +315,10 @@ function getOfferFetch(){
                                       </p>
                       
                                       <!-- serivce detail -->
+                                      <select data-package_id="${packageID}" data-service_id="${newerServiceID}" onchange="setTemplate(event)" class="form-control" name="" id="package-${packageID}-service-${newerServiceID}-templates">
+                                        <option value="">Boş şablon</option>
+                                        
+                                      </select>
                                       <textarea required name="package-${packageID}-service-${newerServiceID}-detail" id="package-${packageID}-service-${newerServiceID}-detail" cols="30" rows="10"></textarea>
                       
                                   </td>
@@ -305,6 +346,34 @@ function getOfferFetch(){
                               </tbody>
                               `
                             newerServiceStartLine.insertAdjacentHTML('beforebegin', newerService)
+                            var templateSelect = $(`#package-${packageID}-service-${newerServiceID}-templates`)
+                            fetch(`/products/get-templates/${service.product.id}`,{
+                              method:"GET",
+                              headers: {
+                                "Accept": "application/json",
+                                'Content-Type': 'application/json'
+                              },
+                            })
+                            .then((response)=>{
+                              return response.json()
+                            })
+                            .then((data)=>{
+                              $.each(data.templates, function (index, template) {
+                                if(service.detail.replace(/\s/g, '') == template.description.replace(/\s/g, '')){
+                                  templateSelect.append($('<option>', {
+                                    value: template.description,
+                                    text: `Şablon ${index + 1}`,
+                                    selected: true
+                                  }));
+                                }else{
+                                  templateSelect.append($('<option>', {
+                                    value: template.description,
+                                    text: `Şablon ${index + 1}`,
+                                  }));
+                                }
+                              });
+                          
+                          })
                             // usedmaterials
                             if(service.used_products.length>=1){
                               $(`#package-${packageID}-service-${newerServiceID}-UsedServiceModal`).collapse()
@@ -409,7 +478,7 @@ function addService(event){
             (function listProducts() {
               var options = []
               for(let product of productsList){
-                options.push(`<option class="form-control" data-unit="${product.unit}" value="${product.id}">${product.name}</option>`)
+                options.push(`<option class="form-control" data-prodid="${product.id}" data-unit="${product.unit}" value="${product.id}">${product.name}</option>`)
               }
               return options
             })()
@@ -450,6 +519,9 @@ function addService(event){
         </p>
 
         <!-- serivce detail -->
+          <select data-package_id="${packageID}" data-service_id="${newerServiceID}" onchange="setTemplate(event)" class="form-control" name="" id="package-${packageID}-service-${newerServiceID}-templates">
+            <option value="">Boş şablon</option>
+          </select>
           <textarea required name="package-${packageID}-service-${newerServiceID}-detail" id="package-${packageID}-service-${newerServiceID}-detail" cols="30" rows="10"></textarea>
 
       </td>
@@ -558,7 +630,7 @@ function addPackage(event){
             (function listProducts() {
               var options = []
               for(let product of productsList){
-                options.push(`<option class="form-control" data-unit="${product.unit}" value="${product.id}">${product.name}</option>`)
+                options.push(`<option class="form-control" data-prodid="${product.id}" data-unit="${product.unit}" value="${product.id}">${product.name}</option>`)
               }
               return options
             })()
@@ -599,6 +671,9 @@ function addPackage(event){
         </p>
 
         <!-- serivce detail -->
+          <select data-package_id="${newerPackageID}" data-service_id="1" onchange="setTemplate(event)" class="form-control" name="" id="package-${newerPackageID}-service-1-templates">
+            <option value="">Boş şablon</option>
+          </select>
           <textarea required name="package-${newerPackageID}-service-1-detail" id="package-${newerPackageID}-service-1-detail" cols="30" rows="10"></textarea>
 
       </td>
@@ -634,6 +709,7 @@ function addPackage(event){
       <td width="85" colspan="2" style="width: 39.1pt; border-right:0pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; background: rgb(229, 229, 229); padding: 0cm 5.4pt; height: 26.05pt;">
         <button id="package-${newerPackageID}-discountbtn" data-package_id="${newerPackageID}" onclick="packageDiscountField(event)" style="font-size: 12px;" type="button" class="btn-sm btn btn-secondary">ENDİRİM</button>
         <button id="package-${newerPackageID}-taxbtn" data-package_id="${newerPackageID}" onclick="packageTaxField(event)" style="font-size: 12px;" type="button" class="btn-sm btn btn-secondary">ƏDV</button>
+        <button id="package-${newerPackageID}-delvbtn" data-package_id="${newerPackageID}" onclick="packageDelvField(event)" style="font-size: 12px;" type="button" class="btn-sm btn btn-secondary">Çatdırılma</button>
       </td>
       <td width="500" colspan="3" style="width: 400pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 0pt solid windowtext; border-image: initial; border-top: none; background: rgb(229, 229, 229); padding: 0cm 5.4pt; height: 26.05pt;">
           <p style="margin: 0cm; font-size: 12pt; text-align: right;"><b>Ümumi (ƏDV Xaric)</b></p>
@@ -750,6 +826,11 @@ function servicesReID(packageID, services){
       toolbarCanCollapse: true
 
     });
+    // templates
+    let descTemplates = document.getElementById(`package-${service.dataset.package_id}-service-${service.dataset.service_id}-templates`)
+    descTemplates.dataset.package_id = packageID
+    descTemplates.dataset.service_id = newerServiceID
+    descTemplates.id = `package-${packageID}-service-${newerServiceID}-templates`
     // usermaterial
     let UsedServiceModalBTN = document.getElementById(`package-${service.dataset.package_id}-service-${service.dataset.service_id}-UsedServiceModalBTN`)
     UsedServiceModalBTN.setAttribute("aria-controls", `package-${packageID}-service-${newerServiceID}-UsedServiceModal`);
@@ -847,10 +928,14 @@ function packagesReID(){
     // discount tax buttons
     let discountBtn = document.getElementById(`package-${package.dataset.package_id}-discountbtn`)
     let taxBtn = document.getElementById(`package-${package.dataset.package_id}-taxbtn`)
+    let delvBtn = document.getElementById(`package-${package.dataset.package_id}-delvbtn`)
     discountBtn.dataset.package_id = newerPackageID
     taxBtn.dataset.package_id = newerPackageID
+    delvBtn.dataset.package_id = newerPackageID
     discountBtn.id = `package-${newerPackageID}-discountbtn`
     taxBtn.id = `package-${newerPackageID}-taxbtn`
+    delvBtn.id = `package-${newerPackageID}-delvbtn`
+
 
     // discount line
     let discountBody = document.getElementById(`package-${package.dataset.package_id}-discount`)
@@ -866,6 +951,13 @@ function packagesReID(){
       document.getElementById(`package-${package.dataset.package_id}-taxprice`).id =  `package-${newerPackageID}-taxprice`
       document.getElementById(`package-${package.dataset.package_id}-totalpricewtax`).id =  `package-${newerPackageID}-totalpricewtax`
       taxBody.id = `package-${newerPackageID}-tax`
+    }
+    // delv line
+    let delvBody = document.getElementById(`package-${package.dataset.package_id}-delv`)
+    if(delvBody != null){
+      document.getElementById(`package-${package.dataset.package_id}-delvfield`).dataset.package_id = newerPackageID
+      document.getElementById(`package-${package.dataset.package_id}-delvfield`).id =  `package-${newerPackageID}-delvfield`
+      delvBody.id = `package-${newerPackageID}-delv`
     }
     
     // addbutton
@@ -902,6 +994,17 @@ function packagesReID(){
   }
   
 }
+
+function setTemplate(event){
+  if(event.target.value){
+    CKEDITOR.instances[`package-${event.target.dataset.package_id}-service-${event.target.dataset.service_id}-detail`].setData(event.target.value)
+
+  }else{
+    CKEDITOR.instances[`package-${event.target.dataset.package_id}-service-${event.target.dataset.service_id}-detail`].setData('')
+
+  }
+}
+
 function checkServiceUsedProd(event){
   let button = event.target
   let serviceID = event.target.dataset.service_id
@@ -925,11 +1028,42 @@ function checkServiceUsedProd(event){
       }, 500);
   }
 }
+
 function findUnit(event){
   let packageID = event.target.dataset.package_id
   let serviceID = event.target.dataset.service_id
   let serviceUnit =  $(`#package-${packageID}-service-${serviceID}-unit`)
   serviceUnit.text($(`#${event.target.id} option:selected`).data('unit'))
+  // templatesleri getirmek
+  let id = $(`#${event.target.id} option:selected`).data('prodid')
+  loader.show()
+  fetch(`/products/get-templates/${id}`,{
+    method:"GET",
+    headers: {
+      "Accept": "application/json",
+      'Content-Type': 'application/json'
+    },
+  })
+  .then((response)=>{
+    return response.json()
+  })
+  .then((data)=>{
+    var templateSelect = $(`#package-${packageID}-service-${serviceID}-templates`)
+    templateSelect.empty();
+    
+    templateSelect.append($('<option>', {
+      value: '',
+      text: `Boş şablon`,
+    }));
+    $.each(data.templates, function (index, template) {
+      templateSelect.append($('<option>', {
+        value: template.description,
+        text: `Şablon ${index + 1}`,
+      }));
+    });
+    loader.hide()
+
+})
 }
 
 function checkFloatInput(){
@@ -942,6 +1076,7 @@ function checkFloatInput(){
     }
   })
 }
+
 function checkIntInput(){
   $('.integerfield').on('input',function(event){
     let price = event.target.value
@@ -962,8 +1097,13 @@ function calcPackageTotalPrice(calcPackageID){
       packageTotalPrice += parseInt(servicesTotalPrices.innerText)
     }
   }
-  if(packageTotalPrice!=0){
+  if(packageTotalPrice>0){
     document.getElementById(`package-${calcPackageID}-totalprice`).innerText = packageTotalPrice
+  }else{
+    document.getElementById(`package-${calcPackageID}-totalprice`).innerText = 0
+  }
+  if(document.getElementById(`package-${calcPackageID}-delvfield`) && parseInt(document.getElementById(`package-${calcPackageID}-delvfield`).value)){
+    document.getElementById(`package-${calcPackageID}-totalprice`).innerText = parseInt(document.getElementById(`package-${calcPackageID}-totalprice`).innerText) + parseInt(document.getElementById(`package-${calcPackageID}-delvfield`).value)
   }
   if(document.getElementById(`package-${calcPackageID}-discount`) != null){
     calcDiscountTotalPrice(null,calcPackageID)
@@ -1009,23 +1149,39 @@ function calcServiceTotalPrice(event){
 function calcTaxTotalPrice(packageID){
   let packageTotalPriceWDiscount = document.getElementById(`package-${packageID}-totalpricewdiscount`)
   if(packageTotalPriceWDiscount != null){
+    let packageTaxPrice = document.getElementById(`package-${packageID}-taxprice`)
+    let packageTotalPriceWTAX = document.getElementById(`package-${packageID}-totalpricewtax`)
     if(parseInt(packageTotalPriceWDiscount.innerText) >= 1){
-      let packageTaxPrice = document.getElementById(`package-${packageID}-taxprice`)
-      let packageTotalPriceWTAX = document.getElementById(`package-${packageID}-totalpricewtax`)
       let taxPrice = parseInt(parseInt(packageTotalPriceWDiscount.innerText)*18/100)
       packageTaxPrice.innerText = taxPrice
       packageTotalPriceWTAX.innerText = parseInt(packageTotalPriceWDiscount.innerText)+taxPrice
+    } else{
+      packageTaxPrice.innerText = 0
+      packageTotalPriceWTAX.innerText = 0
     }
   }else{
     let packageTotalPrice = document.getElementById(`package-${packageID}-totalprice`)
+    let packageTaxPrice = document.getElementById(`package-${packageID}-taxprice`)
+    let packageTotalPriceWTAX = document.getElementById(`package-${packageID}-totalpricewtax`)
     if(parseInt(packageTotalPrice.innerText) >= 1){
-      let packageTaxPrice = document.getElementById(`package-${packageID}-taxprice`)
-      let packageTotalPriceWTAX = document.getElementById(`package-${packageID}-totalpricewtax`)
       let taxPrice = parseInt(parseInt(packageTotalPrice.innerText)*18/100)
       packageTaxPrice.innerText = taxPrice
       packageTotalPriceWTAX.innerText = parseInt(packageTotalPrice.innerText)+taxPrice
     }
+    else{
+      packageTaxPrice.innerText = 0
+      packageTotalPriceWTAX.innerText = 0
+    }
   }
+}
+
+function calcDelvTotalPrice(event,packageID){
+  if(event != null){
+    var calcPackageID =  event.target.dataset.package_id
+  }else{
+    var calcPackageID =  packageID
+  }
+  calcPackageTotalPrice(calcPackageID)
 }
 
 function packageDiscountField(event){
@@ -1075,6 +1231,7 @@ function packageDiscountField(event){
   checkIntInput()
   loader.hide()
 }
+
 function packageTaxField(event){
   if(event.target.classList.contains('btn-secondary')){
     let tax = 
@@ -1114,6 +1271,43 @@ function packageTaxField(event){
   }
 }
 
+function packageDelvField(event){
+  loader.show()
+  if(event.target.classList.contains('btn-secondary')){
+    let delv = 
+    `
+    <tbody id="package-${event.target.dataset.package_id}-delv" >
+      <!-- delv -->
+      <tr style="height: 26.05pt;">
+        <td width="585" colspan="5" style="width: 439.1pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; background: rgb(229, 229, 229); padding: 0cm 5.4pt; height: 26.05pt;">
+              <p style="margin: 0cm; font-size: 12pt; text-align: right;"><b>Çatdırılma</b></p>
+          </td>
+          <td width="86" colspan="2" style="width: 64.15pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; background: rgb(229, 229, 229); padding: 0cm 5.4pt; height: 26.05pt;">
+          <span style="display: flex; align-items: center; justify-content:center; ">
+          <input required onchange="calcDelvTotalPrice(event,null)" data-package_id = ${event.target.dataset.package_id} class='form-control integerfield' placeholder='0' id="package-${event.target.dataset.package_id}-delvfield" style="padding:0px; width:50px; background: rgb(229, 229, 229); border:0px; margin: 0cm; font-size: 12pt; text-align: center; font-weight: bold;"><b>AZN</b>
+          </span>  
+          </td>
+      </tr>
+    
+    </tbody>
+    `
+    if(document.getElementById(`package-${event.target.dataset.package_id}-delv`)==null){
+      event.target.parentElement.parentElement.parentElement.insertAdjacentHTML('beforeBegin', delv)
+    }else{
+      document.getElementById(`package-${event.target.dataset.package_id}-delv`).insertAdjacentHTML('afterEnd', delv)
+    }
+    event.target.classList.remove('btn-secondary')
+    event.target.classList += (' btn-warning')
+  }else{
+    document.getElementById(`package-${event.target.dataset.package_id}-delv`).remove()
+    event.target.classList.remove('btn-warning')
+    event.target.classList += (' btn-secondary')
+  }
+  calcDelvTotalPrice(null, event.target.dataset.package_id)
+  checkIntInput()
+  loader.hide()
+}
+
 
 
 
@@ -1142,7 +1336,11 @@ editOfferForm.addEventListener("submit", (e) => {
     }else{
       newerPackage['discount'] = null
     }
-
+    if (document.getElementById(`package-${packageID}-delv`) != null ){
+      newerPackage['delv'] = document.getElementById(`package-${packageID}-delvfield`).value
+    }else{
+      newerPackage['delv'] = null
+    }
     let newerServices = []
     for(let service of package.getElementsByClassName('services')){
       let serivceID = service.dataset.service_id

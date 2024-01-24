@@ -81,9 +81,36 @@ function getOfferFetch(){
   
                         
                         
+                        <tbody id='package-${newerPackageID}-services_start_line'>
+                        </tbody>
                           
-                          <tbody id='package-${newerPackageID}-services_start_line'>
-                          <!-- summa -->
+                        ${
+                          (function delvcheck() {
+                                if(package.delv > 0){
+                                    return `
+                                  <tbody>
+                                    <!-- delv -->
+                                    <tr style="height: 26.05pt;">
+                                      <td width="585" colspan="5" style="width: 439.1pt; border-right: 1pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; background: rgb(229, 229, 229); padding: 0cm 5.4pt; height: 26.05pt;">
+                                            <p style="margin: 0cm; font-size: 12pt; text-align: right;"><b>Çatdırılma</b></p>
+                                        </td>
+                                        <td width="86" colspan="2" style="width: 64.15pt; border-top: none; border-left: none; border-bottom: 1pt solid windowtext; border-right: 1pt solid windowtext; background: rgb(229, 229, 229); padding: 0cm 5.4pt; height: 26.05pt;">
+                                        <span style="display: flex; align-items: center; justify-content:center; ">
+                                         <p style="margin: 0cm; font-size: 12pt; text-align: center; font-weight: bold;"><span id="package-${newerPackageID}-delvamount">${package.delv}</span> AZN</p>
+                                         </span>  
+                                        </td>
+                                    </tr>
+                                    
+                                  </tbody>
+                                    `
+                                }else{
+    
+                                  return ''
+                                }
+                            })()
+                            }
+                        <tbody>
+                            <!-- summa -->
                           <tr style="height: 26.05pt;">
                             <td width="85" colspan="2" style="width: 39.1pt; border-right:0pt solid windowtext; border-bottom: 1pt solid windowtext; border-left: 1pt solid windowtext; border-image: initial; border-top: none; background: rgb(229, 229, 229); padding: 0cm 5.4pt; height: 26.05pt;">
           
@@ -291,8 +318,13 @@ function calcPackageTotalPrice(calcPackageID){
       packageTotalPrice += parseInt(servicesTotalPrices.innerText)
     }
   }
-  if(packageTotalPrice!=0){
+  if(packageTotalPrice>0){
     document.getElementById(`package-${calcPackageID}-totalprice`).innerText = packageTotalPrice
+  }else{
+    document.getElementById(`package-${calcPackageID}-totalprice`).innerText = 0
+  }
+  if(document.getElementById(`package-${calcPackageID}-delvamount`) && parseInt(document.getElementById(`package-${calcPackageID}-delvamount`).innerText)){
+    document.getElementById(`package-${calcPackageID}-totalprice`).innerText = parseInt(document.getElementById(`package-${calcPackageID}-totalprice`).innerText) + parseInt(document.getElementById(`package-${calcPackageID}-delvamount`).innerText)
   }
   if(document.getElementById(`package-${calcPackageID}-discount`) != null){
     calcDiscountTotalPrice(null,calcPackageID)

@@ -73,12 +73,12 @@
                 <tbody>
                   {% for product in  product_list %}
                   <tr>
-                    <th>{{product.name}}</th>
+                    <th><a href="{% url 'products:product_detail' pk=product.id %}">{{product.name}}</a></th>
                     <th>{{product.category}}</th>
                     <th>{{product.quantity}}</th>
                     <th>{{product.unit}}</th>
                     <th>{{product.total}}AZN</th>
-                    <th>{% if product.useds.name %}{{product.useds.name}}{% else %}-----{% endif %}</th>
+                    <th>{% if product.useds.name %}<a href="{% url 'products:product_detail' pk=product.id %}">{{product.useds.name}}</a>{% else %}-----{% endif %}</th>
                     <th>{% if product.useds.name %}{{product.useds.category}}{% else %}-----{% endif %}</th>
                     <th>{% if product.useds.name %}{{product.useds.quantity}}{% else %}-----{% endif %}</th>
                     <th>{% if product.useds.name %}{{product.useds.unit}}{% else %}-----{% endif %}</th>

@@ -1,6 +1,6 @@
 from django.db import models
 from core.models import AbstractModel
-
+from django.urls import reverse_lazy
 # Create your models here.
 
 class Customer(AbstractModel):
@@ -52,3 +52,6 @@ class Customer(AbstractModel):
     
     def date(self):           
         return self.created_at.strftime('%d.%m.%Y')
+
+    def get_absolute_url(self):
+        return reverse_lazy('customers:customer-profile', kwargs={'pk': self.id})

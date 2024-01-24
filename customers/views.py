@@ -11,6 +11,7 @@ from core.models import Backlog
 from sales.models import Order
 from django.contrib.contenttypes.models import ContentType
 from accounts.models import User
+from django.views.generic.edit import UpdateView 
 
 
 # Create your views here.
@@ -81,3 +82,12 @@ class CustomerProfile(DetailView):
         context['content_type'] = content_type.id
 
         return context
+
+class CustomerEdit(SuccessMessageMixin, UpdateView):
+    model = Customer
+    form_class = CreateCustomerForm
+    template_name = 'edit-customer.html'
+    success_message = "Müştəri məlumatları yeniləndi!"
+    
+
+

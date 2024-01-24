@@ -38,6 +38,7 @@ class OfferRevisionPackageSerializer(serializers.ModelSerializer):
             'revision',
             'tax',
             'discount',
+            'delv',
             'services'
         )
 

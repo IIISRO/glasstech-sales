@@ -51,6 +51,8 @@ class OfferRevisionPackage(AbstractModel):
     revision = models.ForeignKey(OfferRevision, on_delete=models.CASCADE, related_name='revision_packages')
     tax = models.PositiveIntegerField(blank=True, null=True)
     discount = models.PositiveIntegerField(blank=True, null=True)
+    delv = models.PositiveIntegerField(blank=True, null=True)
+    
 
     def __str__(self):
         return f'{self.revision}-package'
@@ -119,10 +121,13 @@ class Order(AbstractModel):
         total_price = 0
         for service in  package.package_services.all():
             total_price += service.quantity*service.price
+        if package.delv:
+            total_price += package.delv
         if package.tax:
             total_price += package.tax
         if  package.discount:
             total_price  -= package.discount
+
         return total_price
 
 class ServiceUsedProduct(AbstractModel):
