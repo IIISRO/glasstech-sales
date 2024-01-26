@@ -51,14 +51,14 @@ def dashboard(request):
     if  not last_year_total_avg == 0:
         precent = ((this_year_total_avg - last_year_total_avg) / last_year_total_avg) * 100
     else:
-        precent = this_year_total_avg * 100   
+        precent = this_year_total_avg  
         
     last_month_offer = Offer.objects.filter(created_at__year= date.today().year, created_at__month=date.today().month - 1).count()
     this_month_offer = Offer.objects.filter(created_at__year= date.today().year, created_at__month=date.today().month).count()
     if  not last_month_offer == 0:
         precent_offer = ((this_month_offer - last_month_offer) / last_month_offer) * 100
     else:
-        precent_offer = this_month_offer * 100
+        precent_offer = this_month_offer
     context = {
         'suc_offer_count': Offer.objects.filter(status = 'Uğurlu').filter(created_at__year= date.today().year, created_at__month=date.today().month).count(),
         'fail_offer_count': Offer.objects.filter(status = 'Uğursuz').filter(created_at__year= date.today().year, created_at__month=date.today().month).count(),

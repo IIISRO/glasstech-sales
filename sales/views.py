@@ -55,12 +55,12 @@ def create_offer(request):
                     price = service['price'],
                     detail = service['detail']
                 )
-                if service['used_materials']:
+                for used in service['used_materials']:
                     ServiceUsedProduct.objects.create(
                         service = new_service,
-                        product = Product.objects.get(id = service['used_materials']['product_id']),
-                        price = service['used_materials']['price'],
-                        quantity = service['used_materials']['quantity']
+                        product = Product.objects.get(id = used['product_id']),
+                        price = used['price'],
+                        quantity = used['quantity']
                     )
 
         messages.add_message(request, messages.SUCCESS, (f"Təklif NO: {data['number']} yaradıldı!"))
@@ -69,9 +69,12 @@ def create_offer(request):
         customer_id = request.GET.get('customer','')
         if customer_id:
             customer = get_object_or_404(Customer, id = int(customer_id)) 
-
-            customer_offers_count = Offer.objects.filter(customer = customer).count()
-            offer_number = f"{datetime.now().strftime('%d%m%y')}-{customer_id}-{customer_offers_count+1}"
+            last_offer_number = Offer.objects.filter(customer = customer).order_by('-created_at')
+            if last_offer_number.exists():
+                offers_count = int(last_offer_number.first().number.split('-')[-1])
+            else:
+                offers_count = 0
+            offer_number = f"{datetime.now().strftime('%d%m%y')}-{customer_id}-{offers_count+1}"
 
             ckeditor_upload = reverse('ckeditor_upload')
             ckeditor_browse = reverse('ckeditor_browse')
@@ -122,14 +125,22 @@ class OfferEdit(View):
                 delv = updated_package['delv']
 
                 )
-                for service in updated_package['services']:
-                    OfferRevisionPackageService.objects.create(
+                for updated_service in updated_package['services']:
+                    new_service = OfferRevisionPackageService.objects.create(
                         package = new_package,
-                        product = Product.objects.get(id = service['product']),
-                        quantity = service['quantity'],
-                        price = service['price'],
-                        detail = service['detail']
+                        product = Product.objects.get(id = updated_service['product']),
+                        quantity = updated_service['quantity'],
+                        price = updated_service['price'],
+                        detail = updated_service['detail']
                     )
+                    for updated_usedprod in updated_service['used_materials']:
+                        ServiceUsedProduct.objects.create(
+                            service = new_service,
+                            product = Product.objects.get(id = updated_usedprod['product_id']),
+                            price = updated_usedprod['price'],
+                            quantity = updated_usedprod['quantity']
+                        )
+
             else:
                 package = OfferRevisionPackage.objects.get(id = updated_package['id'])
                 package.tax = updated_package['tax']
@@ -145,12 +156,12 @@ class OfferEdit(View):
                             price = updated_service['price'],
                             detail = updated_service['detail']
                         )
-                        if updated_service['used_materials']:
+                        for updated_usedprod in updated_service['used_materials']:
                             ServiceUsedProduct.objects.create(
                                 service = new_service,
-                                product = Product.objects.get(id = updated_service['used_materials']['product_id']),
-                                price = updated_service['used_materials']['price'],
-                                quantity = updated_service['used_materials']['quantity']
+                                product = Product.objects.get(id = updated_usedprod['product_id']),
+                                price = updated_usedprod['price'],
+                                quantity = updated_usedprod['quantity']
                             )
                     else:
                         service = OfferRevisionPackageService.objects.filter(id = updated_service['id'])
@@ -161,27 +172,21 @@ class OfferEdit(View):
                             service.price = updated_service['price']
                             service.detail = updated_service['detail']
                             service.save()
-                            if ServiceUsedProduct.objects.filter(service = service).exists():
-                                used_prods = ServiceUsedProduct.objects.filter(service = service)
-                                # update
-                                if updated_service['used_materials']:
-                                    for used_prod in used_prods:
-                                        used_prod.product = Product.objects.get(id = updated_service['used_materials']['product_id'])
-                                        used_prod.price = updated_service['used_materials']['price']
-                                        used_prod.quantity = updated_service['used_materials']['quantity']
-                                        used_prod.save()
-                                # delete
+                            for updated_usedprod in updated_service['used_materials']:
+                                if not updated_usedprod['id']:
+                                    ServiceUsedProduct.objects.create(
+                                        service = service,
+                                        product = Product.objects.get(id = updated_usedprod['product_id']),
+                                        price = updated_usedprod['price'],
+                                        quantity = updated_usedprod['quantity']
+                                    )
                                 else:
-                                    for used_prod in used_prods:
-                                        used_prod.delete()
-                            # create
-                            elif updated_service['used_materials']:
-                                ServiceUsedProduct.objects.create(
-                                    service = service,
-                                    product = Product.objects.get(id = updated_service['used_materials']['product_id']),
-                                    price = updated_service['used_materials']['price'],
-                                    quantity = updated_service['used_materials']['quantity']
-                                )
+                                    usedprod = ServiceUsedProduct.objects.get(id = updated_usedprod['id'])
+                                    usedprod.product = Product.objects.get(id = updated_usedprod['product_id'])
+                                    usedprod.price = updated_usedprod['price']
+                                    usedprod.quantity = updated_usedprod['quantity']
+                                    usedprod.save()
+                           
         # removing
         for package_id in data['removedPackagesIDS']:
             package = OfferRevisionPackage.objects.filter(id = package_id)
@@ -190,7 +195,11 @@ class OfferEdit(View):
         for service_id in data['removedServicesIDS']:
             service = OfferRevisionPackageService.objects.filter(id = service_id)
             if service.exists():
-                service.first().delete
+                service.first().delete()
+        for usedprod_id in data['removedUsedProdsIDS']:
+            usedprod = ServiceUsedProduct.objects.filter(id = usedprod_id)
+            if usedprod.exists():
+                usedprod.first().delete()
         messages.add_message(request, messages.SUCCESS, (f"Təklif NO: {number} məlumatları yeniləndi!"))
                         
         return JsonResponse('yaradildi', safe=False)
@@ -244,12 +253,12 @@ class OfferNewRevisionCreate(View):
                     price = service['price'],
                     detail = service['detail']
                 )
-                if service['used_materials']:
+                for used in service['used_materials']:
                     ServiceUsedProduct.objects.create(
                         service = new_service,
-                        product = Product.objects.get(id = service['used_materials']['product_id']),
-                        price = service['used_materials']['price'],
-                        quantity = service['used_materials']['quantity']
+                        product = Product.objects.get(id = used['product_id']),
+                        price = used['price'],
+                        quantity = used['quantity']
                     )
         
         messages.add_message(request, messages.SUCCESS, (f"Təklif NO: {offer.number} yeni REV{data['number']} yaradıldı!"))
@@ -299,7 +308,7 @@ class OffersList(View):
         if  not last_month_offer == 0:
             precent = ((this_month_offer - last_month_offer) / last_month_offer) * 100
         else:
-            precent = this_month_offer * 100
+            precent = this_month_offer
         context = {
             'offers': Offer.objects.all().order_by('-created_at'),
             'precent': round(precent, 2)
@@ -347,7 +356,13 @@ def create_order(request):
             # bir paket oldugun yoxlamag
             if offer.offer_revisions.filter(is_active = True).first().revision_packages.count()>1:
                 raise Http404
-            number = f'{datetime.now().strftime("%d%m%y")}-{offer.customer.id}-{Order.objects.filter(contract__offer__customer = offer.customer).count()+1}'
+            
+            last_order_number = Order.objects.filter(contract__offer__customer = offer.customer).order_by('-created_at')
+            if last_order_number.exists():
+                order_count = int(last_order_number.first().number.split('-')[-1])
+            else:
+                order_count = 0
+            number = f'{datetime.now().strftime("%d%m%y")}-{offer.customer.id}-{order_count+1}'
 
             ckeditor_upload = reverse('ckeditor_upload')
             ckeditor_browse = reverse('ckeditor_browse')
@@ -464,7 +479,7 @@ class OrdersList(View):
         if  not last_year_total_avg == 0:
             precent = ((this_year_total_avg - last_year_total_avg) / last_year_total_avg) * 100
         else:
-            precent = this_year_total_avg * 100  
+            precent = this_year_total_avg  
 
         context = { 
         'orders_year':Order.objects.filter(created_at__year=date.today().year).count(),

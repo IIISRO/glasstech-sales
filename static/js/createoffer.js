@@ -36,35 +36,11 @@ function addService(event){
             })()
           }
         </select>
-        <button onclick="checkServiceUsedProd(event)" data-package_id="${packageID}" data-service_id="${newerServiceID}" class="btn-xs btn mt-1 btn-success" type="button" data-toggle="collapse" data-target="#package-${packageID}-service-${newerServiceID}-UsedServiceModal" aria-expanded="false" id='package-${packageID}-service-${newerServiceID}-UsedServiceModalBTN'  aria-controls="package-${packageID}-service-${newerServiceID}-UsedServiceModal">
-        İstifadə olunan material
+        <button onclick="addUsedMaterial(event)" data-package_id="${packageID}" data-service_id="${newerServiceID}" id="package-${packageID}-service-${newerServiceID}-UsedMaterialBTN" class="mb-1 btn-xs btn mt-1 btn-success" type="button">
+        İstifadə olunan material <i class="fas fa-solid fa-plus"></i>
         </button>
-        <div class="collapse" id="package-${packageID}-service-${newerServiceID}-UsedServiceModal">
-          <div class="card usedmaterials  card-body">
-              <label for="">Məhsul:</label>
-              <select style="height: 30px;" class="form-control" id="package-${packageID}-service-${newerServiceID}-usedprod">
-                  <option value="" selected disabled>------</option>
-                  ${
-                      (function prodList() {
-                          let prodChoiceList = []
-                          for(let prod of productsList){
-                              prodChoiceList.push(`<option value="${prod.id}" >${prod.name}</option>`)
-                          }
-                          return prodChoiceList
-                      })()
-                  }
-              </select>
-              <div class="row">
-                  <div class="col">
-                      <label for="">Qiymət:</label>
-                      <input style="height: 30px;" class="floatfield form-control" id="package-${packageID}-service-${newerServiceID}-usedprodprice" type="text">
-                  </div>
-                  <div class="col">
-                      <label for="">Say:</label>
-                      <input style="height: 30px;" class="floatfield form-control" id="package-${packageID}-service-${newerServiceID}-usedprodquantity" type="text">
-                  </div>
-              </div>
-          </div>
+        <div id="package-${packageID}-service-${newerServiceID}-UsedMaterialList">
+         
         </div>
         <p class="MsoNormal" style="margin: 0cm 0cm 0cm 2.1pt; font-size: 12pt">
             <b><span lang="AZ-LATIN" style="font-family: Arial, sans-serif;">&nbsp;</span></b>
@@ -188,35 +164,11 @@ function addPackage(event){
             })()
           }
         </select>
-        <button onclick="checkServiceUsedProd(event)" data-package_id="${newerPackageID}" data-service_id="1" class="btn-xs btn mt-1 btn-success" type="button" data-toggle="collapse" data-target="#package-${newerPackageID}-service-1-UsedServiceModal" aria-expanded="false" id='package-${newerPackageID}-service-1-UsedServiceModalBTN'  aria-controls="package-${newerPackageID}-service-1-UsedServiceModal">
-        İstifadə olunan material
+        <button onclick="addUsedMaterial(event)" data-package_id="${newerPackageID}" data-service_id="1" id="package-${newerPackageID}-service-1-UsedMaterialBTN" class="mb-1 btn-xs btn mt-1 btn-success" type="button">
+        İstifadə olunan material <i class="fas fa-solid fa-plus"></i>
         </button>
-        <div class="collapse" id="package-${newerPackageID}-service-1-UsedServiceModal">
-          <div class="card usedmaterials  card-body">
-              <label for="">Məhsul:</label>
-              <select style="height: 30px;" class="form-control" id="package-${newerPackageID}-service-1-usedprod">
-                  <option value="" selected disabled>------</option>
-                  ${
-                      (function prodList() {
-                          let prodChoiceList = []
-                          for(let prod of productsList){
-                              prodChoiceList.push(`<option value="${prod.id}" >${prod.name}</option>`)
-                          }
-                          return prodChoiceList
-                      })()
-                  }
-              </select>
-              <div class="row">
-                  <div class="col">
-                      <label for="">Qiymət:</label>
-                      <input style="height: 30px;" class="floatfield form-control" id="package-${newerPackageID}-service-1-usedprodprice" type="text">
-                  </div>
-                  <div class="col">
-                      <label for="">Say:</label>
-                      <input style="height: 30px;" class="floatfield form-control" id="package-${newerPackageID}-service-1-usedprodquantity" type="text">
-                  </div>
-              </div>
-          </div>
+        <div id="package-${newerPackageID}-service-1-UsedMaterialList">
+         
         </div>
         <p class="MsoNormal" style="margin: 0cm 0cm 0cm 2.1pt; font-size: 12pt">
             <b><span lang="AZ-LATIN" style="font-family: Arial, sans-serif;">&nbsp;</span></b>
@@ -377,17 +329,12 @@ function servicesReID(packageID, services){
     descTemplates.dataset.service_id = newerServiceID
     descTemplates.id = `package-${packageID}-service-${newerServiceID}-templates`
     // usermaterial
-    let UsedServiceModalBTN = document.getElementById(`package-${service.dataset.package_id}-service-${service.dataset.service_id}-UsedServiceModalBTN`)
-    UsedServiceModalBTN.setAttribute("aria-controls", `package-${packageID}-service-${newerServiceID}-UsedServiceModal`);
-    UsedServiceModalBTN.dataset.target = `#package-${packageID}-service-${newerServiceID}-UsedServiceModal`
+    let UsedServiceModalBTN = document.getElementById(`package-${service.dataset.package_id}-service-${service.dataset.service_id}-UsedMaterialBTN`)
     UsedServiceModalBTN.dataset.package_id = packageID
     UsedServiceModalBTN.dataset.service_id = newerServiceID
-    UsedServiceModalBTN.id = `package-${packageID}-service-${newerServiceID}-UsedServiceModalBTN`
-    document.getElementById(`package-${service.dataset.package_id}-service-${service.dataset.service_id}-UsedServiceModal`).id = `package-${packageID}-service-${newerServiceID}-UsedServiceModal`
-    document.getElementById(`package-${service.dataset.package_id}-service-${service.dataset.service_id}-usedprod`).id = `package-${packageID}-service-${newerServiceID}-usedprod`
-    document.getElementById(`package-${service.dataset.package_id}-service-${service.dataset.service_id}-usedprodprice`).id = `package-${packageID}-service-${newerServiceID}-usedprodprice`
-    document.getElementById(`package-${service.dataset.package_id}-service-${service.dataset.service_id}-usedprodquantity`).id = `package-${packageID}-service-${newerServiceID}-usedprodquantity`
-
+    UsedServiceModalBTN.id = `package-${packageID}-service-${newerServiceID}-UsedMaterialBTN`
+    document.getElementById(`package-${service.dataset.package_id}-service-${service.dataset.service_id}-UsedMaterialList`).id = `package-${packageID}-service-${newerServiceID}-UsedMaterialList`
+    
     // unit
     let serviceUnit = document.getElementById(`package-${service.dataset.package_id}-service-${service.dataset.service_id}-unit`)
     serviceUnit.id = `package-${packageID}-service-${newerServiceID}-unit`
@@ -578,28 +525,52 @@ function findUnit(event){
 })
 }
 
-function checkServiceUsedProd(event){
-  let button = event.target
+function addUsedMaterial(event){
   let serviceID = event.target.dataset.service_id
   let packageID = event.target.dataset.package_id
+  const list = $(`#package-${packageID}-service-${serviceID}-UsedMaterialList`)
+  let cart = 
+  `
+    <div style="padding-top:5px;" class="usedmaterial card card-body">
+      <button onclick="removeUsedMaterial(event)" class="btn" style="width:10px; margin:0px; padding:0px;" type="button"><i class="fas fa-solid fa-trash" style="color: #eb0000;"></i></button>
+      <div class="row">
+            <div class="col-6">
+              <label for="">Məhsul:</label>
+              <select required style="height: 35px;" class="usedprod form-control">
+                  <option value="" selected disabled>------</option>
+                  ${
+                    (function listProducts() {
+                      var options = []
+                      for(let product of productsList){
+                        options.push(`<option class="form-control" value="${product.id}">${product.name}</option>`)
+                      }
+                      return options
+                    })()
+                  }
+              </select>
+            </div>
+            <div class="col-3">
+              <label for="">Say:</label>
+              <input required style="height: 35px;" class="usedquantity floatfield form-control" type="text">
+            </div>
+            <div class="col-3">
+                <label for="">Qiymət:</label>
+                <input required style="height: 35px;" class="usedprice floatfield form-control" type="text">
+            </div>
+        </div>
+    </div>
+  `
+  list.append(cart)
 
-  if(button.classList.contains('btn-success')){
-      setTimeout(function(){
-          $(`#package-${packageID}-service-${serviceID}-usedprod`).prop('required',true);
-          $(`#package-${packageID}-service-${serviceID}-usedprodprice`).prop('required',true);
-          $(`#package-${packageID}-service-${serviceID}-usedprodquantity`).prop('required',true);
-          button.classList.remove('btn-success')
-          button.classList.add('btn-danger')
-      }, 500);
-  }else{
-      setTimeout(function(){
-          $(`#package-${packageID}-service-${serviceID}-usedprod`).prop('required',false);
-          $(`#package-${packageID}-service-${serviceID}-usedprodprice`).prop('required',false);
-          $(`#package-${packageID}-service-${serviceID}-usedprodquantity`).prop('required',false);
-          button.classList.remove('btn-danger')
-          button.classList.add('btn-success')
-      }, 500);
-  }
+  checkFloatInput()
+}
+
+function removeUsedMaterial(event){
+  if( event.target.parentElement.parentElement.classList.contains('card')){
+    event.target.parentElement.parentElement.remove()
+  }else[
+    event.target.parentElement.remove()
+  ]
 }
 
 function checkFloatInput(){
@@ -896,17 +867,19 @@ createOfferForm.addEventListener("submit", (e) => {
       newerService['detail'] = CKEDITOR.instances[`package-${packageID}-service-${serivceID}-detail`].getData()
       newerService['quantity'] = parseFloat(document.getElementById(`package-${packageID}-service-${serivceID}-quantity`).value)
       newerService['price'] = parseFloat(document.getElementById(`package-${packageID}-service-${serivceID}-price`).value)
-     
-      if($(`#package-${packageID}-service-${serivceID}-UsedServiceModalBTN`).hasClass('btn-danger')){
-          let newUsedMaterial = {
-              'product_id':parseInt($(`#package-${packageID}-service-${serivceID}-usedprod`).val()),
-              'price': parseFloat($(`#package-${packageID}-service-${serivceID}-usedprodprice`).val()),
-              'quantity': parseFloat($(`#package-${packageID}-service-${serivceID}-usedprodquantity`).val())
-            }
-            newerService['used_materials'] = newUsedMaterial
-      }else{
-        newerService['used_materials'] = null
+      let newUsedMaterials = []
+      let usedMaterialList = document.getElementById(`package-${packageID}-service-${serivceID}-UsedMaterialList`).getElementsByClassName('usedmaterial')
+      for (let used of usedMaterialList){
+        var usedMaterial = {
+          'product_id':parseInt(used.getElementsByClassName('usedprod')[0].value),
+          'quantity': parseFloat(used.getElementsByClassName('usedquantity')[0].value),
+          'price': parseFloat(used.getElementsByClassName('usedprice')[0].value),
+        }
+        newUsedMaterials.push(usedMaterial)
       }
+      
+      newerService['used_materials'] = newUsedMaterials
+    
       newerServices.push(newerService)
     }
     newerPackage['services'] = newerServices

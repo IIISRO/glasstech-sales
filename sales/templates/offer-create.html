@@ -132,29 +132,11 @@
                     <option data-prodid="{{product.id}}" data-unit="{{product.unit}}" value="{{product.id}}">{{product.name}}({{product.category}})</option>
                   {% endfor %}
                 </select>
-                <button onclick="checkServiceUsedProd(event)" data-package_id="1" data-service_id="1" class="btn-xs btn mt-1 btn-success" type="button" data-toggle="collapse" data-target="#package-1-service-1-UsedServiceModal" aria-expanded="false" id='package-1-service-1-UsedServiceModalBTN' aria-controls="package-1-service-1-UsedServiceModal">
-                İstifadə olunan material
+                <button onclick="addUsedMaterial(event)" data-package_id="1" data-service_id="1" id="package-1-service-1-UsedMaterialBTN" class="mb-1 btn-xs btn mt-1 btn-success" type="button">
+                İstifadə olunan material <i class="fas fa-solid fa-plus"></i>
                 </button>
-                <div class="collapse" id="package-1-service-1-UsedServiceModal">
-                  <div class="card usedmaterials  card-body">
-                      <label for="">Məhsul:</label>
-                      <select style="height: 30px;" class="form-control" id="package-1-service-1-usedprod">
-                          <option value="" selected disabled>------</option>
-                          {% for product in products %}
-                            <option  value="{{product.id}}">{{product.name}}({{product.category}})</option>
-                          {% endfor %}
-                      </select>
-                      <div class="row">
-                          <div class="col">
-                              <label for="">Qiymət:</label>
-                              <input style="height: 30px;" class="floatfield form-control" id="package-1-service-1-usedprodprice" type="text">
-                          </div>
-                          <div class="col">
-                              <label for="">Say:</label>
-                              <input style="height: 30px;" class="floatfield form-control" id="package-1-service-1-usedprodquantity" type="text">
-                          </div>
-                      </div>
-                  </div>
+                <div id="package-1-service-1-UsedMaterialList">
+                 
                 </div>
                 <p class="MsoNormal" style="margin: 0cm 0cm 0cm 2.1pt; font-size: 12pt">
                     <b><span lang="AZ-LATIN" style="font-family: Arial, sans-serif;">&nbsp;</span></b>
