@@ -319,11 +319,14 @@ def create_order(request):
 
     offer_number = request.GET.get('offer','')
     offer = get_object_or_404(Offer, number = offer_number) 
-    if not Contract.objects.filter(offer__number = offer_number).exists() and offer.status == "Aktiv":
+    if offer.status == "Aktiv":
         if request.method == 'POST':
             data = json.loads(request.body)
             if not data:
                 raise Http404
+            if Contract.objects.filter(offer__number = offer_number).exists():
+                old_contract= Contract.objects.filter(offer__number = offer_number).first()
+                old_contract.delete()
             contract = Contract.objects.create(offer = offer)
             Order.objects.create(
                 contract = contract,
