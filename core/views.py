@@ -67,8 +67,8 @@ def dashboard(request):
         'avarges': avarges[:date.today().month],
         'this_year_total_avg':int(this_year_total_avg),
         'precent_order': round(precent, 2),
-        'date_year': f'1/1/{date.today().year}-{date.today().day}/{date.today().month}/{date.today().year}',
-        'precent_offer':precent_offer
+        'date_year': f'01/01/{date.today().year}-{date.today().day}/{date.today().month}/{date.today().year}',
+        'precent_offer':round(precent_offer, 2)
 
     }
     
