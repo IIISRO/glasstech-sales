@@ -140,6 +140,14 @@ function getOfferFetch(){
 
             $(function () {
                 $("#example1").DataTable({
+                  fixedColumns: {
+                    start: 1,
+                    end: 1
+                  },
+                  paging: false,
+                  scrollCollapse: true,
+                  scrollX: true,
+                  scrollY: 500,
                   "responsive": true, "lengthChange": false, "autoWidth": false,
                   "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
                 }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');

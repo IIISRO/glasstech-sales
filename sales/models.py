@@ -56,7 +56,17 @@ class OfferRevisionPackage(AbstractModel):
 
     def __str__(self):
         return f'{self.revision}-package'
-  
+    
+    def get_price(self):
+        total_price = sum(service.price*service.quantity for service in self.package_services.all())
+        if self.delv:
+            total_price += self.delv
+        if self.discount:
+            total_price -= self.discount
+        if self.tax:
+            total_price += self.tax
+        return total_price
+
 class OfferRevisionPackageService(AbstractModel):
     package = models.ForeignKey(OfferRevisionPackage, on_delete=models.CASCADE, related_name='package_services')
     product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name='product_services')
@@ -123,10 +133,10 @@ class Order(AbstractModel):
             total_price += service.quantity*service.price
         if package.delv:
             total_price += package.delv
-        if package.tax:
-            total_price += package.tax
         if  package.discount:
             total_price  -= package.discount
+        if package.tax:
+            total_price += package.tax
 
         return total_price
 

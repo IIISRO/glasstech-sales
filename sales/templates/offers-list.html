@@ -95,6 +95,24 @@
                 </div>
             </div>
             <!-- /.card -->
+
+            <!-- PIE CHART -->
+            <div class="card card-secondary">
+              <div class="card-header">
+              <h3 class="card-title">Təkliflərin Potensiyallığı</h3>
+
+              <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                  <i class="fas fa-minus"></i>
+                  </button>
+              </div>
+              </div>
+              <div class="card-body">
+              <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+              </div>
+              <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
             
         <div class="card">
             <div class="card-header">
@@ -102,13 +120,14 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-              <table id="example1" class="table table-bordered table-striped">
+              <table id="offersTable" class="table table-bordered table-striped">
                 <thead>
                 <tr>
                     <th>Nömrə</th>
                     <th>Müştəri</th>
                     <th>Statusu</th>
                     <th>Potensiyallığı</th>
+                    <th>Qiymət</th>
                     <th>Tarix</th>
                 </tr>
                 </thead>
@@ -123,6 +142,7 @@
                         <th>Müştəri</th>
                         <th>Statusu</th>
                         <th>Potensiyallığı</th>
+                        <th>Qiymət</th>
                         <th>Tarix</th>
                     </tr>
                 </tfoot>
@@ -140,6 +160,7 @@
 
 {% block scripts %}
 <!-- ChartJS -->
+<script src="{%  static 'plugins/chart.js/Chart.min.js' %}"></script>
 <script>
     var getOfferApiURL = '{% url "salesApi:offers-listapi" %}'
 
@@ -149,7 +170,6 @@
 <script src="{%  static 'plugins/inputmask/jquery.inputmask.min.js' %}"></script>
 <!-- date-range-picker -->
 <script src="{%  static 'plugins/daterangepicker/daterangepicker.js' %}"></script>
-<script src="{%  static 'plugins/chart.js/Chart.min.js' %}"></script>
 <!-- DataTables  & Plugins -->
 <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
 <script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>

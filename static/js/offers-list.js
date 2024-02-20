@@ -90,6 +90,42 @@ function chart(dates, suc, act, fail)
 };
 
 
+function  pieChart(h,m,l,u){
+    var totalCustomerReferancedData = {
+        labels: [
+            'Yaxşı',
+            'Orta',
+            'Pis',
+            'Təyin Edilməyib',
+        ],
+        datasets: [
+          {
+            data: [h,m,l,u],
+            backgroundColor : ['#28a745', '#fd7e14', '#dc3545', '#6c757d'],
+          }
+        ]
+      }
+    //-------------
+    //- PIE CHART -
+    //-------------
+    // Get context with jQuery - using jQuery's .get() method.
+    var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
+    var pieData        = totalCustomerReferancedData;
+    var pieOptions     = {
+        maintainAspectRatio : false,
+        responsive : true,
+    }
+    //Create pie or douhnut chart
+    // You can switch between pie and douhnut using the method below.
+    new Chart(pieChartCanvas, {
+        type: 'pie',
+        data: pieData,
+        options: pieOptions
+    })
+}
+
+
+
 $(document).ready(function() {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams){
@@ -122,6 +158,9 @@ function getOfferFetch(){
     .then((data) => {
 
         if (data){
+            let potencyHigh = 0;
+            let potencyMid = 0;
+            let potencyLow = 0;
             $("#offerCount").text(data.length)
             let dates =  {}
             for(let offer of data){
@@ -150,10 +189,13 @@ function getOfferFetch(){
                     ${
                         (function potency(){
                             if(offer.potency == "YAXŞI"){
+                                potencyHigh++;
                                 return '<span style="color: green;">YAXŞI</span>'
                             }else if(offer.potency == "ORTA"){
+                                potencyMid++;
                                 return '<span style="color: rgb(255, 157, 0);">ORTA</span>'
                             }else if(offer.potency == 'PİS'){
+                                potencyLow++;
                                 return '<span style="color: rgb(189, 0, 0);">PİS</span>'
                             }else{
                                 return '<span style="color: black;" >Təyin Edilməyib</span>'
@@ -161,6 +203,7 @@ function getOfferFetch(){
                         })()
                     }
                     </td>
+                    <td>${offer.price}</td>
                     <td>${offer.date}</td>
                 </tr>
                 `
@@ -175,11 +218,20 @@ function getOfferFetch(){
             }
 
             chart(dates, suc, act, fail)
+            pieChart(potencyHigh, potencyMid, potencyLow , data.length - (potencyHigh+potencyMid+potencyLow))
             $(function () {
-                $("#example1").DataTable({
-                  "responsive": true, "lengthChange": false, "autoWidth": false,
-                  "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-                }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+                $("#offersTable").DataTable({
+                    fixedColumns: {
+                        start: 1,
+                        end: 1
+                    },
+                    paging: false,
+                    scrollCollapse: true,
+                    scrollX: true,
+                    scrollY: 500,
+                    "responsive": true, "lengthChange": false, "autoWidth": false,
+                    "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+                }).buttons().container().appendTo('#offersTable_wrapper .col-md-6:eq(0)');
                 $.fn.dataTable.ext.errMode = 'none';
               });
             loader.hide()
@@ -195,7 +247,7 @@ $('#offerdate').daterangepicker({
   })
 
 $('#offerdate').on('change', function() {
-    table = $('#example1').DataTable( {
+    table = $('#offersTable').DataTable( {
         paging: false
     } );
      

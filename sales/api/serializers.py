@@ -108,6 +108,8 @@ class  OrderUpdateSerializer(serializers.ModelSerializer):
 class  OffersListSerializer(serializers.ModelSerializer):
     date = serializers.SerializerMethodField()
     customer = serializers.SerializerMethodField()
+    price = serializers.SerializerMethodField()
+
     class Meta:
         model = Offer
         fields = (
@@ -115,6 +117,7 @@ class  OffersListSerializer(serializers.ModelSerializer):
             'number',
             'status',
             'potency',
+            'price',
             'date'
         )
     def get_date(self, obj):
@@ -125,6 +128,11 @@ class  OffersListSerializer(serializers.ModelSerializer):
             'name': obj.customer.get_full_name()
         }
         return customer
+    def get_price(self, obj):
+        prices = []
+        for package in obj.offer_revisions.filter(is_active = True).first().revision_packages.all():
+           prices.append(package.get_price())
+        return max(prices)
     
 class  OrdersListSerializer(serializers.ModelSerializer):
     date = serializers.SerializerMethodField()
