@@ -71,7 +71,7 @@
                 <div class="card">
                     <div class="card-header border-0">
                         <div class="d-flex justify-content-between">
-                        <h3 class="card-title">Ortalama çek</h3>
+                        <h3 class="card-title">İllik ortalama çek</h3>
                         </div>
                     </div>
                     <div class="card-body">
@@ -264,13 +264,13 @@
       responsive              : true,
       maintainAspectRatio     : false,
       scales: {
-        xAxes: [{
-          stacked: true,
-        }],
-        yAxes: [{
-          stacked: true
-        }]
-      }
+            x: {
+                stacked: true,
+            },
+            y: {
+                stacked: true
+            }
+        }
     }
 
     new Chart(stackedBarChartCanvas, {

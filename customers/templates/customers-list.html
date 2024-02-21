@@ -87,7 +87,7 @@
                   <th>Kategoriyası</th>
                   <th>Referansı</th>
                   <th>Təklif sayı</th>
-                  <th>Potensiyallığı</th>
+                  <th>Potensiyallıq</th>
                   <th>Qeydiyyat tarixi</th>
                 </tr>
                 </thead>
@@ -99,7 +99,7 @@
                   <td>{{customer.c_category}}</td>
                   <td>{{customer.reference}}</td>
                   <td>{{customer.customer_offers.all.count}}</td>
-                  <td>{% if customer.potency == "YAXŞI" %}<span style="color: green;">YAXŞI</span>{% elif customer.potency == "ORTA" %}<span style="color: rgb(255, 157, 0);">ORTA</span>{% elif customer.potency == "PİS" %}<span style="color: rgb(189, 0, 0);">PİS</span>{% else %}<span style="color: black;" > <span style="display: none;" >z</span> Təyin Edilməyib</span>{% endif %}</td>
+                  <td>{% if customer.potency == "YAXŞI" %}<span style="color: green;"><span style="display: none;">1</span>YAXŞI</span>{% elif customer.potency == "ORTA" %}<span style="color: rgb(255, 157, 0);"><span style="display: none;">2</span>ORTA</span>{% elif customer.potency == "PİS" %}<span style="color: rgb(189, 0, 0);"><span style="display: none;">3</span>PİS</span>{% else %}<span style="color: black;">Təyin Edilməyib</span>{% endif %}</td>
                   <td>{{customer.date}}</td>
                 </tr>
                 {% endfor %}
@@ -113,7 +113,7 @@
                     <th>Kategoriyası</th>
                     <th>Referansı</th>
                     <th>Təklif sayı</th>
-                    <th>Potensiyallığı</th>
+                    <th>Potensiyallıq</th>
                     <th>Qeydiyyat tarixi</th>
                     </tr>
                 </tfoot>
@@ -227,18 +227,18 @@ var yearlyCustomerOptions = {
 <script>
     $(function () {
       $("#example1").DataTable({
+        fixedColumns: {
+                    start: 1,
+                    end: 1
+                  },
+        paging: false,
+        scrollCollapse: true,
+        scrollX: true,
+        scrollY: 500,
         "responsive": true, "lengthChange": false, "autoWidth": false,
         "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
       }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-      $('#example2').DataTable({
-        "paging": true,
-        "lengthChange": false,
-        "searching": false,
-        "ordering": true,
-        "info": true,
-        "autoWidth": false,
-        "responsive": true,
-      });
+      
     });
   </script>
 {% endblock scripts %}

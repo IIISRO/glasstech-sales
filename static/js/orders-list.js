@@ -70,7 +70,12 @@ $(function () {
               display: false
             },
             ticks: ticksStyle
-          }]
+          }],
+        },
+        plugins:{
+          legend:{
+            display:false
+          }
         }
       }
     })

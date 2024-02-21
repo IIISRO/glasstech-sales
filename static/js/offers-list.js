@@ -12,23 +12,26 @@ function chart(dates, suc, act, fail)
     var $visitorsChart = $('#visitors-chart')
     // eslint-disable-next-line no-unused-vars
     var visitorsChart = new Chart($visitorsChart, {
+    
     data: {
         labels: Object.keys(dates),
         datasets: [{
+        label: "Aktiv",
         type: 'line',
         data: act,
-        backgroundColor: 'transparent',
+        // backgroundColor: '007bff',
         borderColor: '#007bff',
         pointBorderColor: '#007bff',
         pointBackgroundColor: '#007bff',
-        fill: false
+        fill: true,
         // pointHoverBackgroundColor: '#007bff',
         // pointHoverBorderColor    : '#007bff'
         },
         {
+        label: "Uğursuz",
         type: 'line',
         data: fail,
-        backgroundColor: 'tansparent',
+        // backgroundColor: 'tansparent',
         borderColor: '#ced4da',
         pointBorderColor: '#ced4da',
         pointBackgroundColor: '#ced4da',
@@ -37,9 +40,10 @@ function chart(dates, suc, act, fail)
         // pointHoverBorderColor    : '#ced4da'
         },
         {
+        label: "Uğurlu",
         type: 'line',
         data: suc,
-        backgroundColor: 'tansparent',
+        // backgroundColor: 'tansparent',
         borderColor: '#008000',
         pointBorderColor: '#008000',
         pointBackgroundColor: '#008000',
@@ -59,7 +63,7 @@ function chart(dates, suc, act, fail)
         intersect: intersect
         },
         legend: {
-        display: false
+            display: false
         },
         scales: {
         yAxes: [{
@@ -120,10 +124,99 @@ function  pieChart(h,m,l,u){
     new Chart(pieChartCanvas, {
         type: 'pie',
         data: pieData,
-        options: pieOptions
+        options: pieOptions,
+       
     })
 }
 
+function barChart(hv, mv, lv, uv){
+
+    var potencyValData = {
+        labels  : ['Dərəcələr'],
+        datasets: [
+          {
+            label               : 'Yaxşı',
+            backgroundColor: "#28a745", 
+            borderColor         : 'rgba(60,141,188,0.8)',
+            pointRadius          : false,
+            pointColor          : '#3b8bba',
+            pointStrokeColor    : 'rgba(60,141,188,1)',
+            pointHighlightFill  : '#fff',
+            pointHighlightStroke: 'rgba(60,141,188,1)',
+            data                : [hv]
+          },
+          {
+            label               : 'Orta',
+            backgroundColor: "#fd7e14",
+            borderColor         : 'rgba(60,141,188,0.8)',
+            pointRadius          : false,
+            pointColor          : '#3b8bba',
+            pointStrokeColor    : 'rgba(60,141,188,1)',
+            pointHighlightFill  : '#fff',
+            pointHighlightStroke: 'rgba(60,141,188,1)',
+            data                : [mv]
+          },
+          {
+            label               : 'Pis',
+            backgroundColor: "#dc3545",
+            borderColor         : 'rgba(60,141,188,0.8)',
+            pointRadius          : false,
+            pointColor          : '#3b8bba',
+            pointStrokeColor    : 'rgba(60,141,188,1)',
+            pointHighlightFill  : '#fff',
+            pointHighlightStroke: 'rgba(60,141,188,1)',
+            data                : [lv]
+          },
+          {
+            label               : 'Təyin edilməyən',
+            backgroundColor: "#6c757d", 
+            borderColor         : 'rgba(60,141,188,0.8)',
+            pointRadius          : false,
+            pointColor          : '#3b8bba',
+            pointStrokeColor    : 'rgba(60,141,188,1)',
+            pointHighlightFill  : '#fff',
+            pointHighlightStroke: 'rgba(60,141,188,1)',
+            data                : [uv]
+          },
+        ]
+      }
+    
+
+
+    //-------------
+    //- BAR CHART -
+    //-------------
+    var barChartCanvas = $('#barChart').get(0).getContext('2d')
+    var barChartData = $.extend(false, {}, potencyValData)
+    var temp0 = potencyValData.datasets
+    barChartData.datasets = temp0
+  
+    var barChartOptions = {
+        responsive              : true,
+        maintainAspectRatio     : false,
+        datasetFill             : false,
+        plugins:{
+            datalabels:{
+                color:'rgb(185, 185, 185)',
+                font:{weight: 'bold'},
+                anchor:'end',
+                align: 'top'
+            }
+       }
+        
+    }
+
+    new Chart(barChartCanvas, {
+        type: 'bar',
+        data: barChartData,
+        options: barChartOptions,
+        plugins:[ChartDataLabels]
+
+    })
+}
+
+
+ 
 
 
 $(document).ready(function() {
@@ -161,6 +254,11 @@ function getOfferFetch(){
             let potencyHigh = 0;
             let potencyMid = 0;
             let potencyLow = 0;
+            let potencyHighVal = 0;
+            let potencyMidVal = 0;
+            let potencyLowVal = 0;
+            let potencyUNDFVal = 0;
+
             $("#offerCount").text(data.length)
             let dates =  {}
             for(let offer of data){
@@ -190,14 +288,18 @@ function getOfferFetch(){
                         (function potency(){
                             if(offer.potency == "YAXŞI"){
                                 potencyHigh++;
-                                return '<span style="color: green;">YAXŞI</span>'
+                                potencyHighVal+=offer.price;
+                                return '<span style="color: green;"><span style="display: none;">1</span>YAXŞI</span>'
                             }else if(offer.potency == "ORTA"){
                                 potencyMid++;
-                                return '<span style="color: rgb(255, 157, 0);">ORTA</span>'
+                                potencyMidVal+=offer.price;
+                                return '<span style="color: rgb(255, 157, 0);"><span style="display: none;">2</span>ORTA</span>'
                             }else if(offer.potency == 'PİS'){
                                 potencyLow++;
-                                return '<span style="color: rgb(189, 0, 0);">PİS</span>'
+                                potencyLowVal+=offer.price;
+                                return '<span style="color: rgb(189, 0, 0);"><span style="display: none;">3</span>PİS</span>'
                             }else{
+                                potencyUNDFVal+=offer.price;
                                 return '<span style="color: black;" >Təyin Edilməyib</span>'
                             }
                         })()
@@ -219,6 +321,8 @@ function getOfferFetch(){
 
             chart(dates, suc, act, fail)
             pieChart(potencyHigh, potencyMid, potencyLow , data.length - (potencyHigh+potencyMid+potencyLow))
+            $('#totalProfit').html(`<b>${potencyHighVal+potencyMidVal+potencyLowVal+potencyUNDFVal}AZN</b>`)
+            barChart(potencyHighVal, potencyMidVal, potencyLowVal, potencyUNDFVal)
             $(function () {
                 $("#offersTable").DataTable({
                     fixedColumns: {

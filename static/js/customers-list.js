@@ -11,7 +11,12 @@
     var barChartOptions = {
       responsive              : true,
       maintainAspectRatio     : false,
-      datasetFill             : false
+      datasetFill             : false,
+      plugins:{
+        legend:{
+          display:false
+        }
+      }
     }
 
     new Chart(barChartCanvas, {

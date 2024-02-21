@@ -96,24 +96,48 @@
             </div>
             <!-- /.card -->
 
-            <!-- PIE CHART -->
-            <div class="card card-secondary">
-              <div class="card-header">
-              <h3 class="card-title">Təkliflərin Potensiyallığı</h3>
+            <div class="row">
+              <div class="col">
+                <!-- PIE CHART -->
+                <div class="card card-secondary">
+                  <div class="card-header">
+                  <h3 class="card-title">Təkliflərin potensiyallıqına görə sayı</h3>
 
-              <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                  <i class="fas fa-minus"></i>
-                  </button>
+                  <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                      <i class="fas fa-minus"></i>
+                      </button>
+                  </div>
+                  </div>
+                  <div class="card-body">
+                    <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                  </div>
+                  <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
               </div>
+              <div class="col">
+                <!-- BAR CHART -->
+                <div class="card card-secondary">
+                  <div class="card-header">
+                  <h3 class="card-title">Potensiyallıqa görə gözlənilən profit: <span id="totalProfit"></span></h3>
+
+                  <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                      <i class="fas fa-minus"></i>
+                      </button>
+                  </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="chart">
+                        <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                    </div>
+                  </div>
+                  <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
               </div>
-              <div class="card-body">
-              <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-              </div>
-              <!-- /.card-body -->
-          </div>
-          <!-- /.card -->
-            
+            </div>
         <div class="card">
             <div class="card-header">
               <h3 class="card-title">Təkliflər</h3>
@@ -126,7 +150,7 @@
                     <th>Nömrə</th>
                     <th>Müştəri</th>
                     <th>Statusu</th>
-                    <th>Potensiyallığı</th>
+                    <th>Potensiyallıq</th>
                     <th>Qiymət</th>
                     <th>Tarix</th>
                 </tr>
@@ -141,7 +165,7 @@
                         <th>Nömrə</th>
                         <th>Müştəri</th>
                         <th>Statusu</th>
-                        <th>Potensiyallığı</th>
+                        <th>Potensiyallıq</th>
                         <th>Qiymət</th>
                         <th>Tarix</th>
                     </tr>
@@ -161,9 +185,9 @@
 {% block scripts %}
 <!-- ChartJS -->
 <script src="{%  static 'plugins/chart.js/Chart.min.js' %}"></script>
+<script src="{%  static 'plugins/chart.js/chartjs-plugin-datalabels.min.js' %}"></script>
 <script>
     var getOfferApiURL = '{% url "salesApi:offers-listapi" %}'
-
 </script>
 <!-- InputMask -->
 <script src="{%  static 'plugins/moment/moment.min.js' %}"></script>
