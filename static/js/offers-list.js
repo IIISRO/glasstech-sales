@@ -1,4 +1,6 @@
-
+var visitorsChart;
+var pieChartVar;
+var barChartVar;
 function chart(dates, suc, act, fail)
 {    'use strict'
   
@@ -11,7 +13,7 @@ function chart(dates, suc, act, fail)
     var intersect = true
     var $visitorsChart = $('#visitors-chart')
     // eslint-disable-next-line no-unused-vars
-    var visitorsChart = new Chart($visitorsChart, {
+    visitorsChart = new Chart($visitorsChart, {
     
     data: {
         labels: Object.keys(dates),
@@ -121,7 +123,7 @@ function  pieChart(h,m,l,u){
     }
     //Create pie or douhnut chart
     // You can switch between pie and douhnut using the method below.
-    new Chart(pieChartCanvas, {
+    pieChartVar = new Chart(pieChartCanvas, {
         type: 'pie',
         data: pieData,
         options: pieOptions,
@@ -206,7 +208,7 @@ function barChart(hv, mv, lv, uv){
         
     }
 
-    new Chart(barChartCanvas, {
+    barChartVar =  new Chart(barChartCanvas, {
         type: 'bar',
         data: barChartData,
         options: barChartOptions,
@@ -231,7 +233,7 @@ $(document).ready(function() {
 
         
         }
-getOfferFetch()
+    getOfferFetch();
 
 });
 
@@ -351,11 +353,18 @@ $('#offerdate').daterangepicker({
   })
 
 $('#offerdate').on('change', function() {
-    table = $('#offersTable').DataTable( {
+    var offersTable = $('#offersTable').DataTable( {
         paging: false
     } );
-     
-    table.destroy();
+    offersTable.destroy();
+
+   
+    visitorsChart.destroy();
+    pieChartVar.destroy();
+    barChartVar.destroy();
+
+
+
     $('#precentOffers').remove()
     var url = new URL(window.location.href);
     var search_params = url.searchParams;
