@@ -321,8 +321,8 @@ function getOfferFetch(){
 
             chart(dates, suc, act, fail)
             pieChart(potencyHigh, potencyMid, potencyLow , data.length - (potencyHigh+potencyMid+potencyLow))
-            $('#totalProfit').html(`<b>${potencyHighVal+potencyMidVal+potencyLowVal+potencyUNDFVal}AZN</b>`)
-            barChart(potencyHighVal, potencyMidVal, potencyLowVal, potencyUNDFVal)
+            $('#totalProfit').html(`<b>${(potencyHighVal+potencyMidVal+potencyLowVal+potencyUNDFVal).toFixed(1)}AZN</b>`)
+            barChart((potencyHighVal).toFixed(1), (potencyMidVal).toFixed(1), (potencyLowVal).toFixed(1), (potencyUNDFVal).toFixed(1))
             $(function () {
                 $("#offersTable").DataTable({
                     fixedColumns: {
