@@ -43,7 +43,7 @@ class ListSalesProduct(View):
                         product_item['useds']['name'] = used_prod.product.name
                         product_item['useds']['unit'] = used_prod.product.unit
                         product_item['useds']['category'] = used_prod.product.category 
-                        product_item['useds']['quantity'] = used_prod.quantity
+                        product_item['useds']['quantity'] = round(used_prod.quantity, 2)
                         product_item['useds']['total'] = int(used_prod.quantity * used_prod.price)
 
                         if len(temp)>0:
