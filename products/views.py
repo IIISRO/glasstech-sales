@@ -57,11 +57,20 @@ class ListSalesProduct(View):
                                     added=True
 
                             if not added:
+                                product_item['quantity'] = round(product_item['quantity'], 2)
+                                product_item['total'] = round(product_item['total'], 2)
+                                product_item['useds']['quantity'] = round(product_item['total'], 2)
+                                product_item['useds']['total'] = round(product_item['total'], 2)
                                 temp.append(product_item)
 
                     
                         else:
+                            product_item['quantity'] = round(product_item['quantity'], 2)
+                            product_item['total'] = round(product_item['total'], 2)
+                            product_item['useds']['quantity'] = round(product_item['total'], 2)
+                            product_item['useds']['total'] = round(product_item['total'], 2)
                             temp.append(product_item)
+
                 else:
                     product_item = {'id':service.product.id, 'name':service.product.name,'unit':service.product.unit,'category':service.product.category, 'quantity':0.0,'total':0, 'useds':{'id':'', 'name':'','unit':'','category':'','quantity':0,'total':0}}
                     product_item['quantity'] = service.quantity
@@ -72,16 +81,24 @@ class ListSalesProduct(View):
                             if prod['name'] == product_item['name'] and prod['useds']['name']==product_item['useds']['name']:
                                 prod['quantity']+=product_item['quantity']
                                 prod['total']+=product_item['total']
-                                # prod['useds']['quantity'] += product_item['useds']['quantity']
-                                # prod['useds']['total'] += product_item['useds']['total']
                                 added=True
 
                         if not added:
+                            product_item['quantity'] = round(product_item['quantity'], 2)
+                            product_item['total'] = round(product_item['total'], 2)
+                            product_item['useds']['quantity'] = round(product_item['total'], 2)
+                            product_item['useds']['total'] = round(product_item['total'], 2)
                             temp.append(product_item)
+
 
                 
                     else:
+                        product_item['quantity'] = round(product_item['quantity'], 2)
+                        product_item['total'] = round(product_item['total'], 2)
+                        product_item['useds']['quantity'] = round(product_item['total'], 2)
+                        product_item['useds']['total'] = round(product_item['total'], 2)
                         temp.append(product_item)
+
 
             if services.exists():
                 products_list.extend(temp)

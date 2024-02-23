@@ -135,7 +135,7 @@ function getOfferFetch(){
                         })()
                     }
                     </td>
-                    <td>${order.total}AZN</td>
+                    <td>${order.total.toFixed(1)}</td>
                     <td>${order.date}</td>
 
                 </tr>

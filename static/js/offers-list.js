@@ -307,7 +307,7 @@ function getOfferFetch(){
                         })()
                     }
                     </td>
-                    <td>${offer.price}</td>
+                    <td>${offer.price.toFixed(1)}</td>
                     <td>${offer.date}</td>
                 </tr>
                 `
