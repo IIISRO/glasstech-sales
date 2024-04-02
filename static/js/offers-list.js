@@ -308,7 +308,7 @@ function getOfferFetch(){
                     }
                     </td>
                     <td>${offer.price.toFixed(1)}</td>
-                    <td>${offer.date}</td>
+                    <td><span style="display: none;">${offer.date.split('.').reverse().join('')}</span>${offer.date}</td>
                 </tr>
                 `
             }

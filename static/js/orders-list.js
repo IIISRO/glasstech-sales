@@ -136,8 +136,7 @@ function getOfferFetch(){
                     }
                     </td>
                     <td>${order.total.toFixed(1)}</td>
-                    <td>${order.date}</td>
-
+                    <td><span style="display: none;">${order.date.split('.').reverse().join('')}</span>${order.date}</td>
                 </tr>
                 `
             }

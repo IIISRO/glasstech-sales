@@ -52,6 +52,9 @@ class Customer(AbstractModel):
     
     def date(self):           
         return self.created_at.strftime('%d.%m.%Y')
+    
+    def sorted_date(self):
+        return self.created_at.strftime('%Y%m%d')
 
     def get_absolute_url(self):
         return reverse_lazy('customers:customer-profile', kwargs={'pk': self.id})

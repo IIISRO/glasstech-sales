@@ -100,7 +100,7 @@
                   <td>{{customer.reference}}</td>
                   <td>{{customer.customer_offers.all.count}}</td>
                   <td>{% if customer.potency == "YAXŞI" %}<span style="color: green;"><span style="display: none;">1</span>YAXŞI</span>{% elif customer.potency == "ORTA" %}<span style="color: rgb(255, 157, 0);"><span style="display: none;">2</span>ORTA</span>{% elif customer.potency == "PİS" %}<span style="color: rgb(189, 0, 0);"><span style="display: none;">3</span>PİS</span>{% else %}<span style="color: black;">Təyin Edilməyib</span>{% endif %}</td>
-                  <td>{{customer.date}}</td>
+                  <td><span style="display: none;">{{customer.sorted_date}}</span>{{customer.date}}</td>
                 </tr>
                 {% endfor %}
                
