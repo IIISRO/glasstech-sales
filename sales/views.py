@@ -1,6 +1,8 @@
 from typing import Any
 from django.shortcuts import render, get_object_or_404
-from .models import Offer, OfferRevision, OfferRevisionPackage, OfferRevisionPackageService, Order, Contract, ServiceUsedProduct
+from .models import Offer, OfferRevision, OfferRevisionPackage, OfferRevisionPackageService, Order, Contract, \
+    ServiceUsedProduct
+from core.models import TermsOfSale
 from customers.models import Customer
 from products.models import Product
 from datetime import datetime, date
@@ -13,15 +15,22 @@ from django.contrib import messages
 from core.models import Backlog
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Count
+from collections import defaultdict
+from django.db import connection
+from django.core.cache import cache
+
+
+
 # Create your views here.
 
 class OfferReview(View):
     def get(self, request, number):
-        offer = get_object_or_404(Offer,  number = number)
-        context =  {
-            'offer' : offer,
+        offer = get_object_or_404(Offer, number=number)
+        context = {
+            'offer': offer,
         }
         return render(request, 'offer-review.html', context)
+
 
 def create_offer(request):
     if request.method == "POST":
@@ -29,89 +38,98 @@ def create_offer(request):
         if not data:
             raise Http404
         offer = Offer.objects.create(
-            customer = Customer.objects.get(id = data['customer']),
-            number = data['number'],
-            )
+            customer=Customer.objects.get(id=data['customer']),
+            number=data['number'],
+        )
         revision = OfferRevision.objects.create(
-            offer = offer,
-            offer_creator = User.objects.get(id = data['offer_creator']),
-            offer_approver = User.objects.get(id = data['offer_approver']),
-            note = data['note'],
-            pay_delv_cond = data['offer_pay_delv_cond'],
-            delv_time = data['offer_delv_time'],
+            offer=offer,
+            offer_creator=User.objects.get(id=data['offer_creator']),
+            offer_approver=User.objects.get(id=data['offer_approver']),
+            note=data['note'],
+            pay_delv_cond=data['offer_pay_delv_cond'],
+            delv_time=data['offer_delv_time'],
         )
         for package in data['packages']:
             new_package = OfferRevisionPackage.objects.create(
-                revision = revision,
-                tax = package['tax'],
-                discount = package['discount'],
-                delv = package['delv']
+                revision=revision,
+                tax=package['tax'],
+                discount=package['discount'],
+                delv=package['delv']
             )
             for service in package['services']:
                 new_service = OfferRevisionPackageService.objects.create(
-                    package = new_package,
-                    product = Product.objects.get(id = service['product']),
-                    quantity = service['quantity'],
-                    price = service['price'],
-                    detail = service['detail']
+                    package=new_package,
+                    product=Product.objects.get(id=service['product']),
+                    quantity=service['quantity'],
+                    price=service['price'],
+                    detail=service['detail']
                 )
                 for used in service['used_materials']:
                     ServiceUsedProduct.objects.create(
-                        service = new_service,
-                        product = Product.objects.get(id = used['product_id']),
-                        price = used['price'],
-                        quantity = used['quantity']
+                        service=new_service,
+                        product=Product.objects.get(id=used['product_id']),
+                        price=used['price'],
+                        quantity=used['quantity']
                     )
 
         messages.add_message(request, messages.SUCCESS, (f"Təklif NO: {data['number']} yaradıldı!"))
         return JsonResponse('yaradildi', safe=False)
     else:
-        customer_id = request.GET.get('customer','')
+        customer_id = request.GET.get('customer', '')
         if customer_id:
-            customer = get_object_or_404(Customer, id = int(customer_id)) 
-            last_offer_number = Offer.objects.filter(customer = customer).order_by('-created_at')
+            customer = get_object_or_404(Customer, id=int(customer_id))
+            last_offer_number = Offer.objects.filter(customer=customer).order_by('-created_at')
             if last_offer_number.exists():
                 offers_count = int(last_offer_number.first().number.split('-')[-1])
             else:
                 offers_count = 0
-            offer_number = f"{datetime.now().strftime('%d%m%y')}-{customer_id}-{offers_count+1}"
+            offer_number = f"{datetime.now().strftime('%d%m%y')}-{customer_id}-{offers_count + 1}"
 
             ckeditor_upload = reverse('ckeditor_upload')
             ckeditor_browse = reverse('ckeditor_browse')
 
+            terms = {
+                "seller": TermsOfSale.objects.filter(title="SELLER", is_active=True).first(),
+                "buyer": TermsOfSale.objects.filter(title="BUYER", is_active=True).first(),
+                "delivery": TermsOfSale.objects.filter(title="DELIVERY", is_active=True).first(),
+            }
+
             context = {
-                'ckeditor_upload':ckeditor_upload,
-                'ckeditor_browse':ckeditor_browse,
-                'customer':customer,
-                'offer_number':offer_number,
-                'date':datetime.now().strftime('%d.%m.%Y'),
-                'users':User.objects.filter(id__gt = 1),
-                'products':Product.objects.all(),
-            }   
+                'ckeditor_upload': ckeditor_upload,
+                'ckeditor_browse': ckeditor_browse,
+                'customer': customer,
+                'offer_number': offer_number,
+                'date': datetime.now().strftime('%d.%m.%Y'),
+                'users': User.objects.filter(id__gt=1),
+                'products': Product.objects.all(),
+                "terms": terms
+            }
 
             return render(request, 'offer-create.html', context)
         raise Http404
 
+
 class OfferEdit(View):
     def get(self, request, number):
 
-        offer = get_object_or_404(Offer , number = number, status = "Aktiv")
+        offer = get_object_or_404(Offer, number=number, status="Aktiv")
 
         context = {
             'offer': offer,
             'products': Product.objects.all(),
-            'users': User.objects.filter(id__gt = 1),
+            'users': User.objects.filter(id__gt=1),
         }
 
         return render(request, 'offer-edit.html', context)
-    def post(self,request,number):
+
+    def post(self, request, number):
         data = json.loads(request.body)
         if not data:
             raise Http404
         offer = get_object_or_404(Offer, number=number)
-        revision = offer.offer_revisions.get(is_active = True)
-        revision.offer_creator = User.objects.get(id = data['offer_creator'])
-        revision.offer_approver = User.objects.get(id = data['offer_approver'])
+        revision = offer.offer_revisions.get(is_active=True)
+        revision.offer_creator = User.objects.get(id=data['offer_creator'])
+        revision.offer_approver = User.objects.get(id=data['offer_approver'])
         revision.note = data['note']
         revision.pay_delv_cond = data['offer_pay_delv_cond']
         revision.delv_time = data['offer_delv_time']
@@ -119,30 +137,30 @@ class OfferEdit(View):
         for updated_package in data['packages']:
             if not updated_package['id']:
                 new_package = OfferRevisionPackage.objects.create(
-                revision = revision,
-                tax = updated_package['tax'],
-                discount = updated_package['discount'],
-                delv = updated_package['delv']
+                    revision=revision,
+                    tax=updated_package['tax'],
+                    discount=updated_package['discount'],
+                    delv=updated_package['delv']
 
                 )
                 for updated_service in updated_package['services']:
                     new_service = OfferRevisionPackageService.objects.create(
-                        package = new_package,
-                        product = Product.objects.get(id = updated_service['product']),
-                        quantity = updated_service['quantity'],
-                        price = updated_service['price'],
-                        detail = updated_service['detail']
+                        package=new_package,
+                        product=Product.objects.get(id=updated_service['product']),
+                        quantity=updated_service['quantity'],
+                        price=updated_service['price'],
+                        detail=updated_service['detail']
                     )
                     for updated_usedprod in updated_service['used_materials']:
                         ServiceUsedProduct.objects.create(
-                            service = new_service,
-                            product = Product.objects.get(id = updated_usedprod['product_id']),
-                            price = updated_usedprod['price'],
-                            quantity = updated_usedprod['quantity']
+                            service=new_service,
+                            product=Product.objects.get(id=updated_usedprod['product_id']),
+                            price=updated_usedprod['price'],
+                            quantity=updated_usedprod['quantity']
                         )
 
             else:
-                package = OfferRevisionPackage.objects.get(id = updated_package['id'])
+                package = OfferRevisionPackage.objects.get(id=updated_package['id'])
                 package.tax = updated_package['tax']
                 package.discount = updated_package['discount']
                 package.delv = updated_package['delv']
@@ -150,24 +168,24 @@ class OfferEdit(View):
                 for updated_service in updated_package['services']:
                     if not updated_service['id']:
                         new_service = OfferRevisionPackageService.objects.create(
-                            package = package,
-                            product = Product.objects.get(id = updated_service['product']),
-                            quantity = updated_service['quantity'],
-                            price = updated_service['price'],
-                            detail = updated_service['detail']
+                            package=package,
+                            product=Product.objects.get(id=updated_service['product']),
+                            quantity=updated_service['quantity'],
+                            price=updated_service['price'],
+                            detail=updated_service['detail']
                         )
                         for updated_usedprod in updated_service['used_materials']:
                             ServiceUsedProduct.objects.create(
-                                service = new_service,
-                                product = Product.objects.get(id = updated_usedprod['product_id']),
-                                price = updated_usedprod['price'],
-                                quantity = updated_usedprod['quantity']
+                                service=new_service,
+                                product=Product.objects.get(id=updated_usedprod['product_id']),
+                                price=updated_usedprod['price'],
+                                quantity=updated_usedprod['quantity']
                             )
                     else:
-                        service = OfferRevisionPackageService.objects.filter(id = updated_service['id'])
+                        service = OfferRevisionPackageService.objects.filter(id=updated_service['id'])
                         if service.exists():
                             service = service[0]
-                            service.product = Product.objects.get(id = updated_service['product'])
+                            service.product = Product.objects.get(id=updated_service['product'])
                             service.quantity = updated_service['quantity']
                             service.price = updated_service['price']
                             service.detail = updated_service['detail']
@@ -175,137 +193,144 @@ class OfferEdit(View):
                             for updated_usedprod in updated_service['used_materials']:
                                 if not updated_usedprod['id']:
                                     ServiceUsedProduct.objects.create(
-                                        service = service,
-                                        product = Product.objects.get(id = updated_usedprod['product_id']),
-                                        price = updated_usedprod['price'],
-                                        quantity = updated_usedprod['quantity']
+                                        service=service,
+                                        product=Product.objects.get(id=updated_usedprod['product_id']),
+                                        price=updated_usedprod['price'],
+                                        quantity=updated_usedprod['quantity']
                                     )
                                 else:
-                                    usedprod = ServiceUsedProduct.objects.get(id = updated_usedprod['id'])
-                                    usedprod.product = Product.objects.get(id = updated_usedprod['product_id'])
+                                    usedprod = ServiceUsedProduct.objects.get(id=updated_usedprod['id'])
+                                    usedprod.product = Product.objects.get(id=updated_usedprod['product_id'])
                                     usedprod.price = updated_usedprod['price']
                                     usedprod.quantity = updated_usedprod['quantity']
                                     usedprod.save()
-                           
+
         # removing
         for package_id in data['removedPackagesIDS']:
-            package = OfferRevisionPackage.objects.filter(id = package_id)
+            package = OfferRevisionPackage.objects.filter(id=package_id)
             if package.exists():
                 package.first().delete()
         for service_id in data['removedServicesIDS']:
-            service = OfferRevisionPackageService.objects.filter(id = service_id)
+            service = OfferRevisionPackageService.objects.filter(id=service_id)
             if service.exists():
                 service.first().delete()
         for usedprod_id in data['removedUsedProdsIDS']:
-            usedprod = ServiceUsedProduct.objects.filter(id = usedprod_id)
+            usedprod = ServiceUsedProduct.objects.filter(id=usedprod_id)
             if usedprod.exists():
                 usedprod.first().delete()
         messages.add_message(request, messages.SUCCESS, (f"Təklif NO: {number} məlumatları yeniləndi!"))
-                        
+
         return JsonResponse('yaradildi', safe=False)
+
 
 class OfferNewRevisionCreate(View):
     def get(self, request, number):
 
-        offer = get_object_or_404(Offer , number = number, status = 'Aktiv')
-        revisions  = offer.offer_revisions.all().order_by('-created_at')
+        offer = get_object_or_404(Offer, number=number, status='Aktiv')
+        revisions = offer.offer_revisions.all().order_by('-created_at')
         context = {
             'offer': offer,
             'revisions': revisions,
             'products': Product.objects.all(),
-            'users':User.objects.filter(id__gt = 1),
+            'users': User.objects.filter(id__gt=1),
             'date': datetime.now().strftime('%d.%m.%Y'),
             'new_revision_number': "{:03d}".format(int(revisions.first().number) + 1)
         }
 
         return render(request, 'offer-new-rev-create.html', context)
-    def post(self,request,number):
+
+    def post(self, request, number):
         data = json.loads(request.body)
         if not data:
             raise Http404
-        offer = Offer.objects.get(number = number)
-         # handle is_active
-        for active_rev in offer.offer_revisions.filter(is_active = True):
+        offer = Offer.objects.get(number=number)
+        # handle is_active
+        for active_rev in offer.offer_revisions.filter(is_active=True):
             active_rev.is_active = False
             active_rev.save()
         revision = OfferRevision.objects.create(
-            offer = offer,
-            offer_creator = User.objects.get(id = data['offer_creator']),
-            offer_approver = User.objects.get(id = data['offer_approver']),
-            note = data['note'],
-            pay_delv_cond = data['offer_pay_delv_cond'],
-            delv_time = data['offer_delv_time'],
-            number = data['number']
+            offer=offer,
+            offer_creator=User.objects.get(id=data['offer_creator']),
+            offer_approver=User.objects.get(id=data['offer_approver']),
+            note=data['note'],
+            pay_delv_cond=data['offer_pay_delv_cond'],
+            delv_time=data['offer_delv_time'],
+            number=data['number']
         )
         for package in data['packages']:
             new_package = OfferRevisionPackage.objects.create(
-                revision = revision,
-                tax = package['tax'],
-                discount = package['discount'],
-                delv = package['delv']
+                revision=revision,
+                tax=package['tax'],
+                discount=package['discount'],
+                delv=package['delv']
 
             )
             for service in package['services']:
                 new_service = OfferRevisionPackageService.objects.create(
-                    package = new_package,
-                    product = Product.objects.get(id = service['product']),
-                    quantity = service['quantity'],
-                    price = service['price'],
-                    detail = service['detail']
+                    package=new_package,
+                    product=Product.objects.get(id=service['product']),
+                    quantity=service['quantity'],
+                    price=service['price'],
+                    detail=service['detail']
                 )
                 for used in service['used_materials']:
                     ServiceUsedProduct.objects.create(
-                        service = new_service,
-                        product = Product.objects.get(id = used['product_id']),
-                        price = used['price'],
-                        quantity = used['quantity']
+                        service=new_service,
+                        product=Product.objects.get(id=used['product_id']),
+                        price=used['price'],
+                        quantity=used['quantity']
                     )
-        
-        messages.add_message(request, messages.SUCCESS, (f"Təklif NO: {offer.number} yeni REV{data['number']} yaradıldı!"))
+
+        messages.add_message(request, messages.SUCCESS,
+                             (f"Təklif NO: {offer.number} yeni REV{data['number']} yaradıldı!"))
         return JsonResponse('yaradildi', safe=False)
 
+
 def export_offer_docx(request, number):
-    offer = get_object_or_404(Offer, number = number)
-    revision = offer.offer_revisions.get(is_active = True)
-   
+    offer = get_object_or_404(Offer, number=number)
+    revision = offer.offer_revisions.get(is_active=True)
+
     context = {
         'offer': offer,
         'revision': revision
     }
     messages.add_message(request, messages.SUCCESS, (f"Təklif NO: {number} DOCX Çıxarıldı!"))
-    
-    return render(request,'offer-docx.html', context)
+
+    return render(request, 'offer-docx.html', context)
+
 
 class OfferDetail(DetailView):
     model = Offer
     template_name = "offer-detail.html"
     slug_url_kwarg = 'number'
     slug_field = 'number'
-    
+
     def get_context_data(self, **kwargs):
         context = super(OfferDetail, self).get_context_data(**kwargs)
         offer = self.get_object()
         revisions = context['offer'].offer_revisions.all().order_by('created_at')
-        offer_revision = revisions.filter(is_active = True).first()
+        offer_revision = revisions.filter(is_active=True).first()
         backlogs = Backlog.objects.filter(content_type=ContentType.objects.get_for_model(offer), object_id=offer.id)
         content_type = ContentType.objects.get_for_model(offer)
-        
+
         context['revisions'] = revisions
         context['offer_revision'] = offer_revision
         context['backlogs'] = backlogs.order_by('created_at')
-        context['users'] =  User.objects.filter(id__gt = 1),
+        context['users'] = User.objects.filter(id__gt=1),
         context['content_type'] = content_type.id
-        if Order.objects.filter(contract__offer = offer).exists():
-            context['order_num'] = Order.objects.get(contract__offer = offer).number
+        if Order.objects.filter(contract__offer=offer).exists():
+            context['order_num'] = Order.objects.get(contract__offer=offer).number
 
-       
         return context
-    
+
+
 class OffersList(View):
     def get(self, request):
-        last_month_offer = Offer.objects.filter(created_at__year= date.today().year, created_at__month=date.today().month - 1).count()
-        this_month_offer = Offer.objects.filter(created_at__year= date.today().year, created_at__month=date.today().month).count()
-        if  not last_month_offer == 0:
+        last_month_offer = Offer.objects.filter(created_at__year=date.today().year,
+                                                created_at__month=date.today().month - 1).count()
+        this_month_offer = Offer.objects.filter(created_at__year=date.today().year,
+                                                created_at__month=date.today().month).count()
+        if not last_month_offer == 0:
             precent = ((this_month_offer - last_month_offer) / last_month_offer) * 100
         else:
             precent = this_month_offer
@@ -313,42 +338,42 @@ class OffersList(View):
             'offers': Offer.objects.all().order_by('-created_at'),
             'precent': round(precent, 2)
         }
-        return render(request, 'offers-list.html', context) 
+        return render(request, 'offers-list.html', context)
+
 
 def create_order(request):
-
-    offer_number = request.GET.get('offer','')
-    offer = get_object_or_404(Offer, number = offer_number) 
+    offer_number = request.GET.get('offer', '')
+    offer = get_object_or_404(Offer, number=offer_number)
     if offer.status == "Aktiv":
         if request.method == 'POST':
             data = json.loads(request.body)
             if not data:
                 raise Http404
-            if Contract.objects.filter(offer__number = offer_number).exists():
-                old_contract= Contract.objects.filter(offer__number = offer_number).first()
+            if Contract.objects.filter(offer__number=offer_number).exists():
+                old_contract = Contract.objects.filter(offer__number=offer_number).first()
                 old_contract.delete()
-            contract = Contract.objects.create(offer = offer)
+            contract = Contract.objects.create(offer=offer)
             Order.objects.create(
-                contract = contract,
-                number = data['number'],
-                project_name = data['project_name'],
-                saller = User.objects.get(id = data['saller']),
-                plan_note = data['plan_note'],
-                equipment_note = data['equipment_note'],
-                production_note = data['production_note'],
-                packaging_note = data['packaging_note'],
-                transportation_note = data['transport_note'],
-                installation_note = data['installation_note'],
-                note = data['note'],
-                prepayment = data['pre_pay'],
-                nps = data['nps'],
-                order_recipient = User.objects.get(id = data['order_recipient']),
-                
-                order_accountant = User.objects.get(id = data['order_accountant']) if data['order_accountant'] else None,
-                order_production = User.objects.get(id = data['order_production']) if data['order_production'] else None,
-                order_installer = User.objects.get(id = data['order_install']) if data['order_install'] else None,
+                contract=contract,
+                number=data['number'],
+                project_name=data['project_name'],
+                saller=User.objects.get(id=data['saller']),
+                plan_note=data['plan_note'],
+                equipment_note=data['equipment_note'],
+                production_note=data['production_note'],
+                packaging_note=data['packaging_note'],
+                transportation_note=data['transport_note'],
+                installation_note=data['installation_note'],
+                note=data['note'],
+                prepayment=data['pre_pay'],
+                nps=data['nps'],
+                order_recipient=User.objects.get(id=data['order_recipient']),
+
+                order_accountant=User.objects.get(id=data['order_accountant']) if data['order_accountant'] else None,
+                order_production=User.objects.get(id=data['order_production']) if data['order_production'] else None,
+                order_installer=User.objects.get(id=data['order_install']) if data['order_install'] else None,
             )
-           
+
             offer.status = 'Uğurlu'
             offer.save()
             messages.add_message(request, messages.SUCCESS, (f"Sifariş NO: {data['number']} Yaradıldı!"))
@@ -357,40 +382,42 @@ def create_order(request):
         else:
 
             # bir paket oldugun yoxlamag
-            if offer.offer_revisions.filter(is_active = True).first().revision_packages.count()>1:
+            if offer.offer_revisions.filter(is_active=True).first().revision_packages.count() > 1:
                 raise Http404
-            
-            last_order_number = Order.objects.filter(contract__offer__customer = offer.customer).order_by('-created_at')
+
+            last_order_number = Order.objects.filter(contract__offer__customer=offer.customer).order_by('-created_at')
             if last_order_number.exists():
                 order_count = int(last_order_number.first().number.split('-')[-1])
             else:
                 order_count = 0
-            number = f'{datetime.now().strftime("%d%m%y")}-{offer.customer.id}-{order_count+1}'
+            number = f'{datetime.now().strftime("%d%m%y")}-{offer.customer.id}-{order_count + 1}'
 
             ckeditor_upload = reverse('ckeditor_upload')
             ckeditor_browse = reverse('ckeditor_browse')
 
             context = {
-                'ckeditor_upload':ckeditor_upload,
-                'ckeditor_browse':ckeditor_browse,
-                'offer':offer,
+                'ckeditor_upload': ckeditor_upload,
+                'ckeditor_browse': ckeditor_browse,
+                'offer': offer,
                 'number': number,
-                'date':datetime.now().strftime('%d.%m.%Y'),
-                'users':User.objects.filter(id__gt = 1),
-                'products':Product.objects.all(),
-            }   
+                'date': datetime.now().strftime('%d.%m.%Y'),
+                'users': User.objects.filter(id__gt=1),
+                'products': Product.objects.all(),
+            }
 
             return render(request, 'order-create.html', context)
     raise Http404
+
 
 class OrderReview(DetailView):
     model = Order
     template_name = 'order-review.html'
     slug_url_kwarg = 'number'
-    slug_field = 'number'  
+    slug_field = 'number'
+
 
 class OrderDetail(DetailView):
-    model = Order  
+    model = Order
     template_name = 'order-detail.html'
     slug_url_kwarg = 'number'
     slug_field = 'number'
@@ -398,36 +425,51 @@ class OrderDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super(OrderDetail, self).get_context_data(**kwargs)
         order = self.get_object()
-        order_contracted_offer_revision = order.contract.offer.offer_revisions.filter(is_active = True).first()
+        order_contracted_offer_revision = order.contract.offer.offer_revisions.filter(is_active=True).first()
         content_type = ContentType.objects.get_for_model(order)
-        context['users'] = User.objects.filter(id__gt = 1),
+        context['users'] = User.objects.filter(id__gt=1),
         context['order_contracted_offer_revision'] = order_contracted_offer_revision
-        context['backlogs'] = Backlog.objects.filter(content_type=ContentType.objects.get_for_model(order), object_id=order.id)
-        context['offer_backlogs'] =  Backlog.objects.filter(content_type=ContentType.objects.get_for_model(order.contract.offer), object_id=order.contract.offer.id)
+        context['backlogs'] = Backlog.objects.filter(content_type=ContentType.objects.get_for_model(order),
+                                                     object_id=order.id)
+        context['offer_backlogs'] = Backlog.objects.filter(
+            content_type=ContentType.objects.get_for_model(order.contract.offer), object_id=order.contract.offer.id)
         context['content_type'] = content_type.id
 
         return context
-    
+
+
 def export_order_docx(request, number):
     messages.add_message(request, messages.SUCCESS, (f"Sifariş NO: {number} DOCX Çıxarıldı!"))
-    
-    return render(request, 'order-docx.html', context={'order':Order.objects.get(number=number)})
+
+    return render(request, 'order-docx.html', context={'order': Order.objects.get(number=number)})
+
 
 class OrderEdit(View):
     def get(self, request, number):
-
-        order = get_object_or_404(Order , number = number, status = "Davamedir")
+        order = get_object_or_404(Order, number=number, status="Davamedir")
         products = Product.objects.all()
         context = {
             'order': order,
             'products': products,
-            'users':User.objects.filter(id__gt = 1),
+            'users': User.objects.filter(id__gt=1),
             "offer": order.contract.offer
         }
 
         return render(request, 'order-edit.html', context)
-    
+
+
 class OrdersList(View):
+
+    def get_first_time_customers(order_list):
+        return order_list.annotate(
+            customer_offer_count=Count('contract__offer__customer__customer_offers')
+        ).filter(customer_offer_count=1).count()
+
+    def get_returning_customers(order_list):
+        return order_list.annotate(
+            customer_offer_count=Count('contract__offer__customer__customer_offers')
+        ).filter(customer_offer_count__gt=1).count()
+
     def get(self, request):
         order_yan = Order.objects.filter(created_at__year=date.today().year, created_at__month=1)
         order_feb = Order.objects.filter(created_at__year=date.today().year, created_at__month=2)
@@ -441,32 +483,33 @@ class OrdersList(View):
         order_oct = Order.objects.filter(created_at__year=date.today().year, created_at__month=10)
         order_nov = Order.objects.filter(created_at__year=date.today().year, created_at__month=11)
         order_dec = Order.objects.filter(created_at__year=date.today().year, created_at__month=12)
+
         avarges = [
-            {'this_year':0,'last_year':0},
-            {'this_year':0,'last_year':0},
-            {'this_year':0,'last_year':0},
-            {'this_year':0,'last_year':0},
-            {'this_year':0,'last_year':0},
-            {'this_year':0,'last_year':0},
-            {'this_year':0,'last_year':0},
-            {'this_year':0,'last_year':0},
-            {'this_year':0,'last_year':0},
-            {'this_year':0,'last_year':0},
-            {'this_year':0,'last_year':0},
-            {'this_year':0,'last_year':0},
+            {'this_year': 0, 'last_year': 0},
+            {'this_year': 0, 'last_year': 0},
+            {'this_year': 0, 'last_year': 0},
+            {'this_year': 0, 'last_year': 0},
+            {'this_year': 0, 'last_year': 0},
+            {'this_year': 0, 'last_year': 0},
+            {'this_year': 0, 'last_year': 0},
+            {'this_year': 0, 'last_year': 0},
+            {'this_year': 0, 'last_year': 0},
+            {'this_year': 0, 'last_year': 0},
+            {'this_year': 0, 'last_year': 0},
+            {'this_year': 0, 'last_year': 0},
 
         ]
         for month in range(date.today().month):
             avarage = avarges[month]
 
-            order_this_year = Order.objects.filter(created_at__year=date.today().year, created_at__month=month+1)
+            order_this_year = Order.objects.filter(created_at__year=date.today().year, created_at__month=month + 1)
             total_price_this_year = 0
             for order in order_this_year:
                 total_price_this_year += order.total_price()
             if total_price_this_year:
                 avarage['this_year'] = total_price_this_year // order_this_year.count()
 
-            order_last_year = Order.objects.filter(created_at__year=date.today().year-1, created_at__month=month+1)
+            order_last_year = Order.objects.filter(created_at__year=date.today().year - 1, created_at__month=month + 1)
             total_price_last_year = 0
             for order in order_last_year:
                 total_price_last_year += order.total_price()
@@ -478,40 +521,341 @@ class OrdersList(View):
         last_year_total_avg = 0
         for avg in avarges[:date.today().month]:
             last_year_total_avg += avg['last_year']
-            
-        if  not last_year_total_avg == 0:
+
+        if not last_year_total_avg == 0:
             precent = ((this_year_total_avg - last_year_total_avg) / last_year_total_avg) * 100
         else:
-            precent = this_year_total_avg  
+            precent = this_year_total_avg
 
-        context = { 
-        'orders_year':Order.objects.filter(created_at__year=date.today().year).count(),
-        'cust_fst_order_jan': order_yan.annotate(customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(customer_offer_count=1).count(),
-        'cust_fst_order_feb': order_feb.annotate(customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(customer_offer_count=1).count(),
-        'cust_fst_order_mar': order_mar.annotate(customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(customer_offer_count=1).count(),
-        'cust_fst_order_apr': order_apr.annotate(customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(customer_offer_count=1).count(),
-        'cust_fst_order_may': order_may.annotate(customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(customer_offer_count=1).count(),
-        'cust_fst_order_jun': order_jun.annotate(customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(customer_offer_count=1).count(),
-        'cust_fst_order_jul': order_jul.annotate(customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(customer_offer_count=1).count(),
-        'cust_fst_order_aug': order_aug.annotate(customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(customer_offer_count=1).count(),
-        'cust_fst_order_sep': order_sep.annotate(customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(customer_offer_count=1).count(),
-        'cust_fst_order_oct': order_oct.annotate(customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(customer_offer_count=1).count(),
-        'cust_fst_order_nov': order_nov.annotate(customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(customer_offer_count=1).count(),
-        'cust_fst_order_dec': order_dec.annotate(customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(customer_offer_count=1).count(),
-        'cust_alw_order_jan': order_yan.annotate(customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(customer_offer_count__gt=1).count(),
-        'cust_alw_order_feb': order_feb.annotate(customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(customer_offer_count__gt=1).count(),
-        'cust_alw_order_mar': order_mar.annotate(customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(customer_offer_count__gt=1).count(),
-        'cust_alw_order_apr': order_apr.annotate(customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(customer_offer_count__gt=1).count(),
-        'cust_alw_order_may': order_may.annotate(customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(customer_offer_count__gt=1).count(),
-        'cust_alw_order_jun': order_jun.annotate(customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(customer_offer_count__gt=1).count(),
-        'cust_alw_order_jul': order_jul.annotate(customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(customer_offer_count__gt=1).count(),
-        'cust_alw_order_aug': order_aug.annotate(customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(customer_offer_count__gt=1).count(),
-        'cust_alw_order_sep': order_sep.annotate(customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(customer_offer_count__gt=1).count(),
-        'cust_alw_order_oct': order_oct.annotate(customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(customer_offer_count__gt=1).count(),
-        'cust_alw_order_nov': order_nov.annotate(customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(customer_offer_count__gt=1).count(),
-        'cust_alw_order_dec': order_dec.annotate(customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(customer_offer_count__gt=1).count(),
-        'avarges': avarges[:date.today().month],
-        'this_year_total_avg':int(this_year_total_avg),
-        'precent': round(precent, 2)
+        context = {
+            'orders_year': Order.objects.filter(created_at__year=date.today().year).count(),
+            'cust_fst_order_jan': order_yan.annotate(
+                customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(
+                customer_offer_count=1).count(),
+            'cust_fst_order_feb': order_feb.annotate(
+                customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(
+                customer_offer_count=1).count(),
+            'cust_fst_order_mar': order_mar.annotate(
+                customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(
+                customer_offer_count=1).count(),
+            'cust_fst_order_apr': order_apr.annotate(
+                customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(
+                customer_offer_count=1).count(),
+            'cust_fst_order_may': order_may.annotate(
+                customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(
+                customer_offer_count=1).count(),
+            'cust_fst_order_jun': order_jun.annotate(
+                customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(
+                customer_offer_count=1).count(),
+            'cust_fst_order_jul': order_jul.annotate(
+                customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(
+                customer_offer_count=1).count(),
+            'cust_fst_order_aug': order_aug.annotate(
+                customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(
+                customer_offer_count=1).count(),
+            'cust_fst_order_sep': order_sep.annotate(
+                customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(
+                customer_offer_count=1).count(),
+            'cust_fst_order_oct': order_oct.annotate(
+                customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(
+                customer_offer_count=1).count(),
+            'cust_fst_order_nov': order_nov.annotate(
+                customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(
+                customer_offer_count=1).count(),
+            'cust_fst_order_dec': order_dec.annotate(
+                customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(
+                customer_offer_count=1).count(),
+            'cust_alw_order_jan': order_yan.annotate(
+                customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(
+                customer_offer_count__gt=1).count(),
+            'cust_alw_order_feb': order_feb.annotate(
+                customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(
+                customer_offer_count__gt=1).count(),
+            'cust_alw_order_mar': order_mar.annotate(
+                customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(
+                customer_offer_count__gt=1).count(),
+            'cust_alw_order_apr': order_apr.annotate(
+                customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(
+                customer_offer_count__gt=1).count(),
+            'cust_alw_order_may': order_may.annotate(
+                customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(
+                customer_offer_count__gt=1).count(),
+            'cust_alw_order_jun': order_jun.annotate(
+                customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(
+                customer_offer_count__gt=1).count(),
+            'cust_alw_order_jul': order_jul.annotate(
+                customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(
+                customer_offer_count__gt=1).count(),
+            'cust_alw_order_aug': order_aug.annotate(
+                customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(
+                customer_offer_count__gt=1).count(),
+            'cust_alw_order_sep': order_sep.annotate(
+                customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(
+                customer_offer_count__gt=1).count(),
+            'cust_alw_order_oct': order_oct.annotate(
+                customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(
+                customer_offer_count__gt=1).count(),
+            'cust_alw_order_nov': order_nov.annotate(
+                customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(
+                customer_offer_count__gt=1).count(),
+            'cust_alw_order_dec': order_dec.annotate(
+                customer_offer_count=Count('contract__offer__customer__customer_offers')).filter(
+                customer_offer_count__gt=1).count(),
+            'avarges': avarges[:date.today().month],
+            'this_year_total_avg': int(this_year_total_avg),
+            'precent': round(precent, 2)
         }
-        return render(request, 'orders-list.html', context) 
+        return render(request, 'orders-list.html', context)
+
+
+class OrdersListUpdate(View):
+
+    def get_first_time_customers(order_list):
+        return order_list.annotate(
+            customer_offer_count=Count('contract__offer__customer__customer_offers')
+        ).filter(customer_offer_count=1).count()
+
+    def get_returning_customers(order_list):
+        return order_list.annotate(
+            customer_offer_count=Count('contract__offer__customer__customer_offers')
+        ).filter(customer_offer_count__gt=1).count()
+
+    def get(self, request):
+        current_year = date.today().year
+        current_month = date.today().month
+
+        # Cache check
+        cache_key = f"raw_order_stats_{current_year}_{current_month}"
+        cached_result = cache.get(cache_key)
+        if cached_result:
+            return render(request, 'orders-list.html', cached_result)
+
+        # Raw SQL - Tek sorguda tüm veriler
+        with connection.cursor() as cursor:
+            cursor.execute("""
+            WITH customer_offer_counts AS (
+                SELECT 
+                    c.id as customer_id,
+                    COUNT(DISTINCT o2.id) as offer_count
+                FROM customers_customer c
+                LEFT JOIN offers_offer of2 ON c.id = of2.customer_id  
+                LEFT JOIN contracts_contract co2 ON of2.id = co2.offer_id
+                LEFT JOIN orders_order o2 ON co2.id = o2.contract_id
+                WHERE EXTRACT(year FROM o2.created_at) = %s
+                GROUP BY c.id
+            ),
+            monthly_stats AS (
+                SELECT 
+                    EXTRACT(month FROM o.created_at) as month,
+                    COUNT(o.id) as total_orders,
+                    COUNT(CASE WHEN coc.offer_count = 1 THEN 1 END) as first_time_customers,
+                    COUNT(CASE WHEN coc.offer_count > 1 THEN 1 END) as returning_customers,
+                    AVG(o.total_amount) as avg_amount  -- total_price() yerine direkt field
+                FROM orders_order o
+                LEFT JOIN contracts_contract co ON o.contract_id = co.id
+                LEFT JOIN sales_offer of ON co.offer_id = of.id  
+                LEFT JOIN customer_offer_counts coc ON of.customer_id = coc.customer_id
+                WHERE EXTRACT(year FROM o.created_at) = %s
+                GROUP BY EXTRACT(month FROM o.created_at)
+            ),
+            yearly_stats AS (
+                SELECT 
+                    EXTRACT(year FROM created_at) as year,
+                    EXTRACT(month FROM created_at) as month,
+                    AVG(total_amount) as avg_amount
+                FROM orders_order 
+                WHERE EXTRACT(year FROM created_at) IN (%s, %s)
+                AND EXTRACT(month FROM created_at) <= %s
+                GROUP BY EXTRACT(year FROM created_at), EXTRACT(month FROM created_at)
+            )
+            SELECT 
+                COALESCE(ms.month, 1) as month,
+                COALESCE(ms.total_orders, 0) as total_orders,
+                COALESCE(ms.first_time_customers, 0) as first_time_customers,
+                COALESCE(ms.returning_customers, 0) as returning_customers,
+                COALESCE(ys_this.avg_amount, 0) as this_year_avg,
+                COALESCE(ys_last.avg_amount, 0) as last_year_avg
+            FROM generate_series(1, 12) as months(month)
+            LEFT JOIN monthly_stats ms ON months.month = ms.month
+            LEFT JOIN yearly_stats ys_this ON months.month = ys_this.month AND ys_this.year = %s
+            LEFT JOIN yearly_stats ys_last ON months.month = ys_last.month AND ys_last.year = %s
+            ORDER BY months.month;
+            """, [current_year, current_year, current_year, current_year - 1, current_month, current_year,
+                  current_year - 1])
+
+            results = cursor.fetchall()
+
+        # Sonuçları parse et
+        monthly_data = {}
+        avarges = []
+        total_orders = 0
+
+        for i, (month, total_orders_month, first_time, returning, this_year_avg, last_year_avg) in enumerate(results):
+            monthly_data[month] = {
+                'first_time': first_time,
+                'returning': returning
+            }
+            total_orders += total_orders_month
+
+            if month <= current_month:
+                avarges.append({
+                    'this_year': int(this_year_avg or 0),
+                    'last_year': int(last_year_avg or 0)
+                })
+
+        # Toplam hesaplamalar
+        this_year_total_avg = sum(avg['this_year'] for avg in avarges)
+        last_year_total_avg = sum(avg['last_year'] for avg in avarges)
+
+        if last_year_total_avg != 0:
+            precent = ((this_year_total_avg - last_year_total_avg) / last_year_total_avg) * 100
+        else:
+            precent = this_year_total_avg
+
+        # Context oluştur
+        context = {
+            'orders_year': total_orders,
+            'cust_fst_order_jan': monthly_data.get(1, {}).get('first_time', 0),
+            'cust_fst_order_feb': monthly_data.get(2, {}).get('first_time', 0),
+            'cust_fst_order_mar': monthly_data.get(3, {}).get('first_time', 0),
+            'cust_fst_order_apr': monthly_data.get(4, {}).get('first_time', 0),
+            'cust_fst_order_may': monthly_data.get(5, {}).get('first_time', 0),
+            'cust_fst_order_jun': monthly_data.get(6, {}).get('first_time', 0),
+            'cust_fst_order_jul': monthly_data.get(7, {}).get('first_time', 0),
+            'cust_fst_order_aug': monthly_data.get(8, {}).get('first_time', 0),
+            'cust_fst_order_sep': monthly_data.get(9, {}).get('first_time', 0),
+            'cust_fst_order_oct': monthly_data.get(10, {}).get('first_time', 0),
+            'cust_fst_order_nov': monthly_data.get(11, {}).get('first_time', 0),
+            'cust_fst_order_dec': monthly_data.get(12, {}).get('first_time', 0),
+            'cust_alw_order_jan': monthly_data.get(1, {}).get('returning', 0),
+            'cust_alw_order_feb': monthly_data.get(2, {}).get('returning', 0),
+            'cust_alw_order_mar': monthly_data.get(3, {}).get('returning', 0),
+            'cust_alw_order_apr': monthly_data.get(4, {}).get('returning', 0),
+            'cust_alw_order_may': monthly_data.get(5, {}).get('returning', 0),
+            'cust_alw_order_jun': monthly_data.get(6, {}).get('returning', 0),
+            'cust_alw_order_jul': monthly_data.get(7, {}).get('returning', 0),
+            'cust_alw_order_aug': monthly_data.get(8, {}).get('returning', 0),
+            'cust_alw_order_sep': monthly_data.get(9, {}).get('returning', 0),
+            'cust_alw_order_oct': monthly_data.get(10, {}).get('returning', 0),
+            'cust_alw_order_nov': monthly_data.get(11, {}).get('returning', 0),
+            'cust_alw_order_dec': monthly_data.get(12, {}).get('returning', 0),
+            'avarges': avarges,
+            'this_year_total_avg': int(this_year_total_avg),
+            'precent': round(precent, 2)
+        }
+
+        # 10 dakika cache
+        cache.set(cache_key, context, 600)
+
+        return render(request, 'orders-list.html', context)
+
+
+
+    # def get(self, request):
+    #     current_year = date.today().year
+    #     current_month = date.today().month
+    #
+    #     # TEK SORGU ile tüm istatistikleri al
+    #     orders_with_stats = Order.objects.filter(
+    #         created_at__year=current_year
+    #     ).select_related(
+    #         'contract__offer__customer'
+    #     ).prefetch_related(
+    #         'contract__offer__customer__customer_offers'
+    #     ).annotate(
+    #         customer_offer_count=Count('contract__offer__customer__customer_offers')
+    #     )
+    #
+    #     # Memory'de gruplandır
+    #     monthly_data = {i: {'orders': [], 'first_time': 0, 'returning': 0} for i in range(1, 13)}
+    #
+    #     for order in orders_with_stats:
+    #         month = order.created_at.month
+    #         monthly_data[month]['orders'].append(order)
+    #
+    #         # Müşteri tipini belirle
+    #         if order.customer_offer_count == 1:
+    #             monthly_data[month]['first_time'] += 1
+    #         elif order.customer_offer_count > 1:
+    #             monthly_data[month]['returning'] += 1
+    #
+    #     # Ortalamalar için geçen yıl verisi
+    #     last_year_orders = Order.objects.filter(
+    #         created_at__year=current_year - 1,
+    #         created_at__month__lte=current_month
+    #     )
+    #
+    #     # Geçen yıl aylık ortalamalar
+    #     last_year_monthly = defaultdict(list)
+    #     for order in last_year_orders:
+    #         last_year_monthly[order.created_at.month].append(order)
+    #
+    #     # Ortalamalar hesaplama
+    #     avarges = []
+    #     for month in range(1, current_month + 1):
+    #         # Bu yıl
+    #         this_year_orders = monthly_data[month]['orders']
+    #         if this_year_orders:
+    #             this_year_avg = sum(order.total_price() for order in this_year_orders) // len(this_year_orders)
+    #         else:
+    #             this_year_avg = 0
+    #
+    #         # Geçen yıl
+    #         last_year_orders_month = last_year_monthly.get(month, [])
+    #         if last_year_orders_month:
+    #             last_year_avg = sum(order.total_price() for order in last_year_orders_month) // len(
+    #                 last_year_orders_month)
+    #         else:
+    #             last_year_avg = 0
+    #
+    #         avarges.append({'this_year': this_year_avg, 'last_year': last_year_avg})
+    #
+    #     # Eksik ayları sıfırla doldur
+    #     while len(avarges) < 12:
+    #         avarges.append({'this_year': 0, 'last_year': 0})
+    #
+    #     # Toplam hesaplamalar
+    #     this_year_total_avg = sum(avg['this_year'] for avg in avarges[:current_month])
+    #     last_year_total_avg = sum(avg['last_year'] for avg in avarges[:current_month])
+    #
+    #     if last_year_total_avg != 0:
+    #         precent = ((this_year_total_avg - last_year_total_avg) / last_year_total_avg) * 100
+    #     else:
+    #         precent = this_year_total_avg
+    #
+    #     # Context oluştur - orijinal key'ler
+    #     context = {
+    #         'orders_year': len(orders_with_stats),
+    #         'cust_fst_order_jan': monthly_data[1]['first_time'],
+    #         'cust_fst_order_feb': monthly_data[2]['first_time'],
+    #         'cust_fst_order_mar': monthly_data[3]['first_time'],
+    #         'cust_fst_order_apr': monthly_data[4]['first_time'],
+    #         'cust_fst_order_may': monthly_data[5]['first_time'],
+    #         'cust_fst_order_jun': monthly_data[6]['first_time'],
+    #         'cust_fst_order_jul': monthly_data[7]['first_time'],
+    #         'cust_fst_order_aug': monthly_data[8]['first_time'],
+    #         'cust_fst_order_sep': monthly_data[9]['first_time'],
+    #         'cust_fst_order_oct': monthly_data[10]['first_time'],
+    #         'cust_fst_order_nov': monthly_data[11]['first_time'],
+    #         'cust_fst_order_dec': monthly_data[12]['first_time'],
+    #         'cust_alw_order_jan': monthly_data[1]['returning'],
+    #         'cust_alw_order_feb': monthly_data[2]['returning'],
+    #         'cust_alw_order_mar': monthly_data[3]['returning'],
+    #         'cust_alw_order_apr': monthly_data[4]['returning'],
+    #         'cust_alw_order_may': monthly_data[5]['returning'],
+    #         'cust_alw_order_jun': monthly_data[6]['returning'],
+    #         'cust_alw_order_jul': monthly_data[7]['returning'],
+    #         'cust_alw_order_aug': monthly_data[8]['returning'],
+    #         'cust_alw_order_sep': monthly_data[9]['returning'],
+    #         'cust_alw_order_oct': monthly_data[10]['returning'],
+    #         'cust_alw_order_nov': monthly_data[11]['returning'],
+    #         'cust_alw_order_dec': monthly_data[12]['returning'],
+    #         'avarges': avarges[:current_month],
+    #         'this_year_total_avg': int(this_year_total_avg),
+    #         'precent': round(precent, 2)
+    #     }
+    #
+    #     return render(request, 'orders-list.html', context)
+
+
+

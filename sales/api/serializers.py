@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from sales.models import Offer, OfferRevision, OfferRevisionPackage, OfferRevisionPackageService, ServiceUsedProduct, Order
 from accounts.models import User
+from core.models import Backlog
+from datetime import datetime
 
 class ServiceUsedProductSerializer(serializers.ModelSerializer):
     class Meta:
@@ -105,6 +107,8 @@ class  OrderUpdateSerializer(serializers.ModelSerializer):
         model = Order
         fields = '__all__'
 
+
+from django.contrib.contenttypes.models import ContentType
 class  OffersListSerializer(serializers.ModelSerializer):
     date = serializers.SerializerMethodField()
     customer = serializers.SerializerMethodField()
@@ -121,6 +125,20 @@ class  OffersListSerializer(serializers.ModelSerializer):
             'date'
         )
     def get_date(self, obj):
+        last_offer = Offer.objects.filter(customer=obj.customer).order_by('created_at').first()
+
+        # last_order = Order.objects.filter(saller=obj.user).order_by('-created_at').first()
+
+
+        print("-"*40)
+        print()
+        print("last-"*40)
+
+        if last_offer:
+            last_order = Order.objects.filter(contract__offer=last_offer).order_by('-created_at').first()
+            return last_offer.created_at.strftime('%d.%m.%Y')
+            # return last_order.created_at.strftime('%d.%m.%Y')
+            # return datetime.now()
         return obj.date()
     def get_customer(self, obj):
         customer =  {

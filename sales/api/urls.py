@@ -12,8 +12,5 @@ urlpatterns = [
     path('offers', OffersListApi.as_view(), name='offers-listapi'),
     path('orders', OrdersListApi.as_view(), name='orders-listapi'),
 
-
-
-
-
 ]
+

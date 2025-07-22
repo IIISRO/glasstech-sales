@@ -82,12 +82,12 @@ class OffersListApi(APIView):
         else:
             offers_list = Offer.objects.all().order_by('-created_at')
         offers = OffersListSerializer(offers_list, many=True).data
-       
-        return Response(offers)  
-    
+
+        return Response(offers)
+
 class OrdersListApi(APIView):
     permission_classes = (permissions.IsAuthenticated,)
-        
+
     def get(self, request, *args, **kwargs):
         if request.GET.get('date', ''):
             from_date = list(map(int, list(request.GET.get('date', '').split('-')[0].split('/'))))

@@ -199,6 +199,7 @@
 
         <table cellspacing="0" class="Table" style="border-collapse:collapse; border:none; margin-left:7px; ">
           <tbody>
+          {% if terms.seller.content %}
             <tr>
               <td style="border-bottom:1px solid black; border-left:none; border-right:none; border-top:1px solid black; height:19px; vertical-align:top; ">
               <p><span style="font-size:12pt"><span ><strong><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Satıcının h&uuml;quq və &ouml;hdəlikləri</span></span></strong></span></span></p>
@@ -206,19 +207,12 @@
             </tr>
             <tr>
               <td style="border-bottom:1px solid black; border-left:none; border-right:none; border-top:none; height:35px; vertical-align:top; ">
-              <ul>
-                <li style="text-align:justify"><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >&Ouml;dənişi tələb etmək </span></span></span></span></li>
-                <li style="text-align:justify"><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Uyğun şəraiti tələb etmək</span></span></span></span></li>
-                <li style="text-align:justify"><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Malların dəyərini m&uuml;əyyənləşdirilmiş şərtlər və qaydalara uyğun olaraq vaxtında və tam həcmdə &ouml;dəməyi Alıcıdan tələb etmək;</span></span></span></span></li>
-                <li style="text-align:justify"><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Malı və xidməti m&uuml;qavilə ilə m&uuml;əyyən olunan şərtlərlə və qaydada Alıcıya təhvil vermək;</span></span></span></span></li>
-                <li style="text-align:justify"><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Malın keyfiyyət kriteriyalarına uyğun olmasını təmin etmək və Alıcıya zəmanət &ouml;hdəliyi vermək;</span></span></span></span></li>
-                <li style="text-align:justify"><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Malın Alıcıya təhvil verilən anadək, malda aşkar edilən q&uuml;surları &ouml;z q&uuml;vvə və vəsaiti hesabına aradan qaldırmağı, eləcədə malın təsad&uuml;fən zay olması və ya zədələnməsi riskini daşımağı və zay olmuş məhsulu malı dərhal yenisi ilə əvəzləməyi &ouml;hdəsinə g&ouml;t&uuml;rmək.</span></span></span></span></li>
-                <li style="text-align:justify"><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Texniki təhl&uuml;kəsizlik qaydalarına riayyət etmək</span></span></span></span></li>
-              </ul>
-
+              <span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >{{ terms.seller.content|safe }}</span></span></span></span>
               <p style="margin-left:48px; text-align:justify">&nbsp;</p>
               </td>
             </tr>
+          {% endif %}
+          {% if terms.buyer.content %}
             <tr>
               <td style="border-bottom:1px solid black; border-left:none; border-right:none; border-top:none; height:19px; vertical-align:top; ">
               <p style="text-align:justify"><span style="font-size:12pt"><span ><strong><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Alıcının h&uuml;quq və &ouml;hdəlikləri </span></span></strong></span></span></p>
@@ -226,17 +220,12 @@
             </tr>
             <tr>
               <td style="border-bottom:1px solid black; border-left:none; border-right:none; border-top:none; height:35px; vertical-align:top; ">
-              <ul>
-                <li><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Malı m&uuml;əyyənləşdirilmiş keyfiyyət kriteriayalarına g&ouml;rə tələb etmək </span></span></span></span></li>
-                <li><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Malı m&uuml;əyyənləşdirilmiş təhvil tarixinə g&ouml;rə tələb etmək </span></span></span></span></li>
-                <li><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >&Ouml;dənişi razılaşdırılmış şərtlərə əsasən vaxtında və qeyd olunmuş miqdarında &ouml;dəmək </span></span></span></span></li>
-                <li><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Quraşdırma işlərinin d&uuml;zg&uuml;n aparılması &uuml;&ccedil;&uuml;n m&uuml;qavilədə qeyd olunan lazımı iş şəraitinin təmin etmək (yol, texniki təhl&uuml;kəsizlik, elektrik, hava, su&nbsp; və s.) </span></span></span></span></li>
-                <li><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Malı təhvil aldıqdan sonra onu qorumaq və d&uuml;zg&uuml;n istifadə etmək</span></span></span></span></li>
-              </ul>
-
+                <span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >{{ terms.buyer.content|safe }}</span></span></span></span>
               <p style="margin-left:48px">&nbsp;</p>
               </td>
             </tr>
+          {% endif %}
+          {% if terms.delivery.content %}
             <tr>
               <td style="border-bottom:1px solid black; border-left:none; border-right:none; border-top:none; height:19px; vertical-align:top; ">
               <p style="text-align:justify"><span style="font-size:12pt"><span ><strong><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >&Ouml;dəniş və &ccedil;atdırılma şərtləri </span></span></strong></span></span></p>
@@ -244,15 +233,11 @@
             </tr>
             <tr>
               <td style="border-bottom:1px solid black; border-left:none; border-right:none; border-top:none; height:35px; vertical-align:top; ">
-                <textarea required name="offer_pay_delv_cond" id="offer_pay_delv_cond"></textarea>
-
-                <p style="margin-left:48px">&nbsp;</p>
-
-                <p style="margin-left:42px"><span style="font-size:12pt"><span ><strong><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Qeyd: Qiymətlər hal hazırda olan ABŞ Daolları məzənnəsinə uyğun olaraq &ccedil;ıxarılmışdır. Məzənnədəki dəyişikliklər qiymətlərə uyğun şəkildə əks etdiriləcəkdir.</span></span></strong></span></span></p>
-
-                <p>&nbsp;</p>
+                <span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >{{ terms.delivery.content|safe }}</span></span></span></span>
+              <p style="margin-left:48px">&nbsp;</p>
               </td>
             </tr>
+          {% endif %}
           </tbody>
           <tbody>
             <tr>

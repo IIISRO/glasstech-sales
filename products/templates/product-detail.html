@@ -45,11 +45,11 @@
         <hr>
       <form class="pt-3" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <h1 id="templateHeader">Şablonlar({{product.product_descriptions.all.count}})</h1>
+        <h1 id="templateHeader">{{product.name}} Şablonu({{product.product_descriptions.all.count}})</h1>
         <select onchange="displayTemplate()" class="mb-5 form-control" name="" id="desc_select">
             <option selected value="" class="">-----------</option>
             {% for template in product.product_descriptions.all %}
-            <option value="{{template.description}}">Şablon {{ forloop.counter }}</option>
+            <option value="{{template.description}}">{{product.name}} Şablon {{ forloop.counter }}</option>
             {% endfor %}
         </select>
  
