@@ -5,6 +5,7 @@ from customers.models  import Customer
 from products.models  import Product
 from accounts.models import User
 from ckeditor_uploader.fields import RichTextUploadingField
+from services.uploader import Uploader
 # Create your models here.
 
 class Offer(AbstractModel):
@@ -23,6 +24,7 @@ class Offer(AbstractModel):
     status =  models.CharField(choices=STATUSES, null=True, blank=True, max_length=8, default='Aktiv')
     status_change_reason = models.TextField(blank=True, null=True)
     potency = models.CharField(choices=POTENCY_LEVELS, null=True, blank=True, max_length=6)
+    image = models.ImageField(upload_to=Uploader.offer_image_uploader, null=True, blank=True)
 
     def __str__(self):
         return f'Təklif {self.number}' or "Offer"

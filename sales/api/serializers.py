@@ -108,8 +108,7 @@ class  OrderUpdateSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-from django.contrib.contenttypes.models import ContentType
-class  OffersListSerializer(serializers.ModelSerializer):
+class OffersListSerializer(serializers.ModelSerializer):
     date = serializers.SerializerMethodField()
     customer = serializers.SerializerMethodField()
     price = serializers.SerializerMethodField()
@@ -124,34 +123,24 @@ class  OffersListSerializer(serializers.ModelSerializer):
             'price',
             'date'
         )
+
     def get_date(self, obj):
-        last_offer = Offer.objects.filter(customer=obj.customer).order_by('created_at').first()
-
-        # last_order = Order.objects.filter(saller=obj.user).order_by('-created_at').first()
-
-
-        print("-"*40)
-        print()
-        print("last-"*40)
-
-        if last_offer:
-            last_order = Order.objects.filter(contract__offer=last_offer).order_by('-created_at').first()
-            return last_offer.created_at.strftime('%d.%m.%Y')
-            # return last_order.created_at.strftime('%d.%m.%Y')
-            # return datetime.now()
         return obj.date()
+
     def get_customer(self, obj):
-        customer =  {
+        customer = {
             'id': obj.customer.id,
             'name': obj.customer.get_full_name()
         }
         return customer
+
     def get_price(self, obj):
         prices = []
-        for package in obj.offer_revisions.filter(is_active = True).first().revision_packages.all():
-           prices.append(package.get_price())
+        for package in obj.offer_revisions.filter(is_active=True).first().revision_packages.all():
+            prices.append(package.get_price())
         return max(prices)
-    
+
+
 class  OrdersListSerializer(serializers.ModelSerializer):
     date = serializers.SerializerMethodField()
     total = serializers.SerializerMethodField()

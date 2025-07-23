@@ -35,6 +35,9 @@ class OfferReview(View):
 def create_offer(request):
     if request.method == "POST":
         data = json.loads(request.body)
+        print("------------")
+        print(data)
+        print("------------")
         if not data:
             raise Http404
         offer = Offer.objects.create(
@@ -93,6 +96,7 @@ def create_offer(request):
                 "buyer": TermsOfSale.objects.filter(title="BUYER", is_active=True).first(),
                 "delivery": TermsOfSale.objects.filter(title="DELIVERY", is_active=True).first(),
             }
+
 
             context = {
                 'ckeditor_upload': ckeditor_upload,
