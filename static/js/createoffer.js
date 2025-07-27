@@ -892,9 +892,10 @@ createOfferForm.addEventListener("submit", (e) => {
     'offer_creator': parseInt($('#offer_creator').val()),
     'offer_approver': parseInt($('#offer_approver').val()),
     'note': CKEDITOR.instances.offer_note.getData(),
-//    'offer_pay_delv_cond': CKEDITOR.instances.offer_pay_delv_cond.getData(),
+    'offer_pay_delv_cond': CKEDITOR.instances?.offer_pay_delv_cond?.getData() ?? null,
     'offer_delv_time': $('#offer_delv_time').val(),
   }
+
   offer['packages'] = packages
   fetch(url,{
       method:"POST",

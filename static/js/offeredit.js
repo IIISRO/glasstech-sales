@@ -437,7 +437,7 @@ function getOfferFetch(){
                         removePlugins: 'exportpdf',
                         toolbarCanCollapse: true
                       });
-                    CKEDITOR.instances['offer_pay_delv_cond'].setData(revision['pay_delv_cond'])    
+                    CKEDITOR.instances['offer_pay_delv_cond']?.setData(revision['pay_delv_cond'])    
                     $('#offer_delv_time').val(revision.delv_time)
                     $('#rev_num').text(revision.number)
                     $('#rev_date').text(revision.date)
@@ -1372,7 +1372,7 @@ editOfferForm.addEventListener("submit", (e) => {
     'offer_creator': parseInt($('#offer_creator').val()),
     'offer_approver': parseInt($('#offer_approver').val()),
     'note': CKEDITOR.instances.offer_note.getData(),
-    'offer_pay_delv_cond': CKEDITOR.instances.offer_pay_delv_cond.getData(),
+    'offer_pay_delv_cond': CKEDITOR.instances?.offer_pay_delv_cond?.getData() ?? null,
     'offer_delv_time': $('#offer_delv_time').val(),
     'removedPackagesIDS': removedPackagesIDS,
     'removedServicesIDS': removedServicesIDS,

@@ -20,7 +20,13 @@
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="{% static 'css/adminlte.min.css' %}">
-
+<!-- <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/css/selectize.default.min.css"
+  integrity="sha512-pTaEn+6gF1IeWv3W1+7X7eM60TFu/agjgoHmYhAfLEU8Phuf6JKiiE8YmsNC0aCgQv4192s4Vai8YZ6VNM6vyQ=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+/> -->
   <style>
     .activate:hover{
       cursor: pointer;
@@ -38,6 +44,30 @@
       /* This section calls the slideInFromLeft animation we defined above */
       animation: 1s ease-out 0s 1 slideInFromDown;
       
+    }
+
+    .custom-dropdown {
+      border-radius: .25rem;
+      top: 90px !important;
+      color: #495057;
+      border: 1px solid #ced4da;
+      overflow-y: auto;
+      max-height: 18.75rem;
+    }
+
+    .custom-dropdown .option {
+      padding-block: .3rem;
+      padding-inline: .4rem;
+      background: white;
+      cursor: pointer;
+    }
+
+    .custom-dropdown .option:hover {
+      background: rgb(240, 240, 240);
+    }
+
+    .custom-dropdown .option.active {
+      background: rgb(240, 240, 240); 
     }
 
   </style>
@@ -340,10 +370,10 @@
         </div>
         <div class="modal-body">
           <label>Müştəri seçin:</label>
-          <select class="form-control" style="width: 100%;" name="customer" id="customer">
+          <select placeholder="Axtar" class="form-control" style="width: 100%;" name="customer" id="customer">
            <option value="" disabled selected>---------</option>
             {% for customer in customers %}
-           <option value="{{customer.id}}">{{customer}}</option>
+              <option value="{{customer.id}}">{{customer}}</option>
             {% endfor %}
           </select>
         </div>
@@ -385,13 +415,33 @@
 <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 <!-- AdminLTE -->
 <script src="{% static 'js/adminlte.js' %}"></script>
+<!-- Selectize -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
+
 
 
 <script src="{% static 'js/loader.js' %}"></script>
 
 <script>
+  $(document).ready(function() {
+    $('#customer').selectize({
+      sortField: 'text'
+    });
 
+    $('#customer-selectized').css({
+      border: "none",
+      width: "100% !important",
+      outline: "none",
+    });
 
+    $('.selectize-input').css({
+      display: "flex",
+    });
+
+    $('.selectize-dropdown-content').addClass('custom-dropdown');
+    $('.selectize-dropdown').removeClass('form-control');
+  });
+ 
   function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie !== '') {

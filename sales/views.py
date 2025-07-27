@@ -293,14 +293,39 @@ class OfferNewRevisionCreate(View):
 def export_offer_docx(request, number):
     offer = get_object_or_404(Offer, number=number)
     revision = offer.offer_revisions.get(is_active=True)
+    terms = {
+        "seller": TermsOfSale.objects.filter(title="SELLER", is_active=True).first(),
+        "buyer": TermsOfSale.objects.filter(title="BUYER", is_active=True).first(),
+        "delivery": TermsOfSale.objects.filter(title="DELIVERY", is_active=True).first(),
+    }
 
     context = {
         'offer': offer,
-        'revision': revision
+        'revision': revision,
+        'terms': terms
     }
     messages.add_message(request, messages.SUCCESS, (f"Təklif NO: {number} DOCX Çıxarıldı!"))
 
     return render(request, 'offer-docx.html', context)
+
+def export_offer_pdf(request, number):
+    offer = get_object_or_404(Offer, number=number)
+    revision = offer.offer_revisions.get(is_active=True)
+
+    terms = {
+        "seller": TermsOfSale.objects.filter(title="SELLER", is_active=True).first(),
+        "buyer": TermsOfSale.objects.filter(title="BUYER", is_active=True).first(),
+        "delivery": TermsOfSale.objects.filter(title="DELIVERY", is_active=True).first(),
+    }
+
+    context = {
+        'offer': offer,
+        'revision': revision,
+        'terms': terms
+    }
+    messages.add_message(request, messages.SUCCESS, (f"Təklif NO: {number} PDF Çıxarıldı!"))
+
+    return render(request, 'offer-pdf.html', context)
 
 
 class OfferDetail(DetailView):
