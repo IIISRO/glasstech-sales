@@ -8,7 +8,7 @@
             <script src="{% static 'js/loader.js' %}"></script>
 
 
-            <title>Export Html to Word Document</title>
+            <title>Export Html to PDF Document</title>
             <style>
                 /* Style Definitions */
                 p.MsoHeader, li.MsoHeader, div.MsoHeader{
@@ -316,7 +316,11 @@
             
 
 
-
+                <p class="MsoNormal" align="center"
+                    style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; color: rgb(0, 0, 0); text-align: center;">
+                    <b><span lang="AZ-LATIN"
+                            style="font-size: 24pt; font-family: Arial, sans-serif; color: rgb(79, 98, 40);">&nbsp;</span></b>
+                </p>
                 <p id="offer_packages_start_line" class="MsoNormal" style="margin: 0cm; font-size: 12pt; font-family: &quot;Times New Roman&quot;, serif; color: rgb(0, 0, 0);">
                     <b><span lang="AZ-LATIN" style="font-size: 18pt; font-family: Arial, sans-serif; color: rgb(51, 98, 96);">Qeyd!<o:p> </o:p></span></b>
                 </p>
@@ -420,7 +424,7 @@
                                 <span style="font-size:12pt">
                                     <span>
                                         <span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt; font-family:Arial,sans-serif;">
-                                            <span>{{ terms.delivery.content|safe }}</span>
+                                            <span>{{terms.delivery.content|safe}}</span>
                                         </span>
                                     </span>
                                 </span>

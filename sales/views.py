@@ -26,8 +26,15 @@ from django.core.cache import cache
 class OfferReview(View):
     def get(self, request, number):
         offer = get_object_or_404(Offer, number=number)
+        terms = {
+            "seller": TermsOfSale.objects.filter(title="SELLER", is_active=True).first(),
+            "buyer": TermsOfSale.objects.filter(title="BUYER", is_active=True).first(),
+            "delivery": TermsOfSale.objects.filter(title="DELIVERY", is_active=True).first(),
+        }
+
         context = {
             'offer': offer,
+            'terms': terms,
         }
         return render(request, 'offer-review.html', context)
 
