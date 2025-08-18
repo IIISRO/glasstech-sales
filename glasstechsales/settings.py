@@ -136,11 +136,11 @@ WSGI_APPLICATION = 'glasstechsales.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('POSTGRES_DB','glasstechsalesDB'),
+        'NAME': os.environ.get('POSTGRES_DB','s'),
         'USER': os.environ.get('POSTGRES_USER','glasstechsales'),
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD','1xsam32!MK9jcdks@o8'),
-        'HOST': os.environ.get('POSTGRES_HOST','localhost'),
-        'PORT': os.environ.get('POSTGRES_PORT','5432'),
+        'HOST': os.environ.get('POSTGRES_HOST','173.212.213.97'),
+        'PORT': os.environ.get('POSTGRES_PORT','5552'),
     }
 }
 
