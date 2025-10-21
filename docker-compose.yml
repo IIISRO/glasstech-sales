@@ -26,14 +26,16 @@ services:
   web:
     container_name: glasstechsales
     build: .
-    command:  gunicorn --bind 0.0.0.0:8000 glasstechsales.wsgi 
+    # command:  gunicorn --bind 0.0.0.0:8000 glasstechsales.wsgi 
+    command: gunicorn glasstechsales.wsgi:application --workers 4 --threads 2 --timeout 120 --bind 0.0.0.0:8000
     volumes:
       - ./media:/code/media
       - ./static:/code/static
     ports:
       - 8000:8000
     depends_on:
-      - 'pgadmin'
+      # - 'pgadmin'
+      - 'db'
     env_file: .env 
 
   nginx:

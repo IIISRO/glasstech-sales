@@ -139,7 +139,7 @@ DATABASES = {
         'NAME': os.environ.get('POSTGRES_DB','glasstechsalesDB'),
         'USER': os.environ.get('POSTGRES_USER','glasstechsales'),
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD','1xsam32!MK9jcdks@o8'),
-        'HOST': os.environ.get('POSTGRES_HOST','localhost'),
+        'HOST': os.environ.get('POSTGRES_HOST','167.86.71.101'),
         'PORT': os.environ.get('POSTGRES_PORT','5432'),
     }
 }
@@ -209,3 +209,21 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'glasstechsales01@gmail.com'
 EMAIL_HOST_PASSWORD = 'uhpimqrsnyobsjmz'
+
+# settings.py
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.db.backends': {
+            'level': 'DEBUG',  # SQL sorğularını görmək üçün DEBUG səviyyəsi
+            'handlers': ['console'],
+        },
+    },
+}

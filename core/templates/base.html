@@ -373,7 +373,11 @@
           <select placeholder="Axtar" class="form-control" style="width: 100%;" name="customer" id="customer">
            <option value="" disabled selected>---------</option>
             {% for customer in customers %}
+            {% if customer.company_name %}
+              <option value="{{customer.id}}">{{customer}} - {{customer.company_name}}</option>
+              {% else %}
               <option value="{{customer.id}}">{{customer}}</option>
+              {% endif %}
             {% endfor %}
           </select>
         </div>
