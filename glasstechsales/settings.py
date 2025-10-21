@@ -210,20 +210,3 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'glasstechsales01@gmail.com'
 EMAIL_HOST_PASSWORD = 'uhpimqrsnyobsjmz'
 
-# settings.py
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        'django.db.backends': {
-            'level': 'DEBUG',  # SQL sorğularını görmək üçün DEBUG səviyyəsi
-            'handlers': ['console'],
-        },
-    },
-}
