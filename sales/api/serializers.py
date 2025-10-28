@@ -127,10 +127,11 @@ class OffersListSerializer(serializers.ModelSerializer):
     def get_date(self, obj):
         return obj.date()
 
+
     def get_customer(self, obj):
         customer = {
             'id': obj.customer.id,
-            'name': obj.customer.get_full_name()
+            'name': obj.customer.get_full_name() + (f"({obj.customer.company_name})" if obj.customer.company_name else "")
         }
         return customer
 
