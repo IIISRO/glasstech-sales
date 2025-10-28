@@ -51,7 +51,7 @@ class Customer(AbstractModel):
     
     def get_full_name(self):
     
-        return f'{self.name} test edirik {self.surname}'
+        return f'{self.name} {self.surname}'
     
     def date(self):           
         return self.created_at.strftime('%d.%m.%Y')
