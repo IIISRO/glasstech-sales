@@ -630,7 +630,8 @@
                       <a href='{% url "sales:order-edit" number=order.number %}' style="margin: 0;  border: 0; border-radius: 0;" class="btn btn-primary">Düzəliş et</a>
                     {% endif %}
                 </div>
-                <a id="docxBtn" href='{% url "sales:export-docx-order" number=order.number %}' style="margin-top: 10px;" class="mb-2 btn btn-secondary">DOCX Çıxart</a>
+                <a id="docxBtn" href='{% url "sales:export-docx-order" number=order.number %}' style="margin-top: 10px;" class="mb-2 btn btn-warning">DOCX Çıxart</a>
+                <a id="pdfBtn" href='{% url "sales:export-pdf-order" number=order.number %}' style="margin-top: 10px;" class="mb-2 btn btn-success">PDF Çıxart</a>
                 
 
             </form>

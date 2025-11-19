@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import OfferReview, OfferEdit, OfferNewRevisionCreate, OfferDetail, OrderReview, OrderDetail, OffersList, OrderEdit, OrdersListUpdate, OrdersList, create_offer, export_offer_docx, create_order, export_order_docx, export_offer_pdf
+from .views import OfferReview, OfferEdit, OfferNewRevisionCreate, OfferDetail, OrderReview, OrderDetail, OffersList, OrderEdit, OrdersListUpdate, OrdersList, create_offer, export_offer_docx, create_order, export_order_docx, export_offer_pdf, export_order_pdf
 
 app_name = 'sales'
 
@@ -16,6 +16,7 @@ urlpatterns = [
     path('review/order/<str:number>', OrderReview.as_view(), name='order-review'), 
     path('detail/order/<str:number>', OrderDetail.as_view(), name='order-detail'), 
     path('export-docx/order/<str:number>', export_order_docx, name='export-docx-order'), 
+    path('export-pdf/order/<str:number>', export_order_pdf, name='export-pdf-order'), 
     path('edit/order/<str:number>', OrderEdit.as_view(), name='order-edit'), 
     path('orders/', OrdersList.as_view(), name='orders-list'),
     path('orders/update/', OrdersListUpdate.as_view(), name='orders-list-new'),

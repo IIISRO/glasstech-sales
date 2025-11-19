@@ -480,6 +480,12 @@ def export_order_docx(request, number):
     return render(request, 'order-docx.html', context={'order': Order.objects.get(number=number)})
 
 
+def export_order_pdf(request, number):
+    messages.add_message(request, messages.SUCCESS, (f"Sifariş NO: {number} PDF Çıxarıldı!"))
+
+    return render(request, 'order-pdf.html', context={'order': Order.objects.get(number=number)})
+
+
 class OrderEdit(View):
     def get(self, request, number):
         order = get_object_or_404(Order, number=number, status="Davamedir")
@@ -780,118 +786,14 @@ class OrdersListUpdate(View):
             'precent': round(precent, 2)
         }
 
-        # 10 dakika cache
+        
         cache.set(cache_key, context, 600)
 
         return render(request, 'orders-list.html', context)
 
 
 
-    # def get(self, request):
-    #     current_year = date.today().year
-    #     current_month = date.today().month
-    #
-    #     # TEK SORGU ile tüm istatistikleri al
-    #     orders_with_stats = Order.objects.filter(
-    #         created_at__year=current_year
-    #     ).select_related(
-    #         'contract__offer__customer'
-    #     ).prefetch_related(
-    #         'contract__offer__customer__customer_offers'
-    #     ).annotate(
-    #         customer_offer_count=Count('contract__offer__customer__customer_offers')
-    #     )
-    #
-    #     # Memory'de gruplandır
-    #     monthly_data = {i: {'orders': [], 'first_time': 0, 'returning': 0} for i in range(1, 13)}
-    #
-    #     for order in orders_with_stats:
-    #         month = order.created_at.month
-    #         monthly_data[month]['orders'].append(order)
-    #
-    #         # Müşteri tipini belirle
-    #         if order.customer_offer_count == 1:
-    #             monthly_data[month]['first_time'] += 1
-    #         elif order.customer_offer_count > 1:
-    #             monthly_data[month]['returning'] += 1
-    #
-    #     # Ortalamalar için geçen yıl verisi
-    #     last_year_orders = Order.objects.filter(
-    #         created_at__year=current_year - 1,
-    #         created_at__month__lte=current_month
-    #     )
-    #
-    #     # Geçen yıl aylık ortalamalar
-    #     last_year_monthly = defaultdict(list)
-    #     for order in last_year_orders:
-    #         last_year_monthly[order.created_at.month].append(order)
-    #
-    #     # Ortalamalar hesaplama
-    #     avarges = []
-    #     for month in range(1, current_month + 1):
-    #         # Bu yıl
-    #         this_year_orders = monthly_data[month]['orders']
-    #         if this_year_orders:
-    #             this_year_avg = sum(order.total_price() for order in this_year_orders) // len(this_year_orders)
-    #         else:
-    #             this_year_avg = 0
-    #
-    #         # Geçen yıl
-    #         last_year_orders_month = last_year_monthly.get(month, [])
-    #         if last_year_orders_month:
-    #             last_year_avg = sum(order.total_price() for order in last_year_orders_month) // len(
-    #                 last_year_orders_month)
-    #         else:
-    #             last_year_avg = 0
-    #
-    #         avarges.append({'this_year': this_year_avg, 'last_year': last_year_avg})
-    #
-    #     # Eksik ayları sıfırla doldur
-    #     while len(avarges) < 12:
-    #         avarges.append({'this_year': 0, 'last_year': 0})
-    #
-    #     # Toplam hesaplamalar
-    #     this_year_total_avg = sum(avg['this_year'] for avg in avarges[:current_month])
-    #     last_year_total_avg = sum(avg['last_year'] for avg in avarges[:current_month])
-    #
-    #     if last_year_total_avg != 0:
-    #         precent = ((this_year_total_avg - last_year_total_avg) / last_year_total_avg) * 100
-    #     else:
-    #         precent = this_year_total_avg
-    #
-    #     # Context oluştur - orijinal key'ler
-    #     context = {
-    #         'orders_year': len(orders_with_stats),
-    #         'cust_fst_order_jan': monthly_data[1]['first_time'],
-    #         'cust_fst_order_feb': monthly_data[2]['first_time'],
-    #         'cust_fst_order_mar': monthly_data[3]['first_time'],
-    #         'cust_fst_order_apr': monthly_data[4]['first_time'],
-    #         'cust_fst_order_may': monthly_data[5]['first_time'],
-    #         'cust_fst_order_jun': monthly_data[6]['first_time'],
-    #         'cust_fst_order_jul': monthly_data[7]['first_time'],
-    #         'cust_fst_order_aug': monthly_data[8]['first_time'],
-    #         'cust_fst_order_sep': monthly_data[9]['first_time'],
-    #         'cust_fst_order_oct': monthly_data[10]['first_time'],
-    #         'cust_fst_order_nov': monthly_data[11]['first_time'],
-    #         'cust_fst_order_dec': monthly_data[12]['first_time'],
-    #         'cust_alw_order_jan': monthly_data[1]['returning'],
-    #         'cust_alw_order_feb': monthly_data[2]['returning'],
-    #         'cust_alw_order_mar': monthly_data[3]['returning'],
-    #         'cust_alw_order_apr': monthly_data[4]['returning'],
-    #         'cust_alw_order_may': monthly_data[5]['returning'],
-    #         'cust_alw_order_jun': monthly_data[6]['returning'],
-    #         'cust_alw_order_jul': monthly_data[7]['returning'],
-    #         'cust_alw_order_aug': monthly_data[8]['returning'],
-    #         'cust_alw_order_sep': monthly_data[9]['returning'],
-    #         'cust_alw_order_oct': monthly_data[10]['returning'],
-    #         'cust_alw_order_nov': monthly_data[11]['returning'],
-    #         'cust_alw_order_dec': monthly_data[12]['returning'],
-    #         'avarges': avarges[:current_month],
-    #         'this_year_total_avg': int(this_year_total_avg),
-    #         'precent': round(precent, 2)
-    #     }
-    #
-    #     return render(request, 'orders-list.html', context)
+   
 
 
 

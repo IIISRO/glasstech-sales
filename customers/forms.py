@@ -5,7 +5,7 @@ from .models import Customer
 class CreateCustomerForm(forms.ModelForm):
 
     name = forms.CharField(
-        required=True,
+        required=False,
         widget=forms.TextInput(
             attrs={'placeholder': 'Ad', 'class': 'form-control'}
     ))
@@ -68,6 +68,19 @@ class CreateCustomerForm(forms.ModelForm):
         widget=forms.FileInput(
             attrs={'class': 'custom-file-input', 'id': 'customFile'}
     ))
+
+
+    def clean(self):
+        cleaned_data = super().clean()
+        name = cleaned_data.get("name")
+        company_name = cleaned_data.get("company_name")
+
+        if not name and not company_name:
+            raise forms.ValidationError(
+                "Ad və ya Firma adı sahələrindən ən az biri doldurulmalıdır."
+            )
+
+        return cleaned_data
 
 
     class Meta:
