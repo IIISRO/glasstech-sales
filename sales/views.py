@@ -42,9 +42,7 @@ class OfferReview(View):
 def create_offer(request):
     if request.method == "POST":
         data = json.loads(request.body)
-        print("------------")
-        print(data)
-        print("------------")
+        
         if not data:
             raise Http404
         offer = Offer.objects.create(

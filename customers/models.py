@@ -50,8 +50,12 @@ class Customer(AbstractModel):
         return f'{self.name} {self.surname}({self.c_category})'
     
     def get_full_name(self):
-    
-        return f'{self.name} {self.surname}'
+        if self.name and self.company_name:
+            return f'{self.name} {self.surname} - {self.company_name}'
+        elif self.name:
+            return self.name
+        else:
+            return self.company_name
     
     def date(self):           
         return self.created_at.strftime('%d.%m.%Y')

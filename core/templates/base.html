@@ -373,16 +373,9 @@
           <select placeholder="Axtar" class="form-control" style="width: 100%;" name="customer" id="customer">
            <option value="" disabled selected>---------</option>
             {% for customer in customers %}
-            {% if customer.company_name and customer.name %}
-              <option value="{{customer.id}}">{{customer}} - {{customer.company_name}}</option>
-
-              {% elif customer.company_name %}
-              <option value="{{customer.id}}">{{customer.company_name}}</option>
-
-              {% else %}
-              <option value="{{customer.id}}">{{customer.name}}</option>
-              
-              {% endif %}
+          
+              <option value="{{customer.id}}">{{customer.get_full_name}}</option>
+            
             {% endfor %}
           </select>
         </div>
