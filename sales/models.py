@@ -127,19 +127,45 @@ class Order(AbstractModel):
 
     def date(self):
         return self.created_at.strftime('%d.%m.%Y')
+    # def total_price(self):
+    #     package = OfferRevision.objects.filter(offer = self.contract.offer).filter(is_active = True).first().revision_packages.first()
+    #     total_price = 0
+    #     for service in  package.package_services.all():
+    #         total_price += service.quantity*service.price
+    #     if package.delv:
+    #         total_price += package.delv
+    #     if  package.discount:
+    #         total_price  -= package.discount
+    #     if package.tax:
+    #         total_price += package.tax
+
+    #     return total_price
+    
     def total_price(self):
-        package = OfferRevision.objects.filter(offer = self.contract.offer).filter(is_active = True).first().revision_packages.first()
+        # aktiv offer revisionu götür
+        revision = OfferRevision.objects.filter(offer=self.contract.offer, is_active=True).first()
+        if not revision:
+            return 0  # heç bir revision yoxdursa
+
+        # revision paketlərini götür
+        package = revision.revision_packages.first()
+        if not package:
+            return 0  # revision varsa, amma paket yoxdursa
+
+        # toplam qiyməti hesabla
         total_price = 0
-        for service in  package.package_services.all():
-            total_price += service.quantity*service.price
+        for service in package.package_services.all():
+            total_price += service.quantity * service.price
+
         if package.delv:
             total_price += package.delv
-        if  package.discount:
-            total_price  -= package.discount
+        if package.discount:
+            total_price -= package.discount
         if package.tax:
             total_price += package.tax
 
         return total_price
+
 
 class ServiceUsedProduct(AbstractModel):
     service = models.ForeignKey(OfferRevisionPackageService, on_delete=models.CASCADE, related_name='services_used_products')
