@@ -636,14 +636,14 @@
                   ></span
                 ></span
               >
-              <textarea
+              <!-- <textarea
                 name="seller_content"
                 id="seller_content"
                 cols="30"
                 rows="10"
               >
 {{ terms.seller.content|safe }}</textarea
-              >
+              > -->
               <p style="margin-left: 48px; text-align: justify">&nbsp;</p>
             </td>
           </tr>
@@ -685,16 +685,22 @@
                 vertical-align: top;
               "
             >
-              <!-- <span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >{{ terms.buyer.content|safe }}</span></span></span></span> -->
-              <textarea
+              <span style="font-size: 12pt"
+                ><span
+                  ><span dir="ltr" lang="AZ-LATIN" style="font-size: 11pt"
+                    ><span>{{ terms.buyer.content|safe }}</span></span
+                  ></span
+                ></span
+              >
+              <!-- <textarea
                 required
                 name="buyer_content"
                 id="buyer_content"
                 cols="30"
                 rows="10"
               >
-{{ terms.buyer.content|safe }}</textarea
-              >
+{{ terms.buyer.content|safe }}</textarea> -->
+              
               <p style="margin-left: 48px">&nbsp;</p>
             </td>
           </tr>
@@ -741,8 +747,7 @@
                   ><span dir="ltr" lang="AZ-LATIN" style="font-size: 11pt"
                     ><span>{{ terms.delivery.content|safe }}</span></span
                   ></span
-                ></span
-              > -->
+                ></span> -->
               <textarea
                 name="offer_pay_delv_cond"
                 id="offer_pay_delv_cond"
@@ -908,14 +913,14 @@
   });
 </script>
 
-<script>
+<!-- <script>
   CKEDITOR.replace("buyer_content", {
     filebrowserImageUploadUrl: "{% url 'ckeditor_upload' %}",
     filebrowserImageBrowseUrl: "{% url 'ckeditor_browse' %}",
     removePlugins: "exportpdf",
     toolbarCanCollapse: true,
   });
-</script>
+</script> -->
 
 <script>
   CKEDITOR.replace("offer_pay_delv_cond", {
@@ -925,14 +930,14 @@
     toolbarCanCollapse: true,
   });
 </script>
-<script>
+<!-- <script>
   CKEDITOR.replace("seller_content", {
     filebrowserImageUploadUrl: "{% url 'ckeditor_upload' %}",
     filebrowserImageBrowseUrl: "{% url 'ckeditor_browse' %}",
     removePlugins: "exportpdf",
     toolbarCanCollapse: true,
   });
-</script>
+</script> -->
 <script>
   // CKEDITOR.replace('offer_pay_delv_cond', {
   //   filebrowserImageUploadUrl: "{% url 'ckeditor_upload' %}",

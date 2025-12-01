@@ -13,18 +13,51 @@
             <title>Export Html to Word Document</title>
         
             <script>
-                loader.show()
-                function convertHtmlToDocx() {
-                    var htmlContent = document.getElementById('exportContent').innerHTML;
-                    var converted = htmlDocx.asBlob(htmlContent);
+    loader.show();
+    
+    function convertHtmlToDocx() {
+        // Get the HTML content
+        var innerContent = document.getElementById('exportContent').innerHTML;
         
-                    // Create a download link
-                    var link = document.createElement('a');
-                    link.href = window.URL.createObjectURL(converted);
-                    link.download = '{{order.contract.offer.customer.get_full_name}}-Sifariş-{{order.project_name}}.docx';
-                    link.click();
+        // Create a full HTML document with UTF-8 encoding
+        var htmlContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
                 }
-            </script>
+                ${getComputedStyle(document.getElementById('exportContent')).cssText}
+            </style>
+        </head>
+        <body>
+            ${innerContent}
+        </body>
+        </html>`;
+        
+        // Convert to DOCX
+        var converted = htmlDocx.asBlob(htmlContent, {
+            orientation: 'portrait',
+            margins: { top: 720, right: 720, bottom: 720, left: 720 } // 1 inch margins
+        });
+        
+        // Create download link
+        var link = document.createElement('a');
+        link.href = window.URL.createObjectURL(converted);
+        link.download = '{{order.contract.offer.customer.get_full_name}}-Sifariş-{{order.project_name}}.docx';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Clean up
+        setTimeout(() => {
+            window.URL.revokeObjectURL(link.href);
+        }, 100);
+    }
+</script>
         </head>
         <p class="MsoNormal"
             style="margin: 0cm 0cm 10pt; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif; color: rgb(0, 0, 0);">
