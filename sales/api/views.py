@@ -84,6 +84,35 @@ class OffersListApi(APIView):
         offers = OffersListSerializer(offers_list, many=True).data
 
         return Response(offers)
+    
+from datetime import datetime
+from django.utils import timezone
+
+class OffersListApiV2(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+        
+    def get(self, request, *args, **kwargs):
+        if request.GET.get('date', ''):
+            date_str = request.GET.get('date', '')
+            start_str, end_str = date_str.split('-')
+
+            # 01/01/2025 -> aware datetime
+            start = datetime.strptime(start_str.strip(), "%d/%m/%Y")
+            end = datetime.strptime(end_str.strip(), "%d/%m/%Y")
+
+            start = timezone.make_aware(start)
+            end = timezone.make_aware(end)
+
+            offers_list = Offer.objects.filter(
+                created_at__range=(start, end)
+            ).order_by('-created_at')
+
+        else:
+            offers_list = Offer.objects.all().order_by('-created_at')
+
+        offers = OffersListSerializer(offers_list, many=True).data
+        return Response(offers)
+
 
 class OrdersListApi(APIView):
     permission_classes = (permissions.IsAuthenticated,)

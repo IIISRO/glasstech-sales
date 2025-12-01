@@ -135,13 +135,25 @@ class OffersListSerializer(serializers.ModelSerializer):
         }
         return customer
 
+    # def get_price(self, obj):
+    #     prices = []
+    #     if obj.offer_revisions.exists():
+    #         for package in obj.offer_revisions.filter(is_active=True).first().revision_packages.all():
+    #             prices.append(package.get_price())
+    #         return max(prices)
+    #     return 0
     def get_price(self, obj):
         prices = []
-        if obj.offer_revisions.exists():
-            for package in obj.offer_revisions.filter(is_active=True).first().revision_packages.all():
-                prices.append(package.get_price())
-            return max(prices)
-        return 0
+
+        active_revision = obj.offer_revisions.filter(is_active=True).first()
+        if active_revision:
+            for package in active_revision.revision_packages.all():
+                price = package.get_price()
+                if price is not None:
+                    prices.append(price)
+
+        return max(prices) if prices else 0
+
 
 
 class  OrdersListSerializer(serializers.ModelSerializer):

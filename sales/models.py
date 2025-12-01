@@ -142,17 +142,14 @@ class Order(AbstractModel):
     #     return total_price
     
     def total_price(self):
-        # aktiv offer revisionu götür
         revision = OfferRevision.objects.filter(offer=self.contract.offer, is_active=True).first()
         if not revision:
-            return 0  # heç bir revision yoxdursa
+            return 0
 
-        # revision paketlərini götür
         package = revision.revision_packages.first()
         if not package:
-            return 0  # revision varsa, amma paket yoxdursa
-
-        # toplam qiyməti hesabla
+            return 0 
+        
         total_price = 0
         for service in package.package_services.all():
             total_price += service.quantity * service.price
