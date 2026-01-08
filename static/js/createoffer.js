@@ -624,7 +624,7 @@ function calcDiscountTotalPrice(event,packageID){
   if(event != null){
     var calcPackageID =  event.target.dataset.package_id
   }else{
-    var calcPackageID =  packageID
+    var calcPackageID =  packageID 
   }
   let discountPrice = parseInt(document.getElementById(`package-${calcPackageID}-discountfield`).value)
   let packageTotalPrice = parseInt(document.getElementById(`package-${calcPackageID}-totalprice`).innerText)
@@ -886,15 +886,17 @@ createOfferForm.addEventListener("submit", (e) => {
 
     packages.push(newerPackage)
   }
+  var offerInps = document.getElementsByName("offer_pay_delv_cond");
   var offer = {
     'customer': customer_id,
     'number': offer_number,
     'offer_creator': parseInt($('#offer_creator').val()),
     'offer_approver': parseInt($('#offer_approver').val()),
     'note': CKEDITOR.instances.offer_note.getData(),
-    'offer_pay_delv_cond': CKEDITOR.instances.offer_pay_delv_cond.getData(),
+    'offer_pay_delv_cond': offerInps.length > 0 ? offerInps[0].value : null,
     'offer_delv_time': $('#offer_delv_time').val(),
   }
+
   offer['packages'] = packages
   fetch(url,{
       method:"POST",

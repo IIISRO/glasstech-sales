@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from sales.models import Offer, OfferRevision, OfferRevisionPackage, OfferRevisionPackageService, ServiceUsedProduct, Order
 from accounts.models import User
+from core.models import Backlog
+from datetime import datetime
 
 class ServiceUsedProductSerializer(serializers.ModelSerializer):
     class Meta:
@@ -105,7 +107,8 @@ class  OrderUpdateSerializer(serializers.ModelSerializer):
         model = Order
         fields = '__all__'
 
-class  OffersListSerializer(serializers.ModelSerializer):
+
+class OffersListSerializer(serializers.ModelSerializer):
     date = serializers.SerializerMethodField()
     customer = serializers.SerializerMethodField()
     price = serializers.SerializerMethodField()
@@ -120,20 +123,27 @@ class  OffersListSerializer(serializers.ModelSerializer):
             'price',
             'date'
         )
+
     def get_date(self, obj):
         return obj.date()
+
+
     def get_customer(self, obj):
-        customer =  {
+        customer = {
             'id': obj.customer.id,
-            'name': obj.customer.get_full_name()
+            'name': obj.customer.get_full_name() + (f"({obj.customer.company_name})" if obj.customer.company_name else "")
         }
         return customer
+
     def get_price(self, obj):
         prices = []
-        for package in obj.offer_revisions.filter(is_active = True).first().revision_packages.all():
-           prices.append(package.get_price())
-        return max(prices)
-    
+        if obj.offer_revisions.exists():
+            for package in obj.offer_revisions.filter(is_active=True).first().revision_packages.all():
+                prices.append(package.get_price())
+            return max(prices)
+        return 0
+
+
 class  OrdersListSerializer(serializers.ModelSerializer):
     date = serializers.SerializerMethodField()
     total = serializers.SerializerMethodField()

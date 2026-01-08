@@ -5,6 +5,7 @@ from customers.models  import Customer
 from products.models  import Product
 from accounts.models import User
 from ckeditor_uploader.fields import RichTextUploadingField
+from services.uploader import Uploader
 # Create your models here.
 
 class Offer(AbstractModel):

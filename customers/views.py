@@ -61,6 +61,7 @@ class CustomerProfile(DetailView):
         context = super(CustomerProfile, self).get_context_data(**kwargs)
         customer = self.get_object()
         backlogs = Backlog.objects.filter(content_type=ContentType.objects.get_for_model(customer), object_id=customer.id)
+
         content_type = ContentType.objects.get_for_model(customer)
         offers = customer.customer_offers.all()
         orders_count = 0 

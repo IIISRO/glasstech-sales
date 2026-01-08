@@ -10,7 +10,7 @@ class CreateCustomerForm(forms.ModelForm):
             attrs={'placeholder': 'Ad', 'class': 'form-control'}
     ))
     surname = forms.CharField(
-        required=True,
+        required=False,
         widget=forms.TextInput(
             attrs={'placeholder': 'Soyad', 'class': 'form-control'}
     ))

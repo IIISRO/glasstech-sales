@@ -14,7 +14,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Yeni Təklif Yarat</h1>
+            <h1>Yeni Təklif Yarat 2</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -59,27 +59,27 @@
           </div>
         </div>
         <hr>
-        <p >Hörmətli {{customer.name}} {{customer.surname}},<br>  
+        <p >Hörmətli {{customer.name}} {{customer.surname}},<br>
           Bizdən tələb etdiyiniz işlərlə bağlı qiymət təklifimizi əlavədə sizə təqdim edirik. Xahiş edirik <br>
           tanış olasınız və öz fikirlərinizi bizə bildirəsiniz. <br>
           Hörmətlə <br><br>
           <span style="display: flex; justify-content: space-between;">
-            <span>Təklifi Hazırlayan <br> 
+            <span>Təklifi Hazırlayan <br>
               <select class="form-control" required style="background: rgb(245, 245, 245); border: 0;" id="offer_creator" name="offer_creator">
                 <option disabled selected value="">------------</option>
                     {% for user in users %}
                       <option value="{{user.id}}">{{user.get_full_name}}</option>
                     {% endfor %}
-              </select> 
-            </span>			
-            <span>Təklifi Təsdiqləyən <br> 
+              </select>
+            </span>
+            <span>Təklifi Təsdiqləyən <br>
               <select class="form-control" required style="background: rgb(245, 245, 245); border: 0;" id="offer_approver" name="offer_approver">
                 <option disabled selected value="">------------</option>
                     {% for user in users %}
                       <option value="{{user.id}}">{{user.get_full_name}}</option>
                     {% endfor %}
               </select>
-            </span>					       
+            </span>
           </span>
         </p>
         <hr><hr>
@@ -136,7 +136,7 @@
                 İstifadə olunan material <i class="fas fa-solid fa-plus"></i>
                 </button>
                 <div id="package-1-service-1-UsedMaterialList">
-                 
+
                 </div>
                 <p class="MsoNormal" style="margin: 0cm 0cm 0cm 2.1pt; font-size: 12pt">
                     <b><span lang="AZ-LATIN" style="font-family: Arial, sans-serif;">&nbsp;</span></b>
@@ -171,7 +171,7 @@
               </td>
             </tr>
           </tbody>
-            
+
           <tbody>
             <!-- summa -->
             <tr style="height: 26.05pt;">
@@ -191,14 +191,16 @@
           </tbody>
 
         </table>
-      
+
         <h3 style="color: rgb(58, 106, 90); font-weight: bold;">Qeyd!</h3>
         <textarea required name="offer_note" id="offer_note" cols="30" rows="10"></textarea>
         <p><span style="font-size:12pt"><span ><strong><span dir="ltr" lang="AZ-LATIN" style="font-size:18.0pt"><span ><span style="color:#336260">Satış şərtləri</span></span></span></strong></span></span></p>
-
-
+        {% if terms.delivery.content %}
+            <input type="hidden" name="offer_pay_delv_cond" value="{{ terms.delivery.content|safe }}">
+        {% endif %}
         <table cellspacing="0" class="Table" style="border-collapse:collapse; border:none; margin-left:7px; ">
           <tbody>
+          {% if terms.seller.content %}
             <tr>
               <td style="border-bottom:1px solid black; border-left:none; border-right:none; border-top:1px solid black; height:19px; vertical-align:top; ">
               <p><span style="font-size:12pt"><span ><strong><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Satıcının h&uuml;quq və &ouml;hdəlikləri</span></span></strong></span></span></p>
@@ -206,19 +208,12 @@
             </tr>
             <tr>
               <td style="border-bottom:1px solid black; border-left:none; border-right:none; border-top:none; height:35px; vertical-align:top; ">
-              <ul>
-                <li style="text-align:justify"><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >&Ouml;dənişi tələb etmək </span></span></span></span></li>
-                <li style="text-align:justify"><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Uyğun şəraiti tələb etmək</span></span></span></span></li>
-                <li style="text-align:justify"><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Malların dəyərini m&uuml;əyyənləşdirilmiş şərtlər və qaydalara uyğun olaraq vaxtında və tam həcmdə &ouml;dəməyi Alıcıdan tələb etmək;</span></span></span></span></li>
-                <li style="text-align:justify"><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Malı və xidməti m&uuml;qavilə ilə m&uuml;əyyən olunan şərtlərlə və qaydada Alıcıya təhvil vermək;</span></span></span></span></li>
-                <li style="text-align:justify"><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Malın keyfiyyət kriteriyalarına uyğun olmasını təmin etmək və Alıcıya zəmanət &ouml;hdəliyi vermək;</span></span></span></span></li>
-                <li style="text-align:justify"><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Malın Alıcıya təhvil verilən anadək, malda aşkar edilən q&uuml;surları &ouml;z q&uuml;vvə və vəsaiti hesabına aradan qaldırmağı, eləcədə malın təsad&uuml;fən zay olması və ya zədələnməsi riskini daşımağı və zay olmuş məhsulu malı dərhal yenisi ilə əvəzləməyi &ouml;hdəsinə g&ouml;t&uuml;rmək.</span></span></span></span></li>
-                <li style="text-align:justify"><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Texniki təhl&uuml;kəsizlik qaydalarına riayyət etmək</span></span></span></span></li>
-              </ul>
-
+              <span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >{{ terms.seller.content|safe }}</span></span></span></span>
               <p style="margin-left:48px; text-align:justify">&nbsp;</p>
               </td>
             </tr>
+          {% endif %}
+          {% if terms.buyer.content %}
             <tr>
               <td style="border-bottom:1px solid black; border-left:none; border-right:none; border-top:none; height:19px; vertical-align:top; ">
               <p style="text-align:justify"><span style="font-size:12pt"><span ><strong><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Alıcının h&uuml;quq və &ouml;hdəlikləri </span></span></strong></span></span></p>
@@ -226,17 +221,12 @@
             </tr>
             <tr>
               <td style="border-bottom:1px solid black; border-left:none; border-right:none; border-top:none; height:35px; vertical-align:top; ">
-              <ul>
-                <li><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Malı m&uuml;əyyənləşdirilmiş keyfiyyət kriteriayalarına g&ouml;rə tələb etmək </span></span></span></span></li>
-                <li><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Malı m&uuml;əyyənləşdirilmiş təhvil tarixinə g&ouml;rə tələb etmək </span></span></span></span></li>
-                <li><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >&Ouml;dənişi razılaşdırılmış şərtlərə əsasən vaxtında və qeyd olunmuş miqdarında &ouml;dəmək </span></span></span></span></li>
-                <li><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Quraşdırma işlərinin d&uuml;zg&uuml;n aparılması &uuml;&ccedil;&uuml;n m&uuml;qavilədə qeyd olunan lazımı iş şəraitinin təmin etmək (yol, texniki təhl&uuml;kəsizlik, elektrik, hava, su&nbsp; və s.) </span></span></span></span></li>
-                <li><span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Malı təhvil aldıqdan sonra onu qorumaq və d&uuml;zg&uuml;n istifadə etmək</span></span></span></span></li>
-              </ul>
-
+                <span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >{{ terms.buyer.content|safe }}</span></span></span></span>
               <p style="margin-left:48px">&nbsp;</p>
               </td>
             </tr>
+          {% endif %}
+          {% if terms.delivery.content %}
             <tr>
               <td style="border-bottom:1px solid black; border-left:none; border-right:none; border-top:none; height:19px; vertical-align:top; ">
               <p style="text-align:justify"><span style="font-size:12pt"><span ><strong><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >&Ouml;dəniş və &ccedil;atdırılma şərtləri </span></span></strong></span></span></p>
@@ -244,15 +234,11 @@
             </tr>
             <tr>
               <td style="border-bottom:1px solid black; border-left:none; border-right:none; border-top:none; height:35px; vertical-align:top; ">
-                <textarea required name="offer_pay_delv_cond" id="offer_pay_delv_cond"></textarea>
-
-                <p style="margin-left:48px">&nbsp;</p>
-
-                <p style="margin-left:42px"><span style="font-size:12pt"><span ><strong><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >Qeyd: Qiymətlər hal hazırda olan ABŞ Daolları məzənnəsinə uyğun olaraq &ccedil;ıxarılmışdır. Məzənnədəki dəyişikliklər qiymətlərə uyğun şəkildə əks etdiriləcəkdir.</span></span></strong></span></span></p>
-
-                <p>&nbsp;</p>
+                <span style="font-size:12pt"><span ><span dir="ltr" lang="AZ-LATIN" style="font-size:11.0pt"><span >{{ terms.delivery.content|safe }}</span></span></span></span>
+              <p style="margin-left:48px">&nbsp;</p>
               </td>
             </tr>
+          {% endif %}
           </tbody>
           <tbody>
             <tr>
@@ -261,20 +247,20 @@
               </td>
             </tr>
             <tr>
-              <td style="border-bottom:1px solid black; border-left:none; border-right:none; border-top:none; height:35px; vertical-align:top;"> 
+              <td style="border-bottom:1px solid black; border-left:none; border-right:none; border-top:none; height:35px; vertical-align:top;">
               <p><strong><span dir="ltr" lang="AZ-LATIN" style="font-size:11pt"><span style="display: flex; align-items: center;  font-family:Arial,sans-serif">&middot;Təhvil m&uuml;ddəti: avans &ouml;dənişi, &ouml;l&ccedil;&uuml; və texniki detallar təsdiqləndikdən sonra &ndash;&nbsp;<input required id="offer_delv_time" name="offer_delv_time" class="form-control" placeholder="....." style="background: rgb(245, 245, 245); border: 0; font-weight: bold; padding: 0px 5px 0px 5px; width: 60px; color:red">&nbsp;iş g&uuml;n&uuml; ərzində yerinə yetiriləcəkdir</span></span></strong></p>
-        
+
               <p><span dir="ltr" lang="AZ-LATIN" style="font-size:11pt"><span style="font-family:Symbol">&middot;</span></span><span dir="ltr" lang="AZ-LATIN" style="font-size:11pt"><span style="font-family:Arial,sans-serif">Malın təhvili tərəflər arasında imzalanmış təhvil-təslim aktı ilə təsdiqlənməlidir.</span></span></p>
-        
+
               <p><span dir="ltr" lang="AZ-LATIN" style="font-size:11pt"><span style="font-family:Symbol">&middot;</span></span><span dir="ltr" lang="AZ-LATIN" style="font-size:11pt"><span style="font-family:Arial,sans-serif">Təklifin q&uuml;vvədə qalma m&uuml;ddəti:&nbsp;<strong>15</strong>&nbsp;iş g&uuml;n&nbsp;</span></span></p>
-        
+
               <p>&nbsp;</p>
               </td>
             </tr>
           </tbody>
         </table>
-   
-        
+
+
 
         <button style="margin-top: 10px;" class="mb-2 btn btn-primary" type="submit">Yarat</button>
       </form>
@@ -323,12 +309,12 @@
     });
   </script>
 <script>
-  CKEDITOR.replace('offer_pay_delv_cond', {
-    filebrowserImageUploadUrl: "{% url 'ckeditor_upload' %}",
-    filebrowserImageBrowseUrl: "{% url 'ckeditor_browse' %}",
-    removePlugins: 'exportpdf',
-    toolbarCanCollapse: true
-  });
+  // CKEDITOR.replace('offer_pay_delv_cond', {
+  //   filebrowserImageUploadUrl: "{% url 'ckeditor_upload' %}",
+  //   filebrowserImageBrowseUrl: "{% url 'ckeditor_browse' %}",
+  //   removePlugins: 'exportpdf',
+  //   toolbarCanCollapse: true
+  // });
 </script>
 <script type="text/javascript" src="{% static 'js/createoffer.js' %}"></script>
 
